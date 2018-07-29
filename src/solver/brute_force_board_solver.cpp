@@ -22,13 +22,72 @@
 
 #include "brute_force_board_solver.h"
 
+#include <queue>
+#include <vector>
+
 using namespace CPic;
 
-void BruteForceBoardSolver::solve(Board* board) const {
-  // FIXME: This is obsviously wrong...
+using std::queue;
+using std::vector;
 
-  board->results[0][0] = 0;
-  board->results[0][1] = 0;
-  board->results[1][0] = 1;
-  board->results[1][1] = 1;
+typedef unsigned short ushort;
+
+struct Node {
+public:
+  Node(Board board) : board(board), nextRow(0), nextCol(0) {
+    for (ushort row = 0; row < board.rows.size(); ++row) {
+      for (ushort col = 0; col < board.columns.size(); ++col) {
+        this->board.results[row][col] = 0;
+      }
+    }
+  }
+  Node(const Node &other) :
+      board(other.board),
+      nextRow(other.nextRow),
+      nextCol(other.nextCol) { }
+  ~Node() { }
+
+  const vector<Node> getNext() const {
+    vector<Node> next;
+    if (nextRow == this->board.rows.size()) return next;
+
+    for (int i = 0; i < board.colors; ++i) {
+      Node other(*this);
+      other.board.results[nextRow][nextCol] = i;
+      other.nextCol++;
+
+      if (other.nextCol == this->board.columns.size()) {
+        other.nextCol = 0;
+        other.nextRow++;
+      }
+
+      next.push_back(other);
+    }
+
+    return next;
+  }
+
+  Board board;
+
+private:
+  ushort nextRow, nextCol;
+};
+
+void BruteForceBoardSolver::solve(Board* board) const {
+  queue<Node> nodes;
+  nodes.push(Node(*board));
+
+  while (!nodes.empty()) {
+    auto front = nodes.front();
+    if (front.board.isValid()) {
+      board->results = front.board.results;
+      return;
+    } else {
+      nodes.pop();
+      auto next = front.getNext();
+      for (ushort i = 0; i < next.size(); ++i) {
+        nodes.push(next[i]);
+      }
+    }
+  }
 }

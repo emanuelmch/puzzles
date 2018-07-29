@@ -38,6 +38,7 @@ public:
   virtual ~Board();
 
   // Output
+  bool isValid();
   std::vector<std::vector<int>> results;
 
   // "Fixed" values
@@ -46,8 +47,8 @@ public:
   std::vector<std::vector<int>> rows;
 
   // "Missing" values
-  unsigned int blankCellsOnColumn(unsigned int);
-  std::vector<unsigned int> missingColorsOnColumn(unsigned int);
+  unsigned short blankCellsOnColumn(unsigned short);
+  std::vector<unsigned short> missingColorsOnColumn(unsigned short);
 };
 
 }
