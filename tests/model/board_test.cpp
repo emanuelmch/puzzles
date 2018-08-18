@@ -60,14 +60,14 @@ TEST(Board, ShouldInitWithBlankSpaces) {
   Board board = createSquareBoard();
 
   auto results = board.results;
-  ASSERT_EQ(2, results.size());
-  ASSERT_EQ(2, results[0].size());
-  ASSERT_EQ(2, results[1].size());
+  ASSERT_EQ(results.size(), 2);
+  ASSERT_EQ(results[0].size(), 2);
+  ASSERT_EQ(results[1].size(), 2);
 
-  EXPECT_EQ(-1, results[0][0]);
-  EXPECT_EQ(-1, results[0][1]);
-  EXPECT_EQ(-1, results[1][0]);
-  EXPECT_EQ(-1, results[1][1]);
+  EXPECT_EQ(results[0][0], Blank);
+  EXPECT_EQ(results[0][1], Blank);
+  EXPECT_EQ(results[1][0], Blank);
+  EXPECT_EQ(results[1][1], Blank);
 }
 
 //FIXME: ShouldWorkWithRectangularBoards
@@ -75,133 +75,133 @@ TEST(Board, ShouldInitWithBlankSpaces) {
 TEST(Board, ShouldBeValidWhenEmpty) {
   Board board = createSquareBoard();
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsAreFilledCorrectly) {
   Board board = createSquareBoardWithDiagonals();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][0] = 1;
-  board.results[1][1] = 0;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][0] = C1;
+  board.results[1][1] = C0;
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithDiagonals();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][1] = 0;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][1] = C0;
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsAreFilledIncorrectly) {
   Board board = createSquareBoardWithDiagonals();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 0;
-  board.results[1][0] = 0;
-  board.results[1][1] = 0;
+  board.results[0][0] = C0;
+  board.results[0][1] = C0;
+  board.results[1][0] = C0;
+  board.results[1][1] = C0;
 
-  ASSERT_EQ(false, board.isValid());
+  ASSERT_EQ(board.isValid(), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithDiagonals();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 0;
-  board.results[1][1] = 0;
+  board.results[0][0] = C0;
+  board.results[0][1] = C0;
+  board.results[1][1] = C0;
 
-  ASSERT_EQ(false, board.isValid());
+  ASSERT_EQ(board.isValid(), false);
 }
 
 TEST(Board, ShouldBeValidWhenVerticalLinesAreFilledCorrectly) {
   Board board = createSquareBoardWithVerticalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 0;
-  board.results[1][0] = 1;
-  board.results[1][1] = 1;
+  board.results[0][0] = C0;
+  board.results[0][1] = C0;
+  board.results[1][0] = C1;
+  board.results[1][1] = C1;
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeValidWhenVerticalLinesArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithVerticalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 0;
-  board.results[1][1] = 1;
+  board.results[0][0] = C0;
+  board.results[0][1] = C0;
+  board.results[1][1] = C1;
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesAreFilledIncorrectly) {
   Board board = createSquareBoardWithVerticalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][0] = 0;
-  board.results[1][1] = 0;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][0] = C0;
+  board.results[1][1] = C0;
 
-  ASSERT_EQ(false, board.isValid());
+  ASSERT_EQ(board.isValid(), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithVerticalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][1] = 1;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][1] = C1;
 
-  ASSERT_EQ(false, board.isValid());
+  ASSERT_EQ(board.isValid(), false);
 }
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesAreFilledCorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][0] = 0;
-  board.results[1][1] = 1;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][0] = C0;
+  board.results[1][1] = C1;
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][1] = 1;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][1] = C1;
 
-  ASSERT_EQ(true, board.isValid());
+  ASSERT_EQ(board.isValid(), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesAreFilledIncorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 1;
-  board.results[1][0] = 0;
-  board.results[1][1] = 0;
+  board.results[0][0] = C0;
+  board.results[0][1] = C1;
+  board.results[1][0] = C0;
+  board.results[1][1] = C0;
 
-  ASSERT_EQ(false, board.isValid());
+  ASSERT_EQ(board.isValid(), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
 
-  board.results[0][0] = 0;
-  board.results[0][1] = 0;
-  board.results[1][1] = 1;
+  board.results[0][0] = C0;
+  board.results[0][1] = C0;
+  board.results[1][1] = C1;
 
-  ASSERT_EQ(false, board.isValid());
+  ASSERT_EQ(board.isValid(), false);
 }
 
 //FIXME: Tests for  uint blankCellsOnColumn(unsigned int);

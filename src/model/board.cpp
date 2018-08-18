@@ -22,17 +22,14 @@
 
 #include "board.h"
 
-#include <algorithm>
-
 using namespace CPic;
 
-using std::count_if;
 using std::vector;
 
 typedef unsigned short ushort;
 
-inline int cellsInColumnByColor(Board *, ushort column, ushort color);
-inline int cellsInRowByColor(Board *, ushort row, ushort color);
+inline int cellsInColumnByColor(Board *, ushort column, Color color);
+inline int cellsInRowByColor(Board *, ushort row, Color color);
 
 Board::Board(int colors, vector<vector<int>> columns, vector<vector<int>> rows)
               : colors(colors), columns(columns), rows(rows) {
@@ -40,9 +37,9 @@ Board::Board(int colors, vector<vector<int>> columns, vector<vector<int>> rows)
   const ushort rowCount = rows.size();
 
   for (ushort x = 0; x < rowCount; x++) {
-    std::vector<int> row;
+    std::vector<Color> row;
     for (ushort y = 0; y < columnCount; y++) {
-      row.push_back(COLOR_BLANK);
+      row.push_back(Blank);
     }
     this->results.push_back(row);
   }
@@ -53,7 +50,7 @@ Board::~Board() {}
 bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {
     for (ushort color = 0; color < colors; ++color) {
-      auto count = cellsInColumnByColor(this, i, color);
+      auto count = cellsInColumnByColor(this, i, intToColor(color));
       if (count > columns[i][color]) {
         return false;
       }
@@ -62,7 +59,7 @@ bool Board::isValid() {
 
   for (ushort i = 0; i < rows.size(); ++i) {
     for (ushort color = 0; color < colors; ++color) {
-      auto count = cellsInRowByColor(this, i, color);
+      auto count = cellsInRowByColor(this, i, intToColor(color));
       if (count > rows[i][color]) {
         return false;
       }
@@ -72,39 +69,12 @@ bool Board::isValid() {
   return true;
 }
 
-ushort Board::blankCellsOnColumn(ushort column) {
-  //TODO: Don't calculate this every time
-  auto isBlank = [](int cell) { return cell == COLOR_BLANK; };
-  auto count = count_if(results[column].cbegin(), results[column].cend(), isBlank);
-  return static_cast<ushort>(count);
-}
-
-vector<ushort> Board::missingColorsOnColumn(ushort column) {
-  //TODO: Don't calculate this every time. Oh, and clean this awful mess...
-  vector<int> missing = columns[column];
-
-  ushort rowCount = static_cast<ushort>(this->rows.size());
-  for (ushort row = 0; row < rowCount; ++row) {
-    int color = this->results[row][column];
-    if (color != COLOR_BLANK) {
-      auto index = static_cast<size_t>(color);
-      missing[index]--;
-    }
-  }
-
-  vector<ushort> result;
-  for (auto itr = missing.cbegin(); itr != missing.cend(); ++itr) {
-    result.push_back(static_cast<ushort>(*itr));
-  }
-  return result;
-}
-
-int cellsInColumnByColor(Board *board, ushort column, ushort color) {
+int cellsInColumnByColor(Board *board, ushort column, Color color) {
   const auto results = board->results;
 
   int count = 0;
 
-  for (ushort i = 0; i < results.size(); ++i) {
+  for (ushort i = 0; i < results[column].size(); ++i) {
     if (results[column][i] == color)
       count++;
   }
@@ -112,12 +82,12 @@ int cellsInColumnByColor(Board *board, ushort column, ushort color) {
   return count;
 }
 
-int cellsInRowByColor(Board *board, ushort row, ushort color) {
+int cellsInRowByColor(Board *board, ushort row, Color color) {
   const auto results = board->results;
 
   int count = 0;
 
-  for (ushort i = 0; i < results[row].size(); ++i) {
+  for (ushort i = 0; i < results.size(); ++i) {
     if (results[i][row] == color)
       count++;
   }

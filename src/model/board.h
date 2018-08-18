@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <vector>
 
 //TODO: There should be a Color class/enum/whatever, instead of using ints for color
@@ -29,8 +30,17 @@
 
 namespace CPic {
 
-static const int COLOR_BLANK = -1;
+enum Color { Blank, C0, C1 };
 
+// FIXME: Kill this function
+inline Color intToColor(int i) {
+  switch (i) {
+    case -1: return Blank;
+    case 0: return C0;
+    case 1: return C1;
+    default: assert(! "Invalid Color enum value!");
+  }
+}
 class Board {
 public:
 
@@ -39,16 +49,11 @@ public:
 
   // Output
   bool isValid();
-  std::vector<std::vector<int>> results;
+  std::vector<std::vector<Color>> results;
 
-  // "Fixed" values
   int colors;
   std::vector<std::vector<int>> columns;
   std::vector<std::vector<int>> rows;
-
-  // "Missing" values
-  unsigned short blankCellsOnColumn(unsigned short);
-  std::vector<unsigned short> missingColorsOnColumn(unsigned short);
 };
 
 }

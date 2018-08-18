@@ -39,14 +39,14 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   const int rowCount = 2;
 
   auto results = board.results;
-  ASSERT_EQ(columnCount, results.size());
+  ASSERT_EQ(results.size(), columnCount);
   for (int col = 0; col < columnCount; ++col) {
-    ASSERT_EQ(rowCount, results[col].size());
+    ASSERT_EQ(results[col].size(), rowCount);
   }
 
   for (int row = 0; row < rowCount; ++row) {
     for (int col = 0; col < columnCount; ++col) {
-      EXPECT_EQ(col, results[col][row]);
+      EXPECT_EQ(results[col][row], intToColor(col));
     }
   }
 }

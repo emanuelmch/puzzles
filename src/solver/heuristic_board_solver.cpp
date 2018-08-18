@@ -30,36 +30,58 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-inline void lookForFullColoredColumns(Board*);
-inline void paintWholeColumn(Board*, ushort column, ushort color);
+inline void lookForOneColorLeftColumns(Board*);
+inline ushort countColumn(const Board*, ushort column, Color color);
+inline ushort clueForColumn(const Board*, ushort column, ushort colorPosition);
+inline void paintBlanksOnColumn(Board*, ushort column, Color color);
 
 void HeuristicBoardSolver::solve(Board* board) const {
   // TODO: Optimize this when we have more heuristics
-  vector<vector<int>> oldResults;
+  vector<vector<Color>> oldResults;
   do {
     oldResults = board->results;
 
-    lookForFullColoredColumns(board);
+    lookForOneColorLeftColumns(board);
   } while (oldResults != board->results);
 }
 
-void lookForFullColoredColumns(Board *board) {
+void lookForOneColorLeftColumns(Board *board) {
   auto columnCount = static_cast<ushort>(board->columns.size());
   for (ushort column = 0; column < columnCount; ++column) {
-    ushort blankCells = board->blankCellsOnColumn(column);
-    auto colors = board->missingColorsOnColumn(column);
-    for (ushort color = 0; color < colors.size(); ++color) {
-      if (colors[color] == blankCells) {
-        paintWholeColumn(board, column, color);
-      }
+    auto blanks = countColumn(board, column, Blank);
+    ushort count0 = clueForColumn(board, column, 0);
+    ushort count1 = clueForColumn(board, column, 1);
+
+    if (count0 == blanks) {
+      paintBlanksOnColumn(board, column, C0);
+    } else if (count1 == blanks) {
+      paintBlanksOnColumn(board, column, C1);
     }
   }
 }
 
-void paintWholeColumn(Board * board, ushort column, ushort color) {
+ushort countColumn(const Board* board, ushort column, Color color) {
+  ushort count = 0;
+
   auto rowCount = static_cast<ushort>(board->rows.size());
   for (ushort row = 0; row < rowCount; ++row) {
-    if (board->results[column][row] == COLOR_BLANK) {
+    if (board->results[column][row] == color) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+//FIXME: We should have a Color, not a colorPosition
+inline ushort clueForColumn(const Board* board, ushort column, ushort colorPosition) {
+  return board->columns[column][colorPosition];
+}
+
+void paintBlanksOnColumn(Board *board, ushort column, Color color) {
+  auto rowCount = static_cast<ushort>(board->rows.size());
+  for (ushort row = 0; row < rowCount; ++row) {
+    if (board->results[column][row] == Blank) {
       board->results[column][row] = color;
     }
   }

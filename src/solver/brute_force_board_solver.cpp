@@ -37,7 +37,7 @@ public:
   Node(Board board) : board(board), nextRow(0), nextCol(0) {
     for (ushort row = 0; row < board.rows.size(); ++row) {
       for (ushort col = 0; col < board.columns.size(); ++col) {
-        this->board.results[row][col] = 0;
+        this->board.results[row][col] = C0;
       }
     }
   }
@@ -53,7 +53,7 @@ public:
 
     for (int i = 0; i < board.colors; ++i) {
       Node other(*this);
-      other.board.results[nextRow][nextCol] = i;
+      other.board.results[nextRow][nextCol] = intToColor(i);
       other.nextCol++;
 
       if (other.nextCol == this->board.columns.size()) {
