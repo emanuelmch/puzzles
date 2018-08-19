@@ -37,8 +37,8 @@ public:
 private:
   unsigned int colorCount;
 
-  std::vector<std::vector<int>> columns;
-  std::vector<std::vector<int>> rows;
+  std::vector<std::map<Color, int>> columns;
+  std::vector<std::map<Color, int>> rows;
 };
 
 }

@@ -24,11 +24,12 @@
 
 using namespace CPic;
 
+using std::map;
 using std::vector;
 
 typedef unsigned short ushort;
 
-Board::Board(int colorCount, vector<vector<int>> columns, vector<vector<int>> rows)
+Board::Board(int colorCount, vector<map<Color, int>> columns, vector<map<Color, int>> rows)
               : colorCount(colorCount),
                 columnCount(columns.size()),
                 rowCount(rows.size()),
@@ -49,7 +50,7 @@ bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {
     for (ushort color = 0; color < colorCount; ++color) {
       auto count = countColorInColumn(i, intToColor(color));
-      if (count > columns[i][color]) {
+      if (count > columns[i][intToColor(color)]) {
         return false;
       }
     }
@@ -58,7 +59,7 @@ bool Board::isValid() {
   for (ushort i = 0; i < rows.size(); ++i) {
     for (ushort color = 0; color < colorCount; ++color) {
       auto count = countColorInRow(i, intToColor(color));
-      if (count > rows[i][color]) {
+      if (count > rows[i][intToColor(color)]) {
         return false;
       }
     }
@@ -92,11 +93,11 @@ ushort Board::countColorInRow(ushort row, Color color) const {
 }
 
 ushort Board::clueForColumn(ushort column, Color color) const {
-  auto pos = colorToInt(color);
-  return columns[column][pos];
+  auto clues = columns[column];
+  return clues[color];
 }
 
 ushort Board::clueForRow(ushort row, Color color) const {
-  auto pos = colorToInt(color);
-  return rows[row][pos];
+  auto clues = rows[row];
+  return clues[color];
 }

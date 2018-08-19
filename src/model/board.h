@@ -23,6 +23,7 @@
 #pragma once
 
 #include <cassert>
+#include <map>
 #include <vector>
 
 //TODO: There should be a Color class/enum/whatever, instead of using ints for color
@@ -32,7 +33,7 @@ namespace CPic {
 
 enum Color { Blank, C0, C1 };
 
-// FIXME: Kill these functions
+// FIXME: Kill this function
 inline Color intToColor(int i) {
   switch (i) {
     case -1: return Blank;
@@ -43,19 +44,10 @@ inline Color intToColor(int i) {
   }
 }
 
-inline unsigned short colorToInt(Color color) {
-  switch (color) {
-    case C0: return 0;
-    case C1: return 1;
-    default: assert(! "Invalid Color value! [" + color + "]");
-        return -1;
-  }
-}
-
 class Board {
 public:
 
-  Board(int colorCount, std::vector<std::vector<int>> columns, std::vector<std::vector<int>> rows);
+  Board(int colorCount, std::vector<std::map<Color, int>> columns, std::vector<std::map<Color, int>> rows);
   virtual ~Board();
 
   bool isValid();
@@ -72,8 +64,8 @@ public:
   unsigned short clueForRow(unsigned short, Color) const;
 
 private:
-  std::vector<std::vector<int>> columns;
-  std::vector<std::vector<int>> rows;
+  std::vector<std::map<Color, int>> columns;
+  std::vector<std::map<Color, int>> rows;
 };
 
 }

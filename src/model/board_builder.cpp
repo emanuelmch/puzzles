@@ -22,12 +22,22 @@
 
 #include "board_builder.h"
 
+#include <cassert>
+
 using namespace CPic;
 
+using std::map;
 using std::vector;
 
+// TODO: Take columns of any value
 BoardBuilder *BoardBuilder::column(vector<int> column) {
-  this->columns.push_back(column);
+  assert(column.size() == 2);
+
+  map<Color, int> colors;
+  colors[C0] = column[0];
+  colors[C1] = column[1];
+
+  this->columns.push_back(colors);
   if (this->colorCount < column.size()) {
     this->colorCount = column.size();
   }
@@ -35,8 +45,15 @@ BoardBuilder *BoardBuilder::column(vector<int> column) {
   return this;
 }
 
+// TODO: Take rows of any value
 BoardBuilder *BoardBuilder::row(vector<int> row) {
-  this->rows.push_back(row);
+  assert(row.size() == 2);
+
+  map<Color, int> colors;
+  colors[C0] = row[0];
+  colors[C1] = row[1];
+
+  this->rows.push_back(colors);
   if (this->colorCount < row.size()) {
     this->colorCount = row.size();
   }
