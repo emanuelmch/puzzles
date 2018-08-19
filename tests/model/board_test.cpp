@@ -29,7 +29,7 @@ using namespace CPic;
 // FIXME: Should differentiate between contiguous and non-contiguous colors
 
 inline Board createSquareBoardWithDiagonals() {
-  return BoardBuilder().column({1, 1})
+  return BoardBuilder(2).column({1, 1})
                       ->column({1, 1})
                       ->row({1, 1})
                       ->row({1, 1})
@@ -37,7 +37,7 @@ inline Board createSquareBoardWithDiagonals() {
 }
 
 inline Board createSquareBoardWithVerticalLines() {
-  return BoardBuilder().column({2, 0})
+  return BoardBuilder(2).column({2, 0})
                       ->column({0, 2})
                       ->row({1, 1})
                       ->row({1, 1})
@@ -45,7 +45,7 @@ inline Board createSquareBoardWithVerticalLines() {
 }
 
 inline Board createSquareBoardWithHorizontalLines() {
-  return BoardBuilder().column({1, 1})
+  return BoardBuilder(2).column({1, 1})
                       ->column({1, 1})
                       ->row({2, 0})
                       ->row({0, 2})

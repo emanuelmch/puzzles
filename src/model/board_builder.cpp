@@ -29,45 +29,51 @@ using namespace CPic;
 using std::map;
 using std::vector;
 
-// TODO: Take columns of any value
+typedef unsigned short ushort;
+
+BoardBuilder::BoardBuilder(ushort colorCount) {
+    assert(colorCount > 0 && colorCount < 4);
+
+    if (colorCount >= 1) colors.push_back(C0);
+    if (colorCount >= 2) colors.push_back(C1);
+    if (colorCount >= 3) colors.push_back(C2);
+    if (colorCount >= 4) colors.push_back(C3);
+}
+
 BoardBuilder *BoardBuilder::column(vector<int> column) {
-  assert(column.size() == 2);
+  map<Color, int> colorColumn;
 
-  map<Color, int> colors;
-  colors[C0] = column[0];
-  colors[C1] = column[1];
-
-  this->columns.push_back(colors);
-  if (this->colorCount < column.size()) {
-    this->colorCount = column.size();
+  for (ushort i = 0; i < colors.size(); ++i) {
+    auto color = colors[i];
+    if (column.size() > i) {
+      colorColumn[color] = column[i];
+    } else {
+      colorColumn[color] = 0;
+    }
   }
+
+  this->columns.push_back(colorColumn);
 
   return this;
 }
 
-// TODO: Take rows of any value
 BoardBuilder *BoardBuilder::row(vector<int> row) {
-  assert(row.size() == 2);
+  map<Color, int> colorRow;
 
-  map<Color, int> colors;
-  colors[C0] = row[0];
-  colors[C1] = row[1];
-
-  this->rows.push_back(colors);
-  if (this->colorCount < row.size()) {
-    this->colorCount = row.size();
+  for (ushort i = 0; i < colors.size(); ++i) {
+    auto color = colors[i];
+    if (row.size() > i) {
+      colorRow[color] = row[i];
+    } else {
+      colorRow[color] = 0;
+    }
   }
+
+  this->rows.push_back(colorRow);
 
   return this;
 }
 
 Board BoardBuilder::build() {
-  std::vector<Color> colors;
-
-  if (colorCount >= 1) colors.push_back(C0);
-  if (colorCount >= 2) colors.push_back(C1);
-  if (colorCount >= 3) colors.push_back(C2);
-  if (colorCount >= 4) colors.push_back(C3);
-
   return Board(colors, columns, rows);
 }
