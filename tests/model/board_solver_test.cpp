@@ -44,11 +44,10 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
     ASSERT_EQ(results[col].size(), rowCount);
   }
 
-  for (int row = 0; row < rowCount; ++row) {
-    for (int col = 0; col < columnCount; ++col) {
-      EXPECT_EQ(results[col][row], intToColor(col));
-    }
-  }
+  EXPECT_EQ(results[0][0], C0);
+  EXPECT_EQ(results[0][1], C0);
+  EXPECT_EQ(results[1][0], C1);
+  EXPECT_EQ(results[1][1], C1);
 }
 
 //FIXME: ShouldSolveSmallTrivialBoards_HomogeneousRows

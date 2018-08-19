@@ -62,5 +62,12 @@ BoardBuilder *BoardBuilder::row(vector<int> row) {
 }
 
 Board BoardBuilder::build() {
-  return Board(colorCount, columns, rows);
+  std::vector<Color> colors;
+
+  if (colorCount >= 1) colors.push_back(C0);
+  if (colorCount >= 2) colors.push_back(C1);
+  if (colorCount >= 3) colors.push_back(C2);
+  if (colorCount >= 4) colors.push_back(C3);
+
+  return Board(colors, columns, rows);
 }

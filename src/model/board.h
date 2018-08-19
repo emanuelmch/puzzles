@@ -22,36 +22,22 @@
 
 #pragma once
 
-#include <cassert>
 #include <map>
 #include <vector>
 
-//TODO: There should be a Color class/enum/whatever, instead of using ints for color
-//TODO: After Color conversion, most of these ints should be changed to uints
-
 namespace CPic {
 
-enum Color { Blank, C0, C1 };
-
-// FIXME: Kill this function
-inline Color intToColor(int i) {
-  switch (i) {
-    case -1: return Blank;
-    case 0: return C0;
-    case 1: return C1;
-    default: assert(! "Invalid Color enum value! [" + i + "]");
-        return Blank;
-  }
-}
+enum Color { Blank, C0, C1, C2, C3 };
 
 class Board {
 public:
 
-  Board(int colorCount, std::vector<std::map<Color, int>> columns, std::vector<std::map<Color, int>> rows);
+  Board(std::vector<Color>, std::vector<std::map<Color, int>> columns, std::vector<std::map<Color, int>> rows);
   virtual ~Board();
 
   bool isValid();
   std::vector<std::vector<Color>> results;
+  std::vector<Color> colors;
 
   int colorCount;
   int columnCount;

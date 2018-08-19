@@ -51,9 +51,9 @@ public:
     vector<Node> next;
     if (nextRow == this->board.rowCount) return next;
 
-    for (int i = 0; i < board.colorCount; ++i) {
+    for (auto color: board.colors) {
       Node other(*this);
-      other.board.results[nextRow][nextCol] = intToColor(i);
+      other.board.results[nextRow][nextCol] = color;
       other.nextCol++;
 
       if (other.nextCol == this->board.columnCount) {

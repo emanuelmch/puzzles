@@ -29,8 +29,9 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-Board::Board(int colorCount, vector<map<Color, int>> columns, vector<map<Color, int>> rows)
-              : colorCount(colorCount),
+Board::Board(vector<Color> colors, vector<map<Color, int>> columns, vector<map<Color, int>> rows)
+              : colors(colors),
+                colorCount(colors.size()),
                 columnCount(columns.size()),
                 rowCount(rows.size()),
                 columns(columns),
@@ -48,18 +49,18 @@ Board::~Board() {}
 
 bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {
-    for (ushort color = 0; color < colorCount; ++color) {
-      auto count = countColorInColumn(i, intToColor(color));
-      if (count > columns[i][intToColor(color)]) {
+    for (auto color : colors) {
+      auto count = countColorInColumn(i, color);
+      if (count > columns[i][color]) {
         return false;
       }
     }
   }
 
   for (ushort i = 0; i < rows.size(); ++i) {
-    for (ushort color = 0; color < colorCount; ++color) {
-      auto count = countColorInRow(i, intToColor(color));
-      if (count > rows[i][intToColor(color)]) {
+    for (auto color : colors) {
+      auto count = countColorInRow(i, color);
+      if (count > rows[i][color]) {
         return false;
       }
     }
