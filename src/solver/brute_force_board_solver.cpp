@@ -35,9 +35,9 @@ typedef unsigned short ushort;
 struct Node {
 public:
   Node(Board board) : board(board), nextRow(0), nextCol(0) {
-    for (ushort row = 0; row < board.rows.size(); ++row) {
-      for (ushort col = 0; col < board.columns.size(); ++col) {
-        this->board.results[row][col] = C0;
+    for (ushort row = 0; row < board.rowCount; ++row) {
+      for (ushort col = 0; col < board.columnCount; ++col) {
+        this->board.results[col][row] = C0;
       }
     }
   }
@@ -49,14 +49,14 @@ public:
 
   const vector<Node> getNext() const {
     vector<Node> next;
-    if (nextRow == this->board.rows.size()) return next;
+    if (nextRow == this->board.rowCount) return next;
 
-    for (int i = 0; i < board.colors; ++i) {
+    for (int i = 0; i < board.colorCount; ++i) {
       Node other(*this);
       other.board.results[nextRow][nextCol] = intToColor(i);
       other.nextCol++;
 
-      if (other.nextCol == this->board.columns.size()) {
+      if (other.nextCol == this->board.columnCount) {
         other.nextCol = 0;
         other.nextRow++;
       }

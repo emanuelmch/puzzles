@@ -30,29 +30,23 @@ typedef unsigned int uint;
 
 void BoardLogger::log(const Board* board) const {
   // TODO: Improve logging
-  int index = 0;
-  for (auto itr = board->columns.cbegin(); itr != board->columns.cend(); ++itr) {
-    std::cout << "Column " << ++index << ": ";
-    auto values = *itr;
-    for (auto itr2 = values.cbegin(); itr2 != values.cend(); ++itr2) {
-      std::cout << (*itr2) << " ";
-    }
+  for (ushort i = 0; i < board->columnCount; ++i) {
+    std::cout << "Column " << i + 1 << ": ";
+    std::cout << board->clueForColumn(i, C0) << " ";
+    std::cout << board->clueForColumn(i, C1) << " ";
     std::cout << std::endl;
   }
 
-  index = 0;
-  for (auto itr = board->rows.cbegin(); itr != board->rows.cend(); ++itr) {
-    std::cout << "Row " << ++index << ": ";
-    auto values = *itr;
-    for (auto itr2 = values.cbegin(); itr2 != values.cend(); ++itr2) {
-      std::cout << (*itr2) << " ";
-    }
+  for (ushort i = 0; i < board->rowCount; ++i) {
+    std::cout << "Row " << i + 1 << ": ";
+    std::cout << board->clueForRow(i, C0) << " ";
+    std::cout << board->clueForRow(i, C1) << " ";
     std::cout << std::endl;
   }
 
   std::cout << "Final Board:" << std::endl;
-  for (uint y = 0; y < board->rows.size(); ++y) {
-    for (uint x = 0; x < board->columns.size(); ++x) {
+  for (ushort y = 0; y < board->rowCount; ++y) {
+    for (ushort x = 0; x < board->columnCount; ++x) {
           std::cout << board->results[x][y] << " ";
     }
     std::cout << std::endl;

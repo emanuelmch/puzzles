@@ -28,11 +28,12 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-Board::Board(int colors, vector<vector<int>> columns, vector<vector<int>> rows)
-              : colors(colors), columns(columns), rows(rows) {
-  const ushort columnCount = columns.size();
-  const ushort rowCount = rows.size();
-
+Board::Board(int colorCount, vector<vector<int>> columns, vector<vector<int>> rows)
+              : colorCount(colorCount),
+                columnCount(columns.size()),
+                rowCount(rows.size()),
+                columns(columns),
+                rows(rows) {
   for (ushort x = 0; x < rowCount; x++) {
     std::vector<Color> row;
     for (ushort y = 0; y < columnCount; y++) {
@@ -46,7 +47,7 @@ Board::~Board() {}
 
 bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {
-    for (ushort color = 0; color < colors; ++color) {
+    for (ushort color = 0; color < colorCount; ++color) {
       auto count = countColorInColumn(i, intToColor(color));
       if (count > columns[i][color]) {
         return false;
@@ -55,7 +56,7 @@ bool Board::isValid() {
   }
 
   for (ushort i = 0; i < rows.size(); ++i) {
-    for (ushort color = 0; color < colors; ++color) {
+    for (ushort color = 0; color < colorCount; ++color) {
       auto count = countColorInRow(i, intToColor(color));
       if (count > rows[i][color]) {
         return false;
@@ -66,7 +67,7 @@ bool Board::isValid() {
   return true;
 }
 
-ushort Board::countColorInColumn(ushort column, Color color) {
+ushort Board::countColorInColumn(ushort column, Color color) const {
   // TODO: Replace this something from algorithms
   ushort count = 0;
 
@@ -78,7 +79,7 @@ ushort Board::countColorInColumn(ushort column, Color color) {
   return count;
 }
 
-ushort Board::countColorInRow(ushort row, Color color) {
+ushort Board::countColorInRow(ushort row, Color color) const {
   // TODO: Replace this something from algorithms
   ushort count = 0;
 
@@ -88,4 +89,14 @@ ushort Board::countColorInRow(ushort row, Color color) {
   }
 
   return count;
+}
+
+ushort Board::clueForColumn(ushort column, Color color) const {
+  auto pos = colorToInt(color);
+  return columns[column][pos];
+}
+
+ushort Board::clueForRow(ushort row, Color color) const {
+  auto pos = colorToInt(color);
+  return rows[row][pos];
 }

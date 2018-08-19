@@ -32,30 +32,48 @@ namespace CPic {
 
 enum Color { Blank, C0, C1 };
 
-// FIXME: Kill this function
+// FIXME: Kill these functions
 inline Color intToColor(int i) {
   switch (i) {
     case -1: return Blank;
     case 0: return C0;
     case 1: return C1;
-    default: assert(! "Invalid Color enum value!");
+    default: assert(! "Invalid Color enum value! [" + i + "]");
+        return Blank;
   }
 }
+
+inline unsigned short colorToInt(Color color) {
+  switch (color) {
+    case C0: return 0;
+    case C1: return 1;
+    default: assert(! "Invalid Color value! [" + color + "]");
+        return -1;
+  }
+}
+
 class Board {
 public:
 
-  Board(int colors, std::vector<std::vector<int>> columns, std::vector<std::vector<int>> rows);
+  Board(int colorCount, std::vector<std::vector<int>> columns, std::vector<std::vector<int>> rows);
   virtual ~Board();
 
   bool isValid();
   std::vector<std::vector<Color>> results;
 
-  int colors;
+  int colorCount;
+  int columnCount;
+  int rowCount;
+
+  unsigned short countColorInColumn(unsigned short, Color) const;
+  unsigned short countColorInRow(unsigned short, Color) const;
+
+  unsigned short clueForColumn(unsigned short, Color) const;
+  unsigned short clueForRow(unsigned short, Color) const;
+
+private:
   std::vector<std::vector<int>> columns;
   std::vector<std::vector<int>> rows;
-
-  unsigned short countColorInColumn(unsigned short, Color);
-  unsigned short countColorInRow(unsigned short, Color);
 };
 
 }
