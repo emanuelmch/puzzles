@@ -52,8 +52,21 @@ inline Board createSquareBoardWithHorizontalLines() {
                       ->build();
 }
 
+inline Board createNonContiguousRectangularBoard() {
+  return BoardBuilder(2).column({2, 1})
+                        ->column({1, 2})
+                        ->row({1, 1})
+                        ->row({1, 1})
+                        ->row({1, 1})
+                        ->build();
+}
+
 inline Board createSquareBoard() {
   return createSquareBoardWithDiagonals();
+}
+
+inline Board createRectangularBoard() {
+  return createNonContiguousRectangularBoard();
 }
 
 TEST(Board, ShouldInitWithBlankSpaces) {
@@ -70,7 +83,21 @@ TEST(Board, ShouldInitWithBlankSpaces) {
   EXPECT_EQ(results[1][1], Blank);
 }
 
-//TODO: ShouldWorkWithRectangularBoards
+TEST(Board, ShouldWorkWithRectangularBoards) {
+  Board board = createRectangularBoard();
+
+  auto results = board.results;
+  ASSERT_EQ(results.size(), 2);
+  ASSERT_EQ(results[0].size(), 3);
+  ASSERT_EQ(results[1].size(), 3);
+
+  EXPECT_EQ(results[0][0], Blank);
+  EXPECT_EQ(results[0][1], Blank);
+  EXPECT_EQ(results[0][2], Blank);
+  EXPECT_EQ(results[1][0], Blank);
+  EXPECT_EQ(results[1][1], Blank);
+  EXPECT_EQ(results[1][2], Blank);
+}
 
 TEST(Board, ShouldBeValidWhenEmpty) {
   Board board = createSquareBoard();

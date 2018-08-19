@@ -36,12 +36,12 @@ Board::Board(vector<Color> colors, vector<map<Color, int>> columns, vector<map<C
                 rowCount(rows.size()),
                 columns(columns),
                 rows(rows) {
-  for (ushort x = 0; x < rowCount; x++) {
-    std::vector<Color> row;
-    for (ushort y = 0; y < columnCount; y++) {
-      row.push_back(Blank);
+  for (ushort x = 0; x < columnCount; x++) {
+    std::vector<Color> column;
+    for (ushort y = 0; y < rowCount; y++) {
+      column.push_back(Blank);
     }
-    this->results.push_back(row);
+    this->results.push_back(column);
   }
 }
 
