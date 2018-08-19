@@ -50,7 +50,7 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   EXPECT_EQ(results[1][1], C1);
 }
 
-//FIXME: ShouldSolveSmallTrivialBoards_HomogeneousRows
+//TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
 
-//FIXME: ShouldSolveBiggerTrivialBoards
-//FIXME: ShouldSolveRectangularTrivialBoards
+//TODO: ShouldSolveBiggerTrivialBoards
+//TODO: ShouldSolveRectangularTrivialBoards

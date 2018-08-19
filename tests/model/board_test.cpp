@@ -70,7 +70,7 @@ TEST(Board, ShouldInitWithBlankSpaces) {
   EXPECT_EQ(results[1][1], Blank);
 }
 
-//FIXME: ShouldWorkWithRectangularBoards
+//TODO: ShouldWorkWithRectangularBoards
 
 TEST(Board, ShouldBeValidWhenEmpty) {
   Board board = createSquareBoard();
@@ -204,5 +204,5 @@ TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
   ASSERT_EQ(board.isValid(), false);
 }
 
-//FIXME: Tests for  uint blankCellsOnColumn(unsigned int);
-//FIXME: Tests for  vector<uint> missingColorsOnColumn(uint);
+//TODO: Tests for  ushort countColorIn{Column,Row}
+//TODO: Tests for  ushort clueFor{Column,Row}
