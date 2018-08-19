@@ -28,9 +28,6 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-inline int cellsInColumnByColor(Board *, ushort column, Color color);
-inline int cellsInRowByColor(Board *, ushort row, Color color);
-
 Board::Board(int colors, vector<vector<int>> columns, vector<vector<int>> rows)
               : colors(colors), columns(columns), rows(rows) {
   const ushort columnCount = columns.size();
@@ -50,7 +47,7 @@ Board::~Board() {}
 bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {
     for (ushort color = 0; color < colors; ++color) {
-      auto count = cellsInColumnByColor(this, i, intToColor(color));
+      auto count = countColorInColumn(i, intToColor(color));
       if (count > columns[i][color]) {
         return false;
       }
@@ -59,7 +56,7 @@ bool Board::isValid() {
 
   for (ushort i = 0; i < rows.size(); ++i) {
     for (ushort color = 0; color < colors; ++color) {
-      auto count = cellsInRowByColor(this, i, intToColor(color));
+      auto count = countColorInRow(i, intToColor(color));
       if (count > rows[i][color]) {
         return false;
       }
@@ -69,10 +66,9 @@ bool Board::isValid() {
   return true;
 }
 
-int cellsInColumnByColor(Board *board, ushort column, Color color) {
-  const auto results = board->results;
-
-  int count = 0;
+ushort Board::countColorInColumn(ushort column, Color color) {
+  // TODO: Replace this something from algorithms
+  ushort count = 0;
 
   for (ushort i = 0; i < results[column].size(); ++i) {
     if (results[column][i] == color)
@@ -82,10 +78,9 @@ int cellsInColumnByColor(Board *board, ushort column, Color color) {
   return count;
 }
 
-int cellsInRowByColor(Board *board, ushort row, Color color) {
-  const auto results = board->results;
-
-  int count = 0;
+ushort Board::countColorInRow(ushort row, Color color) {
+  // TODO: Replace this something from algorithms
+  ushort count = 0;
 
   for (ushort i = 0; i < results.size(); ++i) {
     if (results[i][row] == color)

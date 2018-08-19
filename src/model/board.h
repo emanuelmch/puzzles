@@ -47,13 +47,15 @@ public:
   Board(int colors, std::vector<std::vector<int>> columns, std::vector<std::vector<int>> rows);
   virtual ~Board();
 
-  // Output
   bool isValid();
   std::vector<std::vector<Color>> results;
 
   int colors;
   std::vector<std::vector<int>> columns;
   std::vector<std::vector<int>> rows;
+
+  unsigned short countColorInColumn(unsigned short, Color);
+  unsigned short countColorInRow(unsigned short, Color);
 };
 
 }
