@@ -33,10 +33,10 @@ TEST(BoardBuilder, ShouldNotComplainOnValidMissingColumnClues) {
                               ->row({1, 1})
                               ->build();
 
-  EXPECT_EQ(board.clueForColumn(0, C0), 2);
-  EXPECT_EQ(board.clueForColumn(0, C1), 0);
-  EXPECT_EQ(board.clueForColumn(1, C0), 0);
-  EXPECT_EQ(board.clueForColumn(1, C1), 2);
+  EXPECT_EQ(board.clueForColumn(0, C0).amount, 2);
+  EXPECT_EQ(board.clueForColumn(0, C1).amount, 0);
+  EXPECT_EQ(board.clueForColumn(1, C0).amount, 0);
+  EXPECT_EQ(board.clueForColumn(1, C1).amount, 2);
 }
 
 TEST(BoardBuilder, ShouldNotComplainOnExtraColumnClues) {
@@ -46,10 +46,10 @@ TEST(BoardBuilder, ShouldNotComplainOnExtraColumnClues) {
                               ->row({1, 1})
                               ->build();
 
-  EXPECT_EQ(board.clueForColumn(0, C0), 2);
-  EXPECT_EQ(board.clueForColumn(0, C1), 0);
-  EXPECT_EQ(board.clueForColumn(1, C0), 0);
-  EXPECT_EQ(board.clueForColumn(1, C1), 2);
+  EXPECT_EQ(board.clueForColumn(0, C0).amount, 2);
+  EXPECT_EQ(board.clueForColumn(0, C1).amount, 0);
+  EXPECT_EQ(board.clueForColumn(1, C0).amount, 0);
+  EXPECT_EQ(board.clueForColumn(1, C1).amount, 2);
 }
 
 TEST(BoardBuilder, ShouldNotComplainOnValidMissingRowClues) {
@@ -59,10 +59,10 @@ TEST(BoardBuilder, ShouldNotComplainOnValidMissingRowClues) {
                               ->row({0, 2})
                               ->build();
 
-  EXPECT_EQ(board.clueForRow(0, C0), 2);
-  EXPECT_EQ(board.clueForRow(0, C1), 0);
-  EXPECT_EQ(board.clueForRow(1, C0), 0);
-  EXPECT_EQ(board.clueForRow(1, C1), 2);
+  EXPECT_EQ(board.clueForRow(0, C0).amount, 2);
+  EXPECT_EQ(board.clueForRow(0, C1).amount, 0);
+  EXPECT_EQ(board.clueForRow(1, C0).amount, 0);
+  EXPECT_EQ(board.clueForRow(1, C1).amount, 2);
 }
 
 TEST(BoardBuilder, ShouldNotComplainOnExtraRowClues) {
@@ -72,8 +72,8 @@ TEST(BoardBuilder, ShouldNotComplainOnExtraRowClues) {
                               ->row({0, 2, 0, 0})
                               ->build();
 
-  EXPECT_EQ(board.clueForRow(0, C0), 2);
-  EXPECT_EQ(board.clueForRow(0, C1), 0);
-  EXPECT_EQ(board.clueForRow(1, C0), 0);
-  EXPECT_EQ(board.clueForRow(1, C1), 2);
+  EXPECT_EQ(board.clueForRow(0, C0).amount, 2);
+  EXPECT_EQ(board.clueForRow(0, C1).amount, 0);
+  EXPECT_EQ(board.clueForRow(1, C0).amount, 0);
+  EXPECT_EQ(board.clueForRow(1, C1).amount, 2);
 }

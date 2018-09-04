@@ -22,6 +22,8 @@
 
 #include "board.h"
 
+#include <cassert>
+
 using namespace CPic;
 
 using std::map;
@@ -29,7 +31,7 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-Board::Board(vector<Color> colors, vector<map<Color, int>> columns, vector<map<Color, int>> rows)
+Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
               : colors(colors),
                 colorCount(colors.size()),
                 columnCount(columns.size()),
@@ -51,7 +53,7 @@ bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {
     for (auto color : colors) {
       auto count = countColorInColumn(i, color);
-      if (count > columns[i][color]) {
+      if (count > clueForColumn(i, color).amount) {
         return false;
       }
     }
@@ -60,7 +62,7 @@ bool Board::isValid() {
   for (ushort i = 0; i < rows.size(); ++i) {
     for (auto color : colors) {
       auto count = countColorInRow(i, color);
-      if (count > rows[i][color]) {
+      if (count > clueForRow(i, color).amount) {
         return false;
       }
     }
@@ -93,12 +95,22 @@ ushort Board::countColorInRow(ushort row, Color color) const {
   return count;
 }
 
-ushort Board::clueForColumn(ushort column, Color color) const {
-  auto clues = columns[column];
-  return clues[color];
+const Clue  Board::clueForColumn(ushort column, Color color) const {
+  for (auto clue : columns[column]) {
+    if (clue.color == color) {
+      return clue;
+    }
+  }
+
+  assert(! "Asked for a clue for a non-existing color");
 }
 
-ushort Board::clueForRow(ushort row, Color color) const {
-  auto clues = rows[row];
-  return clues[color];
+const Clue Board::clueForRow(ushort row, Color color) const {
+  for (auto clue : rows[row]) {
+    if (clue.color == color) {
+      return clue;
+    }
+  }
+
+  assert(! "Asked for a clue for a non-existing color");
 }

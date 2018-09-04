@@ -39,8 +39,8 @@ public:
 private:
   std::vector<Color> colors;
 
-  std::vector<std::map<Color, int>> columns;
-  std::vector<std::map<Color, int>> rows;
+  std::vector<std::vector<Clue>> columns;
+  std::vector<std::vector<Clue>> rows;
 };
 
 }

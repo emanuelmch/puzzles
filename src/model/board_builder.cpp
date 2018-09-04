@@ -41,35 +41,35 @@ BoardBuilder::BoardBuilder(ushort colorCount) {
 }
 
 BoardBuilder *BoardBuilder::column(vector<int> column) {
-  map<Color, int> colorColumn;
+  vector<Clue> newColumn;
 
   for (ushort i = 0; i < colors.size(); ++i) {
     auto color = colors[i];
     if (column.size() > i) {
-      colorColumn[color] = column[i];
+      newColumn.push_back(Clue(color, column[i], false));
     } else {
-      colorColumn[color] = 0;
+      newColumn.push_back(Clue(color, 0, false));
     }
   }
 
-  this->columns.push_back(colorColumn);
+  this->columns.push_back(newColumn);
 
   return this;
 }
 
 BoardBuilder *BoardBuilder::row(vector<int> row) {
-  map<Color, int> colorRow;
+  vector<Clue> newRow;
 
   for (ushort i = 0; i < colors.size(); ++i) {
     auto color = colors[i];
     if (row.size() > i) {
-      colorRow[color] = row[i];
+      newRow.push_back(Clue(color, row[i], false));
     } else {
-      colorRow[color] = 0;
+      newRow.push_back(Clue(color, 0, false));
     }
   }
 
-  this->rows.push_back(colorRow);
+  this->rows.push_back(newRow);
 
   return this;
 }

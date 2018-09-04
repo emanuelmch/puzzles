@@ -26,7 +26,13 @@
 
 using namespace CPic;
 
+using std::ostream;
+
 typedef unsigned int uint;
+
+ostream &operator<<(ostream &output, Clue const &clue) {
+  return output << clue.amount << " blocks of color " << clue.color;
+}
 
 void BoardLogger::log(const Board* board) const {
   // TODO: Improve logging

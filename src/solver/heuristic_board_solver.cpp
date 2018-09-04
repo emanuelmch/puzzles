@@ -46,8 +46,8 @@ void HeuristicBoardSolver::solve(Board* board) const {
 void lookForOneColorLeftColumns(Board *board) {
   for (ushort column = 0; column < board->columnCount; ++column) {
     auto blanks = board->countColorInColumn(column, Blank);
-    ushort count0 = board->clueForColumn(column, C0);
-    ushort count1 = board->clueForColumn(column, C1);
+    ushort count0 = board->clueForColumn(column, C0).amount;
+    ushort count1 = board->clueForColumn(column, C1).amount;
 
     if (count0 == blanks) {
       paintBlanksOnColumn(board, column, C0);
