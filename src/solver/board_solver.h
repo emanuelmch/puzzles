@@ -28,7 +28,7 @@ namespace CPic {
 
 class BoardSolver {
 public:
-  virtual void solve(Board*) const = 0;
+  virtual void solve(Board *) const = 0;
 };
 
 }

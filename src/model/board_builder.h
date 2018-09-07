@@ -36,6 +36,7 @@ public:
   BoardBuilder *row(std::vector<int>);
 
   Board build();
+
 private:
   std::vector<Color> colors;
 

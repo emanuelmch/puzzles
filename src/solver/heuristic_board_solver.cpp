@@ -30,10 +30,10 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-inline void lookForOneColorLeftColumns(Board*);
-inline void paintBlanksOnColumn(Board*, ushort column, Color color);
+inline void lookForOneColorLeftColumns(Board *);
+inline void paintBlanksOnColumn(Board *, ushort column, Color color);
 
-void HeuristicBoardSolver::solve(Board* board) const {
+void HeuristicBoardSolver::solve(Board *board) const {
   // TODO: Optimize this when we have more heuristics
   vector<vector<Color>> oldResults;
   do {

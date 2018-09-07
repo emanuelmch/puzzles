@@ -41,11 +41,13 @@ public:
       }
     }
   }
+
   Node(const Node &other) :
-      board(other.board),
-      nextRow(other.nextRow),
-      nextCol(other.nextCol) { }
-  ~Node() { }
+          board(other.board),
+          nextRow(other.nextRow),
+          nextCol(other.nextCol) {}
+
+  ~Node() {}
 
   const vector<Node> getNext() const {
     vector<Node> next;
@@ -73,7 +75,7 @@ private:
   ushort nextRow, nextCol;
 };
 
-void BruteForceBoardSolver::solve(Board* board) const {
+void BruteForceBoardSolver::solve(Board *board) const {
   queue<Node> nodes;
   nodes.push(Node(*board));
 

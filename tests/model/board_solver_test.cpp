@@ -28,10 +28,10 @@ using namespace CPic;
 
 TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   Board board = BoardBuilder(2).column({2, 0})
-                            ->column({0, 2})
-                            ->row({1, 1})
-                            ->row({1, 1})
-                            ->build();
+          ->column({0, 2})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
 
   this->solver->solve(&board);
 

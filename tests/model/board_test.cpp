@@ -30,35 +30,35 @@ using namespace CPic;
 
 inline Board createSquareBoardWithDiagonals() {
   return BoardBuilder(2).column({1, 1})
-                      ->column({1, 1})
-                      ->row({1, 1})
-                      ->row({1, 1})
-                      ->build();
+          ->column({1, 1})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
 }
 
 inline Board createSquareBoardWithVerticalLines() {
   return BoardBuilder(2).column({2, 0})
-                      ->column({0, 2})
-                      ->row({1, 1})
-                      ->row({1, 1})
-                      ->build();
+          ->column({0, 2})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
 }
 
 inline Board createSquareBoardWithHorizontalLines() {
   return BoardBuilder(2).column({1, 1})
-                      ->column({1, 1})
-                      ->row({2, 0})
-                      ->row({0, 2})
-                      ->build();
+          ->column({1, 1})
+          ->row({2, 0})
+          ->row({0, 2})
+          ->build();
 }
 
 inline Board createNonContiguousRectangularBoard() {
   return BoardBuilder(2).column({2, 1})
-                        ->column({1, 2})
-                        ->row({1, 1})
-                        ->row({1, 1})
-                        ->row({1, 1})
-                        ->build();
+          ->column({1, 2})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
 }
 
 // inline Board createContiguousRectangularBoard() {

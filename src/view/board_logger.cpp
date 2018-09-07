@@ -34,7 +34,7 @@ ostream &operator<<(ostream &output, Clue const &clue) {
   return output << clue.amount << " blocks of color " << clue.color;
 }
 
-void BoardLogger::log(const Board* board) const {
+void BoardLogger::log(const Board *board) const {
   // TODO: Improve logging
   for (ushort i = 0; i < board->columnCount; ++i) {
     std::cout << "Column " << i + 1 << ": ";
@@ -53,7 +53,7 @@ void BoardLogger::log(const Board* board) const {
   std::cout << "Final Board:" << std::endl;
   for (ushort y = 0; y < board->rowCount; ++y) {
     for (ushort x = 0; x < board->columnCount; ++x) {
-          std::cout << board->results[x][y] << " ";
+      std::cout << board->results[x][y] << " ";
     }
     std::cout << std::endl;
   }

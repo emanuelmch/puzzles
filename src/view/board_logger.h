@@ -28,7 +28,7 @@ namespace CPic {
 
 class BoardLogger {
 public:
-  void log(const Board*) const;
+  void log(const Board *) const;
 };
 
 }

@@ -32,12 +32,12 @@ using std::vector;
 typedef unsigned short ushort;
 
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
-              : colors(colors),
-                colorCount(colors.size()),
-                columnCount(columns.size()),
-                rowCount(rows.size()),
-                columns(columns),
-                rows(rows) {
+        : colors(colors),
+          colorCount(colors.size()),
+          columnCount(columns.size()),
+          rowCount(rows.size()),
+          columns(columns),
+          rows(rows) {
   for (ushort x = 0; x < columnCount; x++) {
     std::vector<Color> column;
     for (ushort y = 0; y < rowCount; y++) {
@@ -95,14 +95,14 @@ ushort Board::countColorInRow(ushort row, Color color) const {
   return count;
 }
 
-const Clue  Board::clueForColumn(ushort column, Color color) const {
+const Clue Board::clueForColumn(ushort column, Color color) const {
   for (auto clue : columns[column]) {
     if (clue.color == color) {
       return clue;
     }
   }
 
-  assert(! "Asked for a clue for a non-existing color");
+  assert(!"Asked for a clue for a non-existing color");
 }
 
 const Clue Board::clueForRow(ushort row, Color color) const {
@@ -112,5 +112,5 @@ const Clue Board::clueForRow(ushort row, Color color) const {
     }
   }
 
-  assert(! "Asked for a clue for a non-existing color");
+  assert(!"Asked for a clue for a non-existing color");
 }

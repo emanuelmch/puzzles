@@ -28,7 +28,7 @@ namespace CPic {
 
 class HeuristicBoardSolver : public BoardSolver {
 public:
-  void solve(Board*) const;
+  void solve(Board *) const;
 };
 
 }
