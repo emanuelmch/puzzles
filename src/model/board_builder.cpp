@@ -40,15 +40,22 @@ BoardBuilder::BoardBuilder(ushort colorCount) {
   if (colorCount >= 4) colors.push_back(C3);
 }
 
-BoardBuilder *BoardBuilder::column(vector<int> column) {
+BoardBuilder *BoardBuilder::column(vector<int> column, vector<bool> contiguity) {
   vector<Clue> newColumn;
 
   for (ushort i = 0; i < colors.size(); ++i) {
+    bool isContiguous;
+    if (contiguity.size() > i) {
+      isContiguous = contiguity[i];
+    } else {
+      isContiguous = false;
+    }
+
     auto color = colors[i];
     if (column.size() > i) {
-      newColumn.push_back(Clue(color, column[i], false));
+      newColumn.push_back(Clue(color, column[i], isContiguous));
     } else {
-      newColumn.push_back(Clue(color, 0, false));
+      newColumn.push_back(Clue(color, 0, isContiguous));
     }
   }
 

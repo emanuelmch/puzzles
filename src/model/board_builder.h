@@ -32,7 +32,7 @@ class BoardBuilder {
 public:
   BoardBuilder(unsigned short colorCount);
 
-  BoardBuilder *column(std::vector<int>);
+  BoardBuilder *column(std::vector<int>, std::vector<bool> = std::vector<bool>());
   BoardBuilder *row(std::vector<int>);
 
   Board build();

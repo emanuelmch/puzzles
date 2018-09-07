@@ -28,7 +28,7 @@ using namespace CPic;
 
 using std::ostream;
 
-typedef unsigned int uint;
+typedef unsigned short ushort;
 
 ostream &operator<<(ostream &output, Clue const &clue) {
   return output << clue.amount << " blocks of color " << clue.color;

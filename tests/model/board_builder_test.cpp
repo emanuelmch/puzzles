@@ -77,3 +77,94 @@ TEST(BoardBuilder, ShouldNotComplainOnExtraRowClues) {
   EXPECT_EQ(board.clueForRow(1, C0).amount, 0);
   EXPECT_EQ(board.clueForRow(1, C1).amount, 2);
 }
+
+TEST(BoardBuilder, ShouldWorkWithRelevantContiguityColumnClues) {
+  auto board = BoardBuilder(2).column({2, 2}, {false, true})
+          ->column({0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, false);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, true);
+}
+
+TEST(BoardBuilder, ShouldWorkWithIrrelevantContiguityColumnCluesToTheRight) {
+  auto board = BoardBuilder(2).column({2, 2}, {true, false})
+          ->column({0})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, true);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, false);
+}
+
+TEST(BoardBuilder, ShouldNotComplainOnValidEmptyColumnContiguityColumnClues) {
+  auto board = BoardBuilder(2).column({2, 2}, {})
+          ->column({0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, false);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, false);
+}
+
+TEST(BoardBuilder, ShouldNotComplainOnValidMissingColumnContiguityColumnCluesWithIrrelevantCluesPresent) {
+  auto board = BoardBuilder(2).column({2, 2}, {false})
+          ->column({0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, false);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, false);
+}
+
+TEST(BoardBuilder, ShouldNotComplainOnValidMissingColumnContiguityColumnCluesWithRelevantCluesPresent) {
+  auto board = BoardBuilder(2).column({2, 2}, {true})
+          ->column({0})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, true);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, false);
+}
+
+TEST(BoardBuilder, ShouldNotComplainOnValidFalseExtraColumnContiguityColumnClues) {
+  auto board = BoardBuilder(2).column({2, 2}, {true, false, false})
+          ->column({0})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, true);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, false);
+}
+
+TEST(BoardBuilder, ShouldNotComplainOnValidTrueExtraColumnContiguityColumnClues) {
+  auto board = BoardBuilder(2).column({2, 2}, {true, false, true})
+          ->column({0})
+          ->row({0, 1})
+          ->row({1, 0})
+          ->row({1, 0})
+          ->row({0, 1})
+          ->build();
+
+  EXPECT_EQ(board.clueForColumn(0, C0).contiguous, true);
+  EXPECT_EQ(board.clueForColumn(0, C1).contiguous, false);
+}
