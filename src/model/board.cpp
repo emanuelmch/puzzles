@@ -31,6 +31,9 @@ using std::vector;
 
 typedef unsigned short ushort;
 
+short findFirstColorInColumn(vector<vector<Color>> results, ushort column, Color color);
+short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color color);
+
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
         : colors(colors),
           colorCount(colors.size()),
@@ -68,7 +71,56 @@ bool Board::isValid() {
     }
   }
 
+  for (ushort i = 0; i < columns.size(); ++i) {
+    for (auto color : colors) {
+      auto clue = clueForColumn(i, color);
+      if (clue.amount == 1) continue;
+
+      auto first = findFirstColorInColumn(results, i, color);
+      if (first == -1) continue;
+      auto last = findLastColorInColumn(results, i, color);
+
+      if (clue.contiguous) {
+        if ((last - first) >= clue.amount) {
+          return false;
+        } else {
+          for (int j = first + 1; j < last; ++j) {
+            auto result = results[i][j];
+            if (result != clue.color && result != Blank) {
+              return false;
+            }
+          }
+        }
+      } else {
+        auto count = countColorInColumn(i, color);
+        if (count != clue.amount) continue;
+        if ((last - first) <= (clue.amount - 1)) {
+          return false;
+        }
+      }
+    }
+  }
+
   return true;
+}
+
+short findFirstColorInColumn(vector<vector<Color>> results, ushort column, Color color) {
+  for (short i = 0; i < results[column].size(); ++i) {
+    if (results[column][i] == color) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color color) {
+  short index = -1;
+  for (short i = 0; i < results[column].size(); ++i) {
+    if (results[column][i] == color) {
+      index = i;
+    }
+  }
+  return index;
 }
 
 ushort Board::countColorInColumn(ushort column, Color color) const {
