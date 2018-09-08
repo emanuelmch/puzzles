@@ -34,7 +34,7 @@ typedef unsigned short ushort;
 
 struct Node {
 public:
-  Node(Board board) : board(board), nextRow(0), nextCol(0) {
+  explicit Node(Board board) : board(board), nextRow(0), nextCol(0) {
     for (ushort row = 0; row < board.rowCount; ++row) {
       for (ushort col = 0; col < board.columnCount; ++col) {
         this->board.results[col][row] = C0;
@@ -47,7 +47,7 @@ public:
           nextRow(other.nextRow),
           nextCol(other.nextCol) {}
 
-  ~Node() {}
+  ~Node() = default;
 
   const vector<Node> getNext() const {
     vector<Node> next;
@@ -87,8 +87,8 @@ void BruteForceBoardSolver::solve(Board *board) const {
     } else {
       nodes.pop();
       auto next = front.getNext();
-      for (ushort i = 0; i < next.size(); ++i) {
-        nodes.push(next[i]);
+      for (const auto &node : next) {
+        nodes.push(node);
       }
     }
   }

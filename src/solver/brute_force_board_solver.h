@@ -28,7 +28,7 @@ namespace CPic {
 
 class BruteForceBoardSolver : public BoardSolver {
 public:
-  void solve(Board *) const;
+  void solve(Board *) const override;
 };
 
 }

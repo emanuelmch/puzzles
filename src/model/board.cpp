@@ -36,9 +36,9 @@ short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color 
 
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
         : colors(colors),
-          colorCount(colors.size()),
-          columnCount(columns.size()),
-          rowCount(rows.size()),
+          colorCount(static_cast<int>(colors.size())),
+          columnCount(static_cast<int>(columns.size())),
+          rowCount(static_cast<int>(rows.size())),
           columns(columns),
           rows(rows) {
   for (ushort x = 0; x < columnCount; x++) {
@@ -50,7 +50,7 @@ Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<C
   }
 }
 
-Board::~Board() {}
+Board::~Board() = default;
 
 bool Board::isValid() {
   for (ushort i = 0; i < columns.size(); ++i) {

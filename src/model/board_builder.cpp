@@ -40,7 +40,7 @@ BoardBuilder::BoardBuilder(ushort colorCount) {
   if (colorCount >= 4) colors.push_back(C3);
 }
 
-BoardBuilder *BoardBuilder::column(vector<int> column, vector<bool> contiguity) {
+BoardBuilder *BoardBuilder::column(vector<ushort> column, vector<bool> contiguity) {
   vector<Clue> newColumn;
 
   for (ushort i = 0; i < colors.size(); ++i) {
@@ -53,9 +53,9 @@ BoardBuilder *BoardBuilder::column(vector<int> column, vector<bool> contiguity) 
 
     auto color = colors[i];
     if (column.size() > i) {
-      newColumn.push_back(Clue(color, column[i], isContiguous));
+      newColumn.emplace_back(Clue(color, column[i], isContiguous));
     } else {
-      newColumn.push_back(Clue(color, 0, isContiguous));
+      newColumn.emplace_back(Clue(color, 0, isContiguous));
     }
   }
 
@@ -64,15 +64,15 @@ BoardBuilder *BoardBuilder::column(vector<int> column, vector<bool> contiguity) 
   return this;
 }
 
-BoardBuilder *BoardBuilder::row(vector<int> row) {
+BoardBuilder *BoardBuilder::row(vector<ushort> row) {
   vector<Clue> newRow;
 
   for (ushort i = 0; i < colors.size(); ++i) {
     auto color = colors[i];
     if (row.size() > i) {
-      newRow.push_back(Clue(color, row[i], false));
+      newRow.emplace_back(Clue(color, row[i], false));
     } else {
-      newRow.push_back(Clue(color, 0, false));
+      newRow.emplace_back(Clue(color, 0, false));
     }
   }
 
