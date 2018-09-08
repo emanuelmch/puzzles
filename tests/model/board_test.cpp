@@ -47,8 +47,8 @@ inline Board createSquareBoardWithVerticalLines() {
 inline Board createSquareBoardWithHorizontalLines() {
   return BoardBuilder(2).column({1, 1})
           ->column({1, 1})
-          ->row({2, 0})
-          ->row({0, 2})
+          ->row({2, 0}, {true})
+          ->row({0, 2}, {false, true})
           ->build();
 }
 

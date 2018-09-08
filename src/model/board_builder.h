@@ -33,7 +33,7 @@ public:
   explicit BoardBuilder(unsigned short colorCount);
 
   BoardBuilder *column(std::vector<unsigned short>, std::vector<bool> = std::vector<bool>());
-  BoardBuilder *row(std::vector<unsigned short>);
+  BoardBuilder *row(std::vector<unsigned short>, std::vector<bool> = std::vector<bool>());
 
   Board build();
 

@@ -64,15 +64,22 @@ BoardBuilder *BoardBuilder::column(vector<ushort> column, vector<bool> contiguit
   return this;
 }
 
-BoardBuilder *BoardBuilder::row(vector<ushort> row) {
+BoardBuilder *BoardBuilder::row(vector<ushort> row, vector<bool> contiguity) {
   vector<Clue> newRow;
 
   for (ushort i = 0; i < colors.size(); ++i) {
+    bool isContiguous;
+    if (contiguity.size() > i) {
+      isContiguous = contiguity[i];
+    } else {
+      isContiguous = false;
+    }
+
     auto color = colors[i];
     if (row.size() > i) {
-      newRow.emplace_back(Clue(color, row[i], false));
+      newRow.emplace_back(Clue(color, row[i], isContiguous));
     } else {
-      newRow.emplace_back(Clue(color, 0, false));
+      newRow.emplace_back(Clue(color, 0, isContiguous));
     }
   }
 

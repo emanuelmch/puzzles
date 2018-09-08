@@ -33,6 +33,8 @@ typedef unsigned short ushort;
 
 short findFirstColorInColumn(vector<vector<Color>> results, ushort column, Color color);
 short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color color);
+short findFirstColorInRow(vector<vector<Color>> results, ushort row, Color color);
+short findLastColorInRow(vector<vector<Color>> results, ushort row, Color color);
 
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
         : colors(colors),
@@ -53,6 +55,7 @@ Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<C
 Board::~Board() = default;
 
 bool Board::isValid() {
+  // Has too many of a color in a column?
   for (ushort i = 0; i < columns.size(); ++i) {
     for (auto color : colors) {
       auto count = countColorInColumn(i, color);
@@ -62,6 +65,7 @@ bool Board::isValid() {
     }
   }
 
+  // Has too many of a color in a row?
   for (ushort i = 0; i < rows.size(); ++i) {
     for (auto color : colors) {
       auto count = countColorInRow(i, color);
@@ -71,6 +75,7 @@ bool Board::isValid() {
     }
   }
 
+  // Breaks the contiguity clue in a column?
   for (ushort i = 0; i < columns.size(); ++i) {
     for (auto color : colors) {
       auto clue = clueForColumn(i, color);
@@ -101,6 +106,37 @@ bool Board::isValid() {
     }
   }
 
+  // Breaks the contiguity clue in a row?
+  for (ushort i = 0; i < rows.size(); ++i) {
+    for (auto color : colors) {
+      auto clue = clueForRow(i, color);
+      if (clue.amount == 1) continue;
+
+      auto first = findFirstColorInRow(results, i, color);
+      if (first == -1) continue;
+      auto last = findLastColorInRow(results, i, color);
+
+      if (clue.contiguous) {
+        if ((last - first) >= clue.amount) {
+          return false;
+        } else {
+          for (int j = first + 1; j < last; ++j) {
+            auto result = results[j][i];
+            if (result != clue.color && result != Blank) {
+              return false;
+            }
+          }
+        }
+      } else {
+        auto count = countColorInRow(i, color);
+        if (count != clue.amount) continue;
+        if ((last - first) <= (clue.amount - 1)) {
+          return false;
+        }
+      }
+    }
+  }
+
   return true;
 }
 
@@ -117,6 +153,25 @@ short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color 
   short index = -1;
   for (short i = 0; i < results[column].size(); ++i) {
     if (results[column][i] == color) {
+      index = i;
+    }
+  }
+  return index;
+}
+
+short findFirstColorInRow(vector<vector<Color>> results, ushort row, Color color) {
+  for (short i = 0; i < results.size(); ++i) {
+    if (results[i][row] == color) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+short findLastColorInRow(vector<vector<Color>> results, ushort row, Color color) {
+  short index = -1;
+  for (short i = 0; i < results.size(); ++i) {
+    if (results[i][row] == color) {
       index = i;
     }
   }
