@@ -22,10 +22,12 @@
 
 #include "board.h"
 
+#include <algorithm>
 #include <cassert>
 
 using namespace CPic;
 
+using std::count_if;
 using std::map;
 using std::vector;
 
@@ -179,27 +181,21 @@ short findLastColorInRow(vector<vector<Color>> results, ushort row, Color color)
 }
 
 ushort Board::countColorInColumn(ushort column, Color color) const {
-  // TODO: Replace this something from algorithms
-  ushort count = 0;
+  auto begin = results[column].begin();
+  auto end = results[column].end();
 
-  for (ushort i = 0; i < results[column].size(); ++i) {
-    if (results[column][i] == color)
-      count++;
-  }
-
-  return count;
+  return static_cast<ushort>(count_if(begin, end, [color](auto it) {
+    return it == color;
+  }));
 }
 
 ushort Board::countColorInRow(ushort row, Color color) const {
-  // TODO: Replace this something from algorithms
-  ushort count = 0;
+  auto begin = results.begin();
+  auto end = results.end();
 
-  for (ushort i = 0; i < results.size(); ++i) {
-    if (results[i][row] == color)
-      count++;
-  }
-
-  return count;
+  return static_cast<ushort>(count_if(begin, end, [color, row](auto it) {
+    return it[row] == color;
+  }));
 }
 
 const Clue Board::clueForColumn(ushort column, Color color) const {
