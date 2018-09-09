@@ -20,41 +20,12 @@
  * SOFTWARE.
 */
 
-#include <iostream>
+#pragma once
 
-#include "data/easy.h"
-#include "solver/brute_force_board_solver.h"
-#include "solver/heuristic_board_solver.h"
-#include "view/board_logger.h"
+#include <vector>
 
-using std::cout;
-using std::endl;
+#include "./board_data.h"
 
-using namespace CPic;
-
-int main() {
-  BruteForceBoardSolver bruteSolver;
-  HeuristicBoardSolver heuristicSolver;
-
-  auto easyBoards = createEasyBoards();
-
-  for (auto data: easyBoards) {
-    auto bruteCopy = Board(data.board);
-    bruteSolver.solve(&bruteCopy);
-    if (bruteCopy.results == data.solution) {
-      cout << "Brute force solved board " << data.name << endl;
-    } else {
-      // TODO: Log failures
-      cout << "Brute force failed to solve board " << data.name << endl;
-    }
-
-    auto heuristicCopy = Board(data.board);
-    heuristicSolver.solve(&heuristicCopy);
-    if (heuristicCopy.results == data.solution) {
-      cout << "Heuristics solved board " << data.name << endl;
-    } else {
-      // TODO: Log failures
-      cout << "Heuristics failed to solve board " << data.name << endl;
-    }
-  }
-}
+namespace CPic {
+std::vector<BoardData> createEasyBoards();
+};

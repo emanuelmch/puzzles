@@ -20,41 +20,25 @@
  * SOFTWARE.
 */
 
-#include <iostream>
+#include "easy.h"
 
-#include "data/easy.h"
-#include "solver/brute_force_board_solver.h"
-#include "solver/heuristic_board_solver.h"
-#include "view/board_logger.h"
+#include "../model/board_builder.h"
 
-using std::cout;
-using std::endl;
+using std::vector;
 
 using namespace CPic;
 
-int main() {
-  BruteForceBoardSolver bruteSolver;
-  HeuristicBoardSolver heuristicSolver;
+BoardData createBoard1() {
+  auto board = BoardBuilder(2).column({2, 0}, {true})
+          ->column({0, 2}, {false, true})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
+  vector<vector<Color>> solution = { {C0, C0}, {C1, C1}};
 
-  auto easyBoards = createEasyBoards();
+  return BoardData("board1", board, solution);
+}
 
-  for (auto data: easyBoards) {
-    auto bruteCopy = Board(data.board);
-    bruteSolver.solve(&bruteCopy);
-    if (bruteCopy.results == data.solution) {
-      cout << "Brute force solved board " << data.name << endl;
-    } else {
-      // TODO: Log failures
-      cout << "Brute force failed to solve board " << data.name << endl;
-    }
-
-    auto heuristicCopy = Board(data.board);
-    heuristicSolver.solve(&heuristicCopy);
-    if (heuristicCopy.results == data.solution) {
-      cout << "Heuristics solved board " << data.name << endl;
-    } else {
-      // TODO: Log failures
-      cout << "Heuristics failed to solve board " << data.name << endl;
-    }
-  }
+vector<BoardData> CPic::createEasyBoards() {
+  return { createBoard1() };
 }
