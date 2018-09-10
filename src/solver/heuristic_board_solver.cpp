@@ -31,7 +31,10 @@ using std::vector;
 typedef unsigned short ushort;
 
 inline void lookForOneColorLeftColumns(Board *);
-inline void paintBlanksOnColumn(Board *, ushort column, Color color);
+inline void paintBlanksOnColumn(Board *, ushort column, Color);
+
+inline void lookForOneColorLeftRows(Board *);
+inline void paintBlanksOnRow(Board *, ushort row, Color);
 
 void HeuristicBoardSolver::solve(Board *board) const {
   // TODO: Optimize this when we have more heuristics
@@ -40,6 +43,7 @@ void HeuristicBoardSolver::solve(Board *board) const {
     oldResults = board->results;
 
     lookForOneColorLeftColumns(board);
+    lookForOneColorLeftRows(board);
   } while (oldResults != board->results);
 }
 
@@ -60,6 +64,29 @@ void lookForOneColorLeftColumns(Board *board) {
 void paintBlanksOnColumn(Board *board, ushort column, Color color) {
   auto rowCount = static_cast<ushort>(board->rowCount);
   for (ushort row = 0; row < rowCount; ++row) {
+    if (board->results[column][row] == Blank) {
+      board->results[column][row] = color;
+    }
+  }
+}
+
+void lookForOneColorLeftRows(Board *board) {
+  for (ushort row = 0; row < board->rowCount; ++row) {
+    auto blanks = board->countColorInRow(row, Blank);
+    ushort count0 = board->clueForRow(row, C0).amount;
+    ushort count1 = board->clueForRow(row, C1).amount;
+
+    if (count0 == blanks) {
+      paintBlanksOnRow(board, row, C0);
+    } else if (count1 == blanks) {
+      paintBlanksOnRow(board, row, C1);
+    }
+  }
+}
+
+void paintBlanksOnRow(Board *board, ushort row, Color color) {
+  auto columnCount = static_cast<ushort>(board->columnCount);
+  for (ushort column = 0; column < columnCount; ++column) {
     if (board->results[column][row] == Blank) {
       board->results[column][row] = color;
     }
