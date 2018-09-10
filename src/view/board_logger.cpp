@@ -34,26 +34,26 @@ ostream &operator<<(ostream &output, Clue const &clue) {
   return output << clue.amount << " blocks of color " << clue.color;
 }
 
-void BoardLogger::log(const Board *board) const {
+void BoardLogger::log(const std::vector<std::vector<Color>> *board) const {
   // TODO: Improve logging
-  for (ushort i = 0; i < board->columnCount; ++i) {
-    std::cout << "Column " << i + 1 << ": ";
-    std::cout << board->clueForColumn(i, C0) << " ";
-    std::cout << board->clueForColumn(i, C1) << " ";
-    std::cout << std::endl;
-  }
+//  for (ushort i = 0; i < board->columnCount; ++i) {
+//    std::cout << "Column " << i + 1 << ": ";
+//    std::cout << board->clueForColumn(i, C0) << " ";
+//    std::cout << board->clueForColumn(i, C1) << " ";
+//    std::cout << std::endl;
+//  }
 
-  for (ushort i = 0; i < board->rowCount; ++i) {
-    std::cout << "Row " << i + 1 << ": ";
-    std::cout << board->clueForRow(i, C0) << " ";
-    std::cout << board->clueForRow(i, C1) << " ";
-    std::cout << std::endl;
-  }
+//  for (ushort i = 0; i < board->rowCount; ++i) {
+//    std::cout << "Row " << i + 1 << ": ";
+//    std::cout << board->clueForRow(i, C0) << " ";
+//    std::cout << board->clueForRow(i, C1) << " ";
+//    std::cout << std::endl;
+//  }
 
-  std::cout << "Final Board:" << std::endl;
-  for (ushort y = 0; y < board->rowCount; ++y) {
-    for (ushort x = 0; x < board->columnCount; ++x) {
-      std::cout << board->results[x][y] << " ";
+//  std::cout << "Final Board:" << std::endl;
+  for (ushort y = 0; y < board[0].size(); ++y) {
+    for (const auto &row : *board) {
+      std::cout << row[y] << " ";
     }
     std::cout << std::endl;
   }

@@ -28,7 +28,7 @@ namespace CPic {
 
 class BoardLogger {
 public:
-  void log(const Board *) const;
+  void log(const std::vector<std::vector<Color>> *) const;
 };
 
 }

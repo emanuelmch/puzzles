@@ -35,6 +35,7 @@ using namespace CPic;
 int main() {
   BruteForceBoardSolver bruteSolver;
   HeuristicBoardSolver heuristicSolver;
+  BoardLogger logger;
 
   auto easyBoards = createEasyBoards();
 
@@ -44,8 +45,10 @@ int main() {
     if (bruteCopy.results == data.solution) {
       cout << "Brute force solved board " << data.name << endl;
     } else {
-      // TODO: Log failures
-      cout << "Brute force failed to solve board " << data.name << endl;
+      cout << "Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      logger.log(&data.solution);
+      cout << "But got this: "<< endl;
+      logger.log(&bruteCopy.results);
     }
 
     auto heuristicCopy = Board(data.board);
@@ -53,8 +56,10 @@ int main() {
     if (heuristicCopy.results == data.solution) {
       cout << "Heuristics solved board " << data.name << endl;
     } else {
-      // TODO: Log failures
-      cout << "Heuristics failed to solve board " << data.name << endl;
+      cout << "Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      logger.log(&data.solution);
+      cout << "But got this: "<< endl;
+      logger.log(&heuristicCopy.results);
     }
   }
 }
