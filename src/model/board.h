@@ -36,7 +36,7 @@ public:
   Board(std::vector<Color>, std::vector<std::vector<Clue>> columns, std::vector<std::vector<Clue>> rows);
   virtual ~Board();
 
-  bool isValid();
+  bool isValid() const;
   BoardState results;
   std::vector<Color> colors;
 

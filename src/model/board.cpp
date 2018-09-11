@@ -56,7 +56,7 @@ Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<C
 
 Board::~Board() = default;
 
-bool Board::isValid() {
+bool Board::isValid() const {
   // Has too many of a color in a column?
   for (ushort i = 0; i < columns.size(); ++i) {
     for (auto color : colors) {
