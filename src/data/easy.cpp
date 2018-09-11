@@ -28,19 +28,6 @@ using std::vector;
 
 using namespace CPic;
 
-inline vector<vector<Color>> pivot(vector<vector<Color>> table) {
-  vector<vector<Color>> result(table[0].size(), vector<Color>(table.size()));
-
-  for (vector<Color>::size_type i = 0; i < table.size(); ++i) {
-    for (vector<vector<Color>>::size_type j = 0; j < table[i].size(); ++j) {
-      result[i][j] = table[j][i];
-    }
-  }
-
-  return result;
-}
-
-
 BoardData createBoardEasy1_1() {
   auto board = BoardBuilder(2).column({2, 3}, {true, true})
           ->column({2, 3}, {true, true})
@@ -53,13 +40,13 @@ BoardData createBoardEasy1_1() {
           ->row({2, 3}, {true, true})
           ->row({2, 3}, {true, true})
           ->build();
-  vector<vector<Color>> solution = {{C0, C0, C0, C0, C0},
+  BoardState solution = pivotState({{C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
                                     {C1, C1, C1, C0, C0},
                                     {C1, C1, C1, C0, C0},
-                                    {C1, C1, C1, C0, C0}};
+                                    {C1, C1, C1, C0, C0}});
 
-  return BoardData("easy1_1", board, pivot(solution));
+  return BoardData("easy1_1", board, solution);
 }
 
 vector<BoardData> CPic::createEasyBoards() {

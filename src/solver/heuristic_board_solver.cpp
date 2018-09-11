@@ -38,7 +38,7 @@ inline void paintBlanksOnRow(Board *, ushort row, Color);
 
 void HeuristicBoardSolver::solve(Board *board) const {
   // TODO: Optimize this when we have more heuristics
-  vector<vector<Color>> oldResults;
+  BoardState oldResults;
   do {
     oldResults = board->results;
 

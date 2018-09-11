@@ -37,11 +37,11 @@ struct BoardData {
 public:
   BoardData(const std::string &name,
             const Board &board,
-            const std::vector<std::vector<Color>> &solution)
+            const BoardState &solution)
           : name(name), board(board), solution(solution) {}
 
   const std::string name;
   const Board board;
-  const std::vector<std::vector<Color>> solution;
+  const BoardState solution;
 };
 }

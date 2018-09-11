@@ -33,10 +33,10 @@ using std::vector;
 
 typedef unsigned short ushort;
 
-short findFirstColorInColumn(vector<vector<Color>> results, ushort column, Color color);
-short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color color);
-short findFirstColorInRow(vector<vector<Color>> results, ushort row, Color color);
-short findLastColorInRow(vector<vector<Color>> results, ushort row, Color color);
+short findFirstColorInColumn(BoardState results, ushort column, Color color);
+short findLastColorInColumn(BoardState results, ushort column, Color color);
+short findFirstColorInRow(BoardState results, ushort row, Color color);
+short findLastColorInRow(BoardState results, ushort row, Color color);
 
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
         : colors(colors),
@@ -142,7 +142,7 @@ bool Board::isValid() {
   return true;
 }
 
-short findFirstColorInColumn(vector<vector<Color>> results, ushort column, Color color) {
+short findFirstColorInColumn(BoardState results, ushort column, Color color) {
   for (short i = 0; i < results[column].size(); ++i) {
     if (results[column][i] == color) {
       return i;
@@ -151,7 +151,7 @@ short findFirstColorInColumn(vector<vector<Color>> results, ushort column, Color
   return -1;
 }
 
-short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color color) {
+short findLastColorInColumn(BoardState results, ushort column, Color color) {
   short index = -1;
   for (short i = 0; i < results[column].size(); ++i) {
     if (results[column][i] == color) {
@@ -161,7 +161,7 @@ short findLastColorInColumn(vector<vector<Color>> results, ushort column, Color 
   return index;
 }
 
-short findFirstColorInRow(vector<vector<Color>> results, ushort row, Color color) {
+short findFirstColorInRow(BoardState results, ushort row, Color color) {
   for (short i = 0; i < results.size(); ++i) {
     if (results[i][row] == color) {
       return i;
@@ -170,7 +170,7 @@ short findFirstColorInRow(vector<vector<Color>> results, ushort row, Color color
   return -1;
 }
 
-short findLastColorInRow(vector<vector<Color>> results, ushort row, Color color) {
+short findLastColorInRow(BoardState results, ushort row, Color color) {
   short index = -1;
   for (short i = 0; i < results.size(); ++i) {
     if (results[i][row] == color) {

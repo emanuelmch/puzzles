@@ -27,6 +27,7 @@
 using namespace CPic;
 
 using std::ostream;
+using std::vector;
 
 typedef unsigned short ushort;
 
@@ -34,7 +35,7 @@ ostream &operator<<(ostream &output, Clue const &clue) {
   return output << clue.amount << " blocks of color " << clue.color;
 }
 
-void BoardLogger::log(const std::vector<std::vector<Color>> *board) const {
+void BoardLogger::log(const BoardState *board) const {
   // TODO: Improve logging
 //  for (ushort i = 0; i < board->columnCount; ++i) {
 //    std::cout << "Column " << i + 1 << ": ";

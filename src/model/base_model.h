@@ -22,13 +22,18 @@
 
 #pragma once
 
-#include "model/board.h"
-
 namespace CPic {
-
-class BoardLogger {
-public:
-  void log(const BoardState *) const;
+enum Color {
+  Blank, C0, C1, C2, C3
 };
 
+class Clue {
+public:
+  Clue(Color color, unsigned short amount, bool contiguous)
+          : color(color), amount(amount), contiguous(contiguous) {}
+
+  Color color;
+  unsigned short amount;
+  bool contiguous;
+};
 }
