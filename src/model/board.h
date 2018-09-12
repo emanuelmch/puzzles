@@ -35,11 +35,11 @@ public:
   Board(std::vector<Color>, std::vector<std::vector<Clue>> columns, std::vector<std::vector<Clue>> rows);
   virtual ~Board();
 
-  std::vector<Color> colors;
+  const std::vector<Color> colors;
 
-  unsigned short colorCount;
-  unsigned short columnCount;
-  unsigned short rowCount;
+  const unsigned short colorCount;
+  const unsigned short columnCount;
+  const unsigned short rowCount;
 
   const Clue clueForColumn(unsigned short, Color) const;
   const Clue clueForRow(unsigned short, Color) const;
