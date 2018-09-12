@@ -33,6 +33,10 @@ public:
 
   BoardState(const std::vector<std::vector<Color>> &table) : internal(table) {}
 
+  unsigned short countColorInColumn(unsigned short, Color) const;
+
+  unsigned short countColorInRow(unsigned short, Color) const;
+
   void push_back(const std::vector<Color> &row) {
     internal.push_back(row);
   }
@@ -47,6 +51,14 @@ public:
 
   std::vector<std::vector<Color>>::const_iterator end() const {
     return internal.end();
+  }
+
+  const std::vector<Color> &at(unsigned short index) const {
+    return internal.at(index);
+  }
+
+  std::vector<Color> &at(unsigned short index) {
+    return internal.at(index);
   }
 
   const std::vector<Color> &operator[](unsigned short index) const {
@@ -81,4 +93,9 @@ inline BoardState pivotState(std::vector<std::vector<Color>> table) {
   return result;
 }
 
+inline BoardState emptyBoardState(unsigned long long int columnCount, unsigned long long int rowCount) {
+  std::vector<std::vector<Color>> emptyBoard(columnCount, std::vector<Color>(rowCount));
+
+  return emptyBoard;
+}
 }

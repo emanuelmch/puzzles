@@ -33,12 +33,11 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
           ->row({1, 1})
           ->build();
 
-  this->solver->solve(&board);
+  auto results = this->solver->solve(&board);
 
   const int columnCount = 2;
   const int rowCount = 2;
 
-  auto results = board.results;
   ASSERT_EQ(results.size(), columnCount);
   for (int col = 0; col < columnCount; ++col) {
     ASSERT_EQ(results[col].size(), rowCount);

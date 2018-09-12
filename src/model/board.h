@@ -36,16 +36,12 @@ public:
   Board(std::vector<Color>, std::vector<std::vector<Clue>> columns, std::vector<std::vector<Clue>> rows);
   virtual ~Board();
 
-  bool isValid() const;
-  BoardState results;
+  bool isValid(const BoardState *results) const;
   std::vector<Color> colors;
 
-  int colorCount;
-  int columnCount;
-  int rowCount;
-
-  unsigned short countColorInColumn(unsigned short, Color) const;
-  unsigned short countColorInRow(unsigned short, Color) const;
+  unsigned short colorCount;
+  unsigned short columnCount;
+  unsigned short rowCount;
 
   const Clue clueForColumn(unsigned short, Color) const;
   const Clue clueForRow(unsigned short, Color) const;

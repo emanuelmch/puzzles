@@ -20,15 +20,28 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include "board_state.h"
 
-#include "board_solver.h"
+#include <algorithm>
 
-namespace CPic {
+typedef unsigned short ushort;
 
-class HeuristicBoardSolver : public BoardSolver {
-public:
-  BoardState solve(const Board *) const override;
-};
+using std::count_if;
 
+using namespace CPic;
+
+ushort BoardState::countColorInColumn(ushort index, Color color) const {
+  auto column = this->at(index);
+  auto begin = column.begin();
+  auto end = column.end();
+
+  return static_cast<ushort>(count_if(begin, end, [color](auto it) {
+    return it == color;
+  }));
+}
+
+ushort BoardState::countColorInRow(ushort row, Color color) const {
+  return static_cast<ushort>(count_if(begin(), end(), [color, row](auto it) {
+    return it[row] == color;
+  }));
 }

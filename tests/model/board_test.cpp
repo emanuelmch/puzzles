@@ -78,280 +78,289 @@ inline Board createRectangularBoard() {
   return createNonContiguousRectangularBoard();
 }
 
-TEST(Board, ShouldInitWithBlankSpaces) {
-  Board board = createSquareBoard();
-
-  auto results = board.results;
-  ASSERT_EQ(results.size(), 2);
-  ASSERT_EQ(results[0].size(), 2);
-  ASSERT_EQ(results[1].size(), 2);
-
-  EXPECT_EQ(results[0][0], Blank);
-  EXPECT_EQ(results[0][1], Blank);
-  EXPECT_EQ(results[1][0], Blank);
-  EXPECT_EQ(results[1][1], Blank);
-}
-
 TEST(Board, ShouldWorkWithRectangularBoards) {
   Board board = createRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  auto results = board.results;
-  ASSERT_EQ(results.size(), 2);
-  ASSERT_EQ(results[0].size(), 3);
-  ASSERT_EQ(results[1].size(), 3);
+  ASSERT_EQ(state.size(), 2);
+  ASSERT_EQ(state[0].size(), 3);
+  ASSERT_EQ(state[1].size(), 3);
 
-  EXPECT_EQ(results[0][0], Blank);
-  EXPECT_EQ(results[0][1], Blank);
-  EXPECT_EQ(results[0][2], Blank);
-  EXPECT_EQ(results[1][0], Blank);
-  EXPECT_EQ(results[1][1], Blank);
-  EXPECT_EQ(results[1][2], Blank);
+  EXPECT_EQ(state[0][0], Blank);
+  EXPECT_EQ(state[0][1], Blank);
+  EXPECT_EQ(state[0][2], Blank);
+  EXPECT_EQ(state[1][0], Blank);
+  EXPECT_EQ(state[1][1], Blank);
+  EXPECT_EQ(state[1][2], Blank);
 }
 
 TEST(Board, ShouldBeValidWhenEmpty) {
   Board board = createSquareBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsAreFilledCorrectly) {
   Board board = createSquareBoardWithDiagonals();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][0] = C1;
-  board.results[1][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][0] = C1;
+  state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithDiagonals();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsAreFilledIncorrectly) {
   Board board = createSquareBoardWithDiagonals();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[1][0] = C0;
-  board.results[1][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[1][0] = C0;
+  state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithDiagonals();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[1][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeValidWhenVerticalLinesAreFilledCorrectly) {
   Board board = createSquareBoardWithVerticalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[1][0] = C1;
-  board.results[1][1] = C1;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[1][0] = C1;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeValidWhenVerticalLinesArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithVerticalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[1][1] = C1;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesAreFilledIncorrectly) {
   Board board = createSquareBoardWithVerticalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][0] = C0;
-  board.results[1][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][0] = C0;
+  state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithVerticalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][1] = C1;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesAreFilledCorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][0] = C0;
-  board.results[1][1] = C1;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][0] = C0;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][1] = C1;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesAreFilledIncorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[1][0] = C0;
-  board.results[1][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[1][0] = C0;
+  state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[1][1] = C1;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeValidWhenNonContiguousRectangularBoardIsFilledCorrectly) {
   Board board = createNonContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[0][2] = C0;
-  board.results[1][0] = C1;
-  board.results[1][1] = C0;
-  board.results[1][2] = C1;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[0][2] = C0;
+  state[1][0] = C1;
+  state[1][1] = C0;
+  state[1][2] = C1;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledWithIncorrectAmounts) {
   Board board = createNonContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[0][2] = C1;
-  board.results[1][0] = C1;
-  board.results[1][1] = C0;
-  board.results[1][2] = C1;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[0][2] = C1;
+  state[1][0] = C1;
+  state[1][1] = C0;
+  state[1][2] = C1;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledInInvalidPlaces) {
   Board board = createNonContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[0][2] = C1;
-  board.results[1][0] = C1;
-  board.results[1][1] = C1;
-  board.results[1][2] = C0;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[0][2] = C1;
+  state[1][0] = C1;
+  state[1][1] = C1;
+  state[1][2] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledWithIncorrectAmounts) {
   Board board = createNonContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][1] = C1;
-  board.results[1][1] = C1;
+  state[0][1] = C1;
+  state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledInInvalidPlaces) {
   Board board = createNonContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
+  state[0][0] = C0;
+  state[0][1] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeValidWhenContiguousRectangularBoardIsFilledCorrectly) {
   Board board = createContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C0;
-  board.results[0][2] = C1;
-  board.results[1][0] = C1;
-  board.results[1][1] = C1;
-  board.results[1][2] = C0;
+  state[0][0] = C0;
+  state[0][1] = C0;
+  state[0][2] = C1;
+  state[1][0] = C1;
+  state[1][1] = C1;
+  state[1][2] = C0;
 
-  ASSERT_EQ(board.isValid(), true);
+  ASSERT_EQ(board.isValid(&state), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledWithIncorrectAmounts) {
   Board board = createContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[0][2] = C1;
-  board.results[1][0] = C1;
-  board.results[1][1] = C1;
-  board.results[1][2] = C0;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[0][2] = C1;
+  state[1][0] = C1;
+  state[1][1] = C1;
+  state[1][2] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledInInvalidPlaces) {
   Board board = createContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][1] = C1;
-  board.results[0][2] = C0;
-  board.results[1][0] = C1;
-  board.results[1][1] = C0;
-  board.results[1][2] = C1;
+  state[0][0] = C0;
+  state[0][1] = C1;
+  state[0][2] = C0;
+  state[1][0] = C1;
+  state[1][1] = C0;
+  state[1][2] = C1;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledWithIncorrectAmounts) {
   Board board = createContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C1;
-  board.results[0][1] = C1;
+  state[0][0] = C1;
+  state[0][1] = C1;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledInInvalidPlaces) {
   Board board = createContiguousRectangularBoard();
+  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  board.results[0][0] = C0;
-  board.results[0][2] = C0;
+  state[0][0] = C0;
+  state[0][2] = C0;
 
-  ASSERT_EQ(board.isValid(), false);
+  ASSERT_EQ(board.isValid(&state), false);
 }
 
 //TODO: Tests for  ushort countColorIn{Column,Row}
