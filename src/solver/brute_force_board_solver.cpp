@@ -85,7 +85,7 @@ BoardState BruteForceBoardSolver::solve(const Board *board) const {
   const Node *lastNode = nullptr;
   while (!nodes.empty()) {
     auto front = nodes.front();
-    if (front.board->isValid(&front.state)) {
+    if (front.state.isValid(front.board)) {
       return front.state;
     } else {
       nodes.pop();

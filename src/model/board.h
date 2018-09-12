@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "base_model.h"
-#include "board_state.h"
 
 namespace CPic {
 
@@ -36,7 +35,6 @@ public:
   Board(std::vector<Color>, std::vector<std::vector<Clue>> columns, std::vector<std::vector<Clue>> rows);
   virtual ~Board();
 
-  bool isValid(const BoardState *results) const;
   std::vector<Color> colors;
 
   unsigned short colorCount;

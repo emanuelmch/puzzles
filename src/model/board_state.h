@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "base_model.h"
+#include "board.h"
 
 namespace CPic {
 class BoardState {
@@ -32,6 +33,8 @@ public:
   BoardState() = default;
 
   BoardState(const std::vector<std::vector<Color>> &table) : internal(table) {}
+
+  bool isValid(const Board *) const;
 
   unsigned short countColorInColumn(unsigned short, Color) const;
 

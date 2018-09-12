@@ -22,6 +22,8 @@
 
 #include "model/board_builder.h"
 
+#include "model/board_state.h"
+
 #include <gtest/gtest.h>
 
 using namespace CPic;
@@ -98,7 +100,7 @@ TEST(Board, ShouldBeValidWhenEmpty) {
   Board board = createSquareBoard();
   BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsAreFilledCorrectly) {
@@ -110,7 +112,7 @@ TEST(Board, ShouldBeValidWhenDiagonalsAreFilledCorrectly) {
   state[1][0] = C1;
   state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsArePartiallyFilledCorrectly) {
@@ -121,7 +123,7 @@ TEST(Board, ShouldBeValidWhenDiagonalsArePartiallyFilledCorrectly) {
   state[0][1] = C1;
   state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsAreFilledIncorrectly) {
@@ -133,7 +135,7 @@ TEST(Board, ShouldBeInvalidWhenDiagonalsAreFilledIncorrectly) {
   state[1][0] = C0;
   state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsArePartiallyFilledIncorrectly) {
@@ -144,7 +146,7 @@ TEST(Board, ShouldBeInvalidWhenDiagonalsArePartiallyFilledIncorrectly) {
   state[0][1] = C0;
   state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeValidWhenVerticalLinesAreFilledCorrectly) {
@@ -156,7 +158,7 @@ TEST(Board, ShouldBeValidWhenVerticalLinesAreFilledCorrectly) {
   state[1][0] = C1;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeValidWhenVerticalLinesArePartiallyFilledCorrectly) {
@@ -167,7 +169,7 @@ TEST(Board, ShouldBeValidWhenVerticalLinesArePartiallyFilledCorrectly) {
   state[0][1] = C0;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesAreFilledIncorrectly) {
@@ -179,7 +181,7 @@ TEST(Board, ShouldBeInvalidWhenVerticalLinesAreFilledIncorrectly) {
   state[1][0] = C0;
   state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesArePartiallyFilledIncorrectly) {
@@ -190,7 +192,7 @@ TEST(Board, ShouldBeInvalidWhenVerticalLinesArePartiallyFilledIncorrectly) {
   state[0][1] = C1;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesAreFilledCorrectly) {
@@ -202,7 +204,7 @@ TEST(Board, ShouldBeValidWhenHorizontalLinesAreFilledCorrectly) {
   state[1][0] = C0;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesArePartiallyFilledCorrectly) {
@@ -213,7 +215,7 @@ TEST(Board, ShouldBeValidWhenHorizontalLinesArePartiallyFilledCorrectly) {
   state[0][1] = C1;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesAreFilledIncorrectly) {
@@ -225,7 +227,7 @@ TEST(Board, ShouldBeInvalidWhenHorizontalLinesAreFilledIncorrectly) {
   state[1][0] = C0;
   state[1][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
@@ -236,7 +238,7 @@ TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
   state[0][1] = C0;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeValidWhenNonContiguousRectangularBoardIsFilledCorrectly) {
@@ -250,7 +252,7 @@ TEST(Board, ShouldBeValidWhenNonContiguousRectangularBoardIsFilledCorrectly) {
   state[1][1] = C0;
   state[1][2] = C1;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledWithIncorrectAmounts) {
@@ -264,7 +266,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledWithIncorrec
   state[1][1] = C0;
   state[1][2] = C1;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledInInvalidPlaces) {
@@ -278,7 +280,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledInInvalidPla
   state[1][1] = C1;
   state[1][2] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledWithIncorrectAmounts) {
@@ -288,7 +290,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledWit
   state[0][1] = C1;
   state[1][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledInInvalidPlaces) {
@@ -298,7 +300,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledInI
   state[0][0] = C0;
   state[0][1] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeValidWhenContiguousRectangularBoardIsFilledCorrectly) {
@@ -312,7 +314,7 @@ TEST(Board, ShouldBeValidWhenContiguousRectangularBoardIsFilledCorrectly) {
   state[1][1] = C1;
   state[1][2] = C0;
 
-  ASSERT_EQ(board.isValid(&state), true);
+  ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledWithIncorrectAmounts) {
@@ -326,7 +328,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledWithIncorrectAm
   state[1][1] = C1;
   state[1][2] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledInInvalidPlaces) {
@@ -340,7 +342,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledInInvalidPlaces
   state[1][1] = C0;
   state[1][2] = C1;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledWithIncorrectAmounts) {
@@ -350,7 +352,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledWithIn
   state[0][0] = C1;
   state[0][1] = C1;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledInInvalidPlaces) {
@@ -360,7 +362,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledInInva
   state[0][0] = C0;
   state[0][2] = C0;
 
-  ASSERT_EQ(board.isValid(&state), false);
+  ASSERT_EQ(state.isValid(&board), false);
 }
 
 //TODO: Tests for  ushort countColorIn{Column,Row}

@@ -30,6 +30,135 @@ using std::count_if;
 
 using namespace CPic;
 
+short findFirstColorInColumn(const BoardState *state, ushort column, Color color);
+short findLastColorInColumn(const BoardState *state, ushort column, Color color);
+short findFirstColorInRow(const BoardState *state, ushort row, Color color);
+short findLastColorInRow(const BoardState *state, ushort row, Color color);
+
+bool BoardState::isValid(const Board *board) const {
+  // Has too many of a color in a column?
+  for (ushort i = 0; i < board->columnCount; ++i) {
+    for (auto color : board->colors) {
+      auto count = countColorInColumn(i, color);
+      if (count > board->clueForColumn(i, color).amount) {
+        return false;
+      }
+    }
+  }
+
+  // Has too many of a color in a row?
+  for (ushort i = 0; i < board->rowCount; ++i) {
+    for (auto color : board->colors) {
+      auto count = countColorInRow(i, color);
+      if (count > board->clueForRow(i, color).amount) {
+        return false;
+      }
+    }
+  }
+
+  // Breaks the contiguity clue in a column?
+  for (ushort i = 0; i < board->columnCount; ++i) {
+    for (auto color : board->colors) {
+      auto clue = board->clueForColumn(i, color);
+      if (clue.amount == 1) continue;
+
+      auto first = findFirstColorInColumn(this, i, color);
+      if (first == -1) continue;
+      auto last = findLastColorInColumn(this, i, color);
+
+      if (clue.contiguous) {
+        if ((last - first) >= clue.amount) {
+          return false;
+        } else {
+          for (int j = first + 1; j < last; ++j) {
+            auto result = at(i)[j];
+            if (result != clue.color && result != Blank) {
+              return false;
+            }
+          }
+        }
+      } else {
+        auto count = countColorInColumn(i, color);
+        if (count != clue.amount) continue;
+        if ((last - first) <= (clue.amount - 1)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  // Breaks the contiguity clue in a row?
+  for (ushort i = 0; i < board->rowCount; ++i) {
+    for (auto color : board->colors) {
+      auto clue = board->clueForRow(i, color);
+      if (clue.amount == 1) continue;
+
+      auto first = findFirstColorInRow(this, i, color);
+      if (first == -1) continue;
+      auto last = findLastColorInRow(this, i, color);
+
+      if (clue.contiguous) {
+        if ((last - first) >= clue.amount) {
+          return false;
+        } else {
+          for (int j = first + 1; j < last; ++j) {
+            auto result = at(j)[i];
+            if (result != clue.color && result != Blank) {
+              return false;
+            }
+          }
+        }
+      } else {
+        auto count = countColorInRow(i, color);
+        if (count != clue.amount) continue;
+        if ((last - first) <= (clue.amount - 1)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+short findFirstColorInColumn(const BoardState *state, ushort column, Color color) {
+  for (short i = 0; i < state->at(column).size(); ++i) {
+    if (state->at(column)[i] == color) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+short findLastColorInColumn(const BoardState *state, ushort column, Color color) {
+  short index = -1;
+  for (short i = 0; i < state->at(column).size(); ++i) {
+    if (state->at(column)[i] == color) {
+      index = i;
+    }
+  }
+  return index;
+}
+
+short findFirstColorInRow(const BoardState *state, ushort row, Color color) {
+  for (short i = 0; i < state->size(); ++i) {
+    if (state->at(i)[row] == color) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+short findLastColorInRow(const BoardState *state, ushort row, Color color) {
+  short index = -1;
+  for (short i = 0; i < state->size(); ++i) {
+    if (state->at(i)[row] == color) {
+      index = i;
+    }
+  }
+  return index;
+}
+
 ushort BoardState::countColorInColumn(ushort index, Color color) const {
   auto column = this->at(index);
   auto begin = column.begin();

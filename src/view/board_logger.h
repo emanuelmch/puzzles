@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "model/board.h"
+#include "model/board_state.h"
 
 namespace CPic {
 
