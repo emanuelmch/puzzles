@@ -22,7 +22,9 @@
 
 #include "brute_force_board_solver.h"
 
+#include <cassert>
 #include <queue>
+#include <utility>
 #include <vector>
 
 using namespace CPic;
@@ -34,7 +36,7 @@ typedef unsigned short ushort;
 
 struct Node {
 public:
-  explicit Node(const Board *board, BoardState state) : board(board), state(state), nextRow(0), nextCol(0) {
+  explicit Node(const Board *_board, BoardState _state) : board(_board), state(std::move(_state)), nextRow(0), nextCol(0) {
     for (ushort row = 0; row < board->rowCount; ++row) {
       for (ushort col = 0; col < board->columnCount; ++col) {
         state.at(col)[row] = C0;
@@ -42,11 +44,7 @@ public:
     }
   }
 
-  Node(const Node &other) :
-          board(other.board),
-          state(other.state),
-          nextRow(other.nextRow),
-          nextCol(other.nextCol) {}
+  Node(const Node &other) = default;
 
   ~Node() = default;
 
@@ -78,9 +76,11 @@ private:
 };
 
 BoardState BruteForceBoardSolver::solve(const Board *board) const {
+  assert(board->columnCount > 0);
+  assert(board->rowCount > 0);
   queue<Node> nodes;
   std::vector<std::vector<Color>> emptyBoard(board->columnCount, std::vector<Color>(board->rowCount, C0));
-  nodes.push(Node(board, emptyBoard));
+  nodes.push(Node(board, BoardState(emptyBoard)));
 
   const Node *lastNode = nullptr;
   while (!nodes.empty()) {
@@ -96,6 +96,8 @@ BoardState BruteForceBoardSolver::solve(const Board *board) const {
       }
     }
   }
+
+  assert(lastNode != nullptr);
 
   return lastNode->state;
 }

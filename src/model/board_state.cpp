@@ -101,7 +101,7 @@ bool BoardState::isValid(const Board *board) const {
         if ((last - first) >= clue.amount) {
           return false;
         } else {
-          for (int j = first + 1; j < last; ++j) {
+          for (auto j = static_cast<ushort>(first + 1); j < last; ++j) {
             auto result = at(j)[i];
             if (result != clue.color && result != Blank) {
               return false;
@@ -122,7 +122,8 @@ bool BoardState::isValid(const Board *board) const {
 }
 
 short findFirstColorInColumn(const BoardState *state, ushort column, Color color) {
-  for (short i = 0; i < state->at(column).size(); ++i) {
+  auto size = static_cast<short>(state->at(column).size());
+  for (short i = 0; i < size; ++i) {
     if (state->at(column)[i] == color) {
       return i;
     }
@@ -131,8 +132,9 @@ short findFirstColorInColumn(const BoardState *state, ushort column, Color color
 }
 
 short findLastColorInColumn(const BoardState *state, ushort column, Color color) {
+  auto size = static_cast<short >(state->at(column).size());
   short index = -1;
-  for (short i = 0; i < state->at(column).size(); ++i) {
+  for (short i = 0; i < size; ++i) {
     if (state->at(column)[i] == color) {
       index = i;
     }
@@ -141,7 +143,8 @@ short findLastColorInColumn(const BoardState *state, ushort column, Color color)
 }
 
 short findFirstColorInRow(const BoardState *state, ushort row, Color color) {
-  for (short i = 0; i < state->size(); ++i) {
+  auto size = static_cast<ushort>(state->size());
+  for (ushort i = 0; i < size; ++i) {
     if (state->at(i)[row] == color) {
       return i;
     }
@@ -150,8 +153,10 @@ short findFirstColorInRow(const BoardState *state, ushort row, Color color) {
 }
 
 short findLastColorInRow(const BoardState *state, ushort row, Color color) {
+  auto size = static_cast<ushort>(state->size());
   short index = -1;
-  for (short i = 0; i < state->size(); ++i) {
+
+  for (ushort i = 0; i < size; ++i) {
     if (state->at(i)[row] == color) {
       index = i;
     }

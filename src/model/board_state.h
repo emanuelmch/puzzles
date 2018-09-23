@@ -1,3 +1,5 @@
+#include <utility>
+
 /*
  * Copyright (c) 2018 Emanuel Machado da Silva
  *
@@ -32,7 +34,7 @@ class BoardState {
 public:
   BoardState() = default;
 
-  BoardState(const std::vector<std::vector<Color>> &table) : internal(table) {}
+  explicit BoardState(std::vector<std::vector<Color>> table) : internal(std::move(table)) {}
 
   bool isValid(const Board *) const;
 
@@ -41,7 +43,7 @@ public:
   unsigned short countColorInRow(unsigned short, Color) const;
 
   void push_back(const std::vector<Color> &row) {
-    internal.push_back(row);
+    internal.emplace_back(row);
   }
 
   unsigned long long int size() const {
@@ -93,12 +95,12 @@ inline BoardState pivotState(std::vector<std::vector<Color>> table) {
     }
   }
 
-  return result;
+  return BoardState(result);
 }
 
 inline BoardState emptyBoardState(unsigned long long int columnCount, unsigned long long int rowCount) {
   std::vector<std::vector<Color>> emptyBoard(columnCount, std::vector<Color>(rowCount));
 
-  return emptyBoard;
+  return BoardState(emptyBoard);
 }
 }
