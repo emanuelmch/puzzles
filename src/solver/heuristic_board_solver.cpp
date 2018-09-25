@@ -66,8 +66,8 @@ void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
 void paintBlanksOnColumn(const Board *board, BoardState *state, ushort column, Color color) {
   auto rowCount = static_cast<ushort>(board->rowCount);
   for (ushort row = 0; row < rowCount; ++row) {
-    if (state->at(column)[row] == Blank) {
-      state->at(column)[row] = color;
+    if (state->colorAt(column, row) == Blank) {
+      state->setColorAt(column, row, color);
     }
   }
 }
@@ -89,8 +89,8 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
 void paintBlanksOnRow(const Board *board, BoardState *state, ushort row, Color color) {
   auto columnCount = static_cast<ushort>(board->columnCount);
   for (ushort column = 0; column < columnCount; ++column) {
-    if (state->at(column)[row] == Blank) {
-      state->at(column)[row] = color;
+    if (state->colorAt(column, row) == Blank) {
+      state->setColorAt(column, row, color);
     }
   }
 }

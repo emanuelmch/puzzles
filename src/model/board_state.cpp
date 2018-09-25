@@ -23,6 +23,9 @@
 #include "board_state.h"
 
 #include <algorithm>
+#include <cassert>
+
+#include "../common/numbers.h"
 
 typedef unsigned short ushort;
 
@@ -62,16 +65,20 @@ bool BoardState::isValid(const Board *board) const {
       auto clue = board->clueForColumn(i, color);
       if (clue.amount == 1) continue;
 
-      auto first = findFirstColorInColumn(this, i, color);
-      if (first == -1) continue;
+      auto _first = findFirstColorInColumn(this, i, color);
+      if (_first < 0) continue;
+
+      assert(Numbers::fitsUShort(_first));
+      auto first = static_cast<ushort>(_first);
       auto last = findLastColorInColumn(this, i, color);
 
       if (clue.contiguous) {
         if ((last - first) >= clue.amount) {
           return false;
         } else {
-          for (int j = first + 1; j < last; ++j) {
-            auto result = at(i)[j];
+          // FIXME: Shouldn't bother test the case `j == first`
+          for (ushort j = first; j < last; ++j) {
+            auto result = colorAt(i, j);
             if (result != clue.color && result != Blank) {
               return false;
             }
@@ -102,7 +109,7 @@ bool BoardState::isValid(const Board *board) const {
           return false;
         } else {
           for (auto j = static_cast<ushort>(first + 1); j < last; ++j) {
-            auto result = at(j)[i];
+            auto result = colorAt(j, i);
             if (result != clue.color && result != Blank) {
               return false;
             }
@@ -122,9 +129,9 @@ bool BoardState::isValid(const Board *board) const {
 }
 
 short findFirstColorInColumn(const BoardState *state, ushort column, Color color) {
-  auto size = static_cast<short>(state->at(column).size());
-  for (short i = 0; i < size; ++i) {
-    if (state->at(column)[i] == color) {
+  auto size = static_cast<ushort>(state->rowCount(column));
+  for (ushort i = 0; i < size; ++i) {
+    if (state->colorAt(column, i) == color) {
       return i;
     }
   }
@@ -132,10 +139,10 @@ short findFirstColorInColumn(const BoardState *state, ushort column, Color color
 }
 
 short findLastColorInColumn(const BoardState *state, ushort column, Color color) {
-  auto size = static_cast<short >(state->at(column).size());
+  auto size = static_cast<short>(state->rowCount(column));
   short index = -1;
-  for (short i = 0; i < size; ++i) {
-    if (state->at(column)[i] == color) {
+  for (ushort i = 0; i < size; ++i) {
+    if (state->colorAt(column, i) == color) {
       index = i;
     }
   }
@@ -143,9 +150,9 @@ short findLastColorInColumn(const BoardState *state, ushort column, Color color)
 }
 
 short findFirstColorInRow(const BoardState *state, ushort row, Color color) {
-  auto size = static_cast<ushort>(state->size());
+  auto size = static_cast<ushort>(state->columnCount());
   for (ushort i = 0; i < size; ++i) {
-    if (state->at(i)[row] == color) {
+    if (state->colorAt(i, row) == color) {
       return i;
     }
   }
@@ -153,11 +160,11 @@ short findFirstColorInRow(const BoardState *state, ushort row, Color color) {
 }
 
 short findLastColorInRow(const BoardState *state, ushort row, Color color) {
-  auto size = static_cast<ushort>(state->size());
+  auto size = static_cast<ushort>(state->columnCount());
   short index = -1;
 
   for (ushort i = 0; i < size; ++i) {
-    if (state->at(i)[row] == color) {
+    if (state->colorAt(i, row) == color) {
       index = i;
     }
   }
@@ -165,7 +172,7 @@ short findLastColorInRow(const BoardState *state, ushort row, Color color) {
 }
 
 ushort BoardState::countColorInColumn(ushort index, Color color) const {
-  auto column = this->at(index);
+  auto column = this->internal.at(index);
   auto begin = column.begin();
   auto end = column.end();
 
@@ -176,6 +183,6 @@ ushort BoardState::countColorInColumn(ushort index, Color color) const {
 
 ushort BoardState::countColorInRow(ushort row, Color color) const {
   return static_cast<ushort>(count_if(begin(), end(), [color, row](auto it) {
-    return it[row] == color;
+    return it.row(row) == color;
   }));
 }

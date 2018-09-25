@@ -39,7 +39,7 @@ public:
   explicit Node(const Board *_board, BoardState _state) : board(_board), state(std::move(_state)), nextRow(0), nextCol(0) {
     for (ushort row = 0; row < board->rowCount; ++row) {
       for (ushort col = 0; col < board->columnCount; ++col) {
-        state.at(col)[row] = C0;
+        this->state.setColorAt(col, row, C0);
       }
     }
   }
@@ -54,7 +54,7 @@ public:
 
     for (auto color: board->colors) {
       Node other(*this);
-      other.state[nextRow][nextCol] = color;
+      other.state.setColorAt(nextRow, nextCol, color);
       other.nextCol++;
 
       if (other.nextCol == this->board->columnCount) {
@@ -79,7 +79,7 @@ BoardState BruteForceBoardSolver::solve(const Board *board) const {
   assert(board->columnCount > 0);
   assert(board->rowCount > 0);
   queue<Node> nodes;
-  std::vector<std::vector<Color>> emptyBoard(board->columnCount, std::vector<Color>(board->rowCount, C0));
+  vector<BoardColumn> emptyBoard(board->columnCount, BoardColumn(vector<Color>(board->rowCount, C0)));
   nodes.push(Node(board, BoardState(emptyBoard)));
 
   const Node *lastNode = nullptr;

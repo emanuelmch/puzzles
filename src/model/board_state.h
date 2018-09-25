@@ -30,48 +30,76 @@
 #include "board.h"
 
 namespace CPic {
+
+class BoardColumn {
+public:
+  explicit BoardColumn(const std::vector<Color>::size_type size) : internal(size) {}
+  explicit BoardColumn(const std::vector<Color> &values) : internal(values) {}
+
+  void setColorAt(unsigned short index, Color color) {
+    internal[index] = color;
+  }
+
+  Color row(unsigned short index) const {
+    return internal[index];
+  }
+
+  unsigned short size() const {
+    return static_cast<unsigned short>(internal.size());
+  }
+
+  const std::vector<Color>::const_iterator begin() const {
+    return internal.begin();
+  }
+
+  const std::vector<Color>::const_iterator end() const {
+    return internal.end();
+  }
+
+  bool operator==(const BoardColumn &other) const {
+    return internal == other.internal;
+  }
+
+private:
+  std::vector<Color> internal;
+};
+
 class BoardState {
 public:
   BoardState() = default;
-
-  explicit BoardState(std::vector<std::vector<Color>> table) : internal(std::move(table)) {}
+  explicit BoardState(const std::vector<BoardColumn> &table) : internal(std::move(table)) {}
 
   bool isValid(const Board *) const;
 
   unsigned short countColorInColumn(unsigned short, Color) const;
-
   unsigned short countColorInRow(unsigned short, Color) const;
 
-  void push_back(const std::vector<Color> &row) {
-    internal.emplace_back(row);
+  void push_back(const BoardColumn &row) {
+    internal.push_back(row);
   }
 
-  unsigned long long int size() const {
+  void setColorAt(unsigned short column, unsigned short row, Color color) {
+    internal.at(column).setColorAt(row, color);
+  }
+
+  unsigned long long int rowCount(unsigned short column) const {
+    return internal[column].size();
+  }
+
+  unsigned long long int columnCount() const {
     return internal.size();
   }
 
-  std::vector<std::vector<Color>>::const_iterator begin() const {
+  const std::vector<BoardColumn>::const_iterator begin() const {
     return internal.begin();
   }
 
-  std::vector<std::vector<Color>>::const_iterator end() const {
+  const std::vector<BoardColumn>::const_iterator end() const {
     return internal.end();
   }
 
-  const std::vector<Color> &at(unsigned short index) const {
-    return internal.at(index);
-  }
-
-  std::vector<Color> &at(unsigned short index) {
-    return internal.at(index);
-  }
-
-  const std::vector<Color> &operator[](unsigned short index) const {
-    return internal.at(index);
-  }
-
-  std::vector<Color> &operator[](unsigned short index) {
-    return internal.at(index);
+  Color colorAt(unsigned short column, unsigned short row) const {
+    return internal.at(column).row(row);
   }
 
   bool operator==(const BoardState &other) const {
@@ -83,15 +111,15 @@ public:
   }
 
 private:
-  std::vector<std::vector<Color>> internal;
+  std::vector<BoardColumn> internal;
 };
 
 inline BoardState pivotState(std::vector<std::vector<Color>> table) {
-  std::vector<std::vector<Color>> result(table[0].size(), std::vector<Color>(table.size()));
+  std::vector<BoardColumn> result(table[0].size(), BoardColumn(table.size()));
 
   for (std::vector<Color>::size_type i = 0; i < table.size(); ++i) {
     for (std::vector<std::vector<Color>>::size_type j = 0; j < table[i].size(); ++j) {
-      result[i][j] = table[j][i];
+      result[i].setColorAt(j, table[j][i]);
     }
   }
 
@@ -99,7 +127,7 @@ inline BoardState pivotState(std::vector<std::vector<Color>> table) {
 }
 
 inline BoardState emptyBoardState(unsigned long long int columnCount, unsigned long long int rowCount) {
-  std::vector<std::vector<Color>> emptyBoard(columnCount, std::vector<Color>(rowCount));
+  std::vector<BoardColumn> emptyBoard(columnCount, BoardColumn(rowCount));
 
   return BoardState(emptyBoard);
 }

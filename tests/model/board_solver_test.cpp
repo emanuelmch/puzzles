@@ -38,15 +38,15 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   const int columnCount = 2;
   const int rowCount = 2;
 
-  ASSERT_EQ(results.size(), columnCount);
+  ASSERT_EQ(results.columnCount(), columnCount);
   for (int col = 0; col < columnCount; ++col) {
-    ASSERT_EQ(results[col].size(), rowCount);
+    ASSERT_EQ(results.rowCount(col), rowCount);
   }
 
-  EXPECT_EQ(results[0][0], C0);
-  EXPECT_EQ(results[0][1], C0);
-  EXPECT_EQ(results[1][0], C1);
-  EXPECT_EQ(results[1][1], C1);
+  EXPECT_EQ(results.colorAt(0, 0), C0);
+  EXPECT_EQ(results.colorAt(0, 1), C0);
+  EXPECT_EQ(results.colorAt(1, 0), C1);
+  EXPECT_EQ(results.colorAt(1, 0), C1);
 }
 
 //TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
