@@ -30,8 +30,14 @@
 typedef unsigned short ushort;
 
 using std::count_if;
+using std::vector;
 
 using namespace CPic;
+
+BoardColumn::BoardColumn(const vector<Color> &values) : internal(values) {
+  assert(values.empty() == false);
+  assert(Numbers::fitsUShort(static_cast<unsigned long long int>(values.size())));
+}
 
 short findFirstColorInColumn(const BoardState *state, ushort column, Color color);
 short findLastColorInColumn(const BoardState *state, ushort column, Color color);
@@ -129,7 +135,7 @@ bool BoardState::isValid(const Board *board) const {
 }
 
 short findFirstColorInColumn(const BoardState *state, ushort column, Color color) {
-  auto size = static_cast<ushort>(state->rowCount(column));
+  auto size = static_cast<ushort>(state->rowCount());
   for (ushort i = 0; i < size; ++i) {
     if (state->colorAt(column, i) == color) {
       return i;
@@ -139,7 +145,7 @@ short findFirstColorInColumn(const BoardState *state, ushort column, Color color
 }
 
 short findLastColorInColumn(const BoardState *state, ushort column, Color color) {
-  auto size = static_cast<short>(state->rowCount(column));
+  auto size = static_cast<short>(state->rowCount());
   short index = -1;
   for (ushort i = 0; i < size; ++i) {
     if (state->colorAt(column, i) == color) {

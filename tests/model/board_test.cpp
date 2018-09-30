@@ -85,8 +85,7 @@ TEST(Board, ShouldWorkWithRectangularBoards) {
   BoardState state = emptyBoardState(board.columnCount, board.rowCount);
 
   ASSERT_EQ(state.columnCount(), 2);
-  ASSERT_EQ(state.rowCount(0), 3);
-  ASSERT_EQ(state.rowCount(1), 3);
+  ASSERT_EQ(state.rowCount(), 3);
 
   EXPECT_EQ(state.colorAt(0, 0), Blank);
   EXPECT_EQ(state.colorAt(0, 1), Blank);

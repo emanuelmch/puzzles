@@ -39,9 +39,7 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   const int rowCount = 2;
 
   ASSERT_EQ(results.columnCount(), columnCount);
-  for (int col = 0; col < columnCount; ++col) {
-    ASSERT_EQ(results.rowCount(col), rowCount);
-  }
+  ASSERT_EQ(results.rowCount(), rowCount);
 
   EXPECT_EQ(results.colorAt(0, 0), C0);
   EXPECT_EQ(results.colorAt(0, 1), C0);

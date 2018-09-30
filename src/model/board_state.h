@@ -33,8 +33,8 @@ namespace CPic {
 
 class BoardColumn {
 public:
-  explicit BoardColumn(const std::vector<Color>::size_type size) : internal(size) {}
-  explicit BoardColumn(const std::vector<Color> &values) : internal(values) {}
+  explicit BoardColumn(const unsigned short size) : internal(size) {}
+  explicit BoardColumn(const std::vector<Color> &values);
 
   void setColorAt(unsigned short index, Color color) {
     internal[index] = color;
@@ -44,7 +44,7 @@ public:
     return internal[index];
   }
 
-  unsigned short size() const {
+  unsigned short rowCount() const {
     return static_cast<unsigned short>(internal.size());
   }
 
@@ -67,10 +67,9 @@ private:
 class BoardState {
 public:
   BoardState() = default;
-  explicit BoardState(const std::vector<BoardColumn> &table) : internal(std::move(table)) {}
+  explicit BoardState(std::vector<BoardColumn> table) : internal(std::move(table)) {}
 
   bool isValid(const Board *) const;
-
   unsigned short countColorInColumn(unsigned short, Color) const;
   unsigned short countColorInRow(unsigned short, Color) const;
 
@@ -82,8 +81,8 @@ public:
     internal.at(column).setColorAt(row, color);
   }
 
-  unsigned long long int rowCount(unsigned short column) const {
-    return internal[column].size();
+  unsigned long long int rowCount() const {
+    return internal[0].rowCount();
   }
 
   unsigned long long int columnCount() const {
@@ -115,10 +114,12 @@ private:
 };
 
 inline BoardState pivotState(std::vector<std::vector<Color>> table) {
-  std::vector<BoardColumn> result(table[0].size(), BoardColumn(table.size()));
+  auto rowCount = static_cast<unsigned short>(table.size());
+  auto columnCount = static_cast<unsigned short>(table[0].size());
+  std::vector<BoardColumn> result(columnCount, BoardColumn(rowCount));
 
-  for (std::vector<Color>::size_type i = 0; i < table.size(); ++i) {
-    for (std::vector<std::vector<Color>>::size_type j = 0; j < table[i].size(); ++j) {
+  for (unsigned short i = 0; i < rowCount; ++i) {
+    for (unsigned short j = 0; j < columnCount; ++j) {
       result[i].setColorAt(j, table[j][i]);
     }
   }
@@ -126,7 +127,7 @@ inline BoardState pivotState(std::vector<std::vector<Color>> table) {
   return BoardState(result);
 }
 
-inline BoardState emptyBoardState(unsigned long long int columnCount, unsigned long long int rowCount) {
+inline BoardState emptyBoardState(unsigned short columnCount, unsigned short rowCount) {
   std::vector<BoardColumn> emptyBoard(columnCount, BoardColumn(rowCount));
 
   return BoardState(emptyBoard);
