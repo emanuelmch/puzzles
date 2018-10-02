@@ -28,6 +28,27 @@ using std::vector;
 
 using namespace CPic;
 
+BoardData createBoardEasy1_0() {
+  auto board = BoardBuilder(1).column({5}, {true})
+          ->column({5}, {true})
+          ->column({5}, {true})
+          ->column({5}, {true})
+          ->column({5}, {true})
+          ->row({5}, {true})
+          ->row({5}, {true})
+          ->row({5}, {true})
+          ->row({5}, {true})
+          ->row({5}, {true})
+          ->build();
+  BoardState solution = pivotState({{C0, C0, C0, C0, C0},
+                                    {C0, C0, C0, C0, C0},
+                                    {C0, C0, C0, C0, C0},
+                                    {C0, C0, C0, C0, C0},
+                                    {C0, C0, C0, C0, C0}});
+
+  return BoardData("easy1_0", board, solution);
+}
+
 BoardData createBoardEasy1_1() {
   auto board = BoardBuilder(2).column({2, 3}, {true, true})
           ->column({2, 3}, {true, true})
@@ -50,5 +71,5 @@ BoardData createBoardEasy1_1() {
 }
 
 vector<BoardData> CPic::createEasyBoards() {
-  return {createBoardEasy1_1()};
+  return {createBoardEasy1_0(), createBoardEasy1_1()};
 }
