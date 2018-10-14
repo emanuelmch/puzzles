@@ -36,13 +36,8 @@ typedef unsigned short ushort;
 
 struct Node {
 public:
-  explicit Node(const Board *_board, BoardState _state) : board(_board), state(std::move(_state)), nextRow(0), nextCol(0) {
-    for (ushort row = 0; row < board->rowCount; ++row) {
-      for (ushort col = 0; col < board->columnCount; ++col) {
-        this->state.setColorAt(col, row, C0);
-      }
-    }
-  }
+  explicit Node(const Board *_board, BoardState _state) :
+          board(_board), state(std::move(_state)), nextRow(0), nextCol(0) {}
 
   Node(const Node &other) = default;
 
