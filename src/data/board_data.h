@@ -45,4 +45,17 @@ public:
   const Board board;
   const BoardState solution;
 };
+
+std::vector<BoardData> createTrivialBoards();
+std::vector<BoardData> createEasyBoards();
+
+inline std::vector<BoardData> createAllBoards() {
+  std::vector<BoardData> trivial = createTrivialBoards();
+  std::vector<BoardData> easy = createEasyBoards();
+
+  std::move(easy.begin(), easy.end(), std::back_inserter(trivial));
+
+  return trivial;
+}
+
 }

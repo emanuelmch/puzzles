@@ -28,27 +28,39 @@ using std::vector;
 
 using namespace CPic;
 
-BoardData createBoardEasy1_1() {
-  auto board = BoardBuilder(2).column({2, 3}, {true, true})
-          ->column({2, 3}, {true, true})
-          ->column({2, 3}, {true, true})
+BoardData createBoardTrivial1_0() {
+  auto board = BoardBuilder(1).column({5}, {true})
+          ->column({5}, {true})
+          ->column({5}, {true})
           ->column({5}, {true})
           ->column({5}, {true})
           ->row({5}, {true})
           ->row({5}, {true})
-          ->row({2, 3}, {true, true})
-          ->row({2, 3}, {true, true})
-          ->row({2, 3}, {true, true})
+          ->row({5}, {true})
+          ->row({5}, {true})
+          ->row({5}, {true})
           ->build();
   BoardState solution = pivotState({{C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
-                                    {C1, C1, C1, C0, C0},
-                                    {C1, C1, C1, C0, C0},
-                                    {C1, C1, C1, C0, C0}});
+                                    {C0, C0, C0, C0, C0},
+                                    {C0, C0, C0, C0, C0},
+                                    {C0, C0, C0, C0, C0}});
 
-  return BoardData("easy1_1", board, solution);
+  return BoardData("trivial1_0", board, solution);
 }
 
-vector<BoardData> CPic::createEasyBoards() {
-  return {createBoardEasy1_1()};
+BoardData createBoardTrivial1_1() {
+  auto board = BoardBuilder(2).column({0,2}, {false,true})
+          ->column({0,2}, {false,true})
+          ->row({0,2}, {false,true})
+          ->row({0,2}, {false,true})
+          ->build();
+  BoardState solution = pivotState({{C1, C1},
+                                    {C1, C1}});
+
+  return BoardData("trivial1_1", board, solution);
+}
+
+vector<BoardData> CPic::createTrivialBoards() {
+  return {createBoardTrivial1_0(), createBoardTrivial1_1()};
 }
