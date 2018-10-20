@@ -22,7 +22,9 @@
 
 #include "brute_force_board_solver.h"
 
+#include <cassert>
 #include <queue>
+#include <utility>
 #include <vector>
 
 using namespace CPic;
@@ -34,31 +36,28 @@ typedef unsigned short ushort;
 
 struct Node {
 public:
-  explicit Node(Board board) : board(board), nextRow(0), nextCol(0) {
-    for (ushort row = 0; row < board.rowCount; ++row) {
-      for (ushort col = 0; col < board.columnCount; ++col) {
-        this->board.results[col][row] = C0;
+  explicit Node(const Board *_board, BoardState _state) : board(_board), state(std::move(_state)), nextRow(0), nextCol(0) {
+    for (ushort row = 0; row < board->rowCount; ++row) {
+      for (ushort col = 0; col < board->columnCount; ++col) {
+        this->state.setColorAt(col, row, C0);
       }
     }
   }
 
-  Node(const Node &other) :
-          board(other.board),
-          nextRow(other.nextRow),
-          nextCol(other.nextCol) {}
+  Node(const Node &other) = default;
 
   ~Node() = default;
 
   const vector<Node> getNext() const {
     vector<Node> next;
-    if (nextRow == this->board.rowCount) return next;
+    if (nextRow == this->board->rowCount) return next;
 
-    for (auto color: board.colors) {
+    for (auto color: board->colors) {
       Node other(*this);
-      other.board.results[nextRow][nextCol] = color;
+      other.state.setColorAt(nextRow, nextCol, color);
       other.nextCol++;
 
-      if (other.nextCol == this->board.columnCount) {
+      if (other.nextCol == this->board->columnCount) {
         other.nextCol = 0;
         other.nextRow++;
       }
@@ -69,27 +68,36 @@ public:
     return next;
   }
 
-  Board board;
+  const Board *board;
+  BoardState state;
 
 private:
   ushort nextRow, nextCol;
 };
 
-void BruteForceBoardSolver::solve(Board *board) const {
+BoardState BruteForceBoardSolver::solve(const Board *board) const {
+  assert(board->columnCount > 0);
+  assert(board->rowCount > 0);
   queue<Node> nodes;
-  nodes.push(Node(*board));
+  vector<BoardColumn> emptyBoard(board->columnCount, BoardColumn(vector<Color>(board->rowCount, C0)));
+  nodes.push(Node(board, BoardState(emptyBoard)));
 
+  const Node *lastNode = nullptr;
   while (!nodes.empty()) {
     auto front = nodes.front();
-    if (front.board.isValid()) {
-      board->results = front.board.results;
-      return;
+    if (front.state.isValid(front.board)) {
+      return front.state;
     } else {
       nodes.pop();
       auto next = front.getNext();
       for (const auto &node : next) {
         nodes.push(node);
+        lastNode = &node;
       }
     }
   }
+
+  assert(lastNode != nullptr);
+
+  return lastNode->state;
 }

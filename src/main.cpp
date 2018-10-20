@@ -41,25 +41,25 @@ int main() {
 
   for (auto data: easyBoards) {
     auto bruteCopy = Board(data.board);
-    bruteSolver.solve(&bruteCopy);
-    if (bruteCopy.results == data.solution) {
+    auto bruteResults = bruteSolver.solve(&bruteCopy);
+    if (bruteResults == data.solution) {
       cout << "Brute force solved board " << data.name << endl;
     } else {
       cout << "Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
       logger.log(&data.solution);
       cout << "But got this: "<< endl;
-      logger.log(&bruteCopy.results);
+      logger.log(&bruteResults);
     }
 
     auto heuristicCopy = Board(data.board);
-    heuristicSolver.solve(&heuristicCopy);
-    if (heuristicCopy.results == data.solution) {
+    auto heuristicResults = heuristicSolver.solve(&heuristicCopy);
+    if (heuristicResults == data.solution) {
       cout << "Heuristics solved board " << data.name << endl;
     } else {
       cout << "Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
       logger.log(&data.solution);
       cout << "But got this: "<< endl;
-      logger.log(&heuristicCopy.results);
+      logger.log(&heuristicResults);
     }
   }
 }

@@ -22,14 +22,19 @@
 
 #pragma once
 
-#include "model/board.h"
-#include "model/board_state.h"
+#include <limits>
 
 namespace CPic {
 
-class BoardSolver {
-public:
-  virtual BoardState solve(const Board *) const = 0;
-};
+namespace Numbers {
 
+inline bool fitsUShort(unsigned long long value) {
+  return (value >= std::numeric_limits<unsigned short>::min()) &&
+         (value <= std::numeric_limits<unsigned short>::max());
+}
+
+inline bool fitsUShort(short value) {
+  return (value >= std::numeric_limits<unsigned short>::min());
+}
+};
 }

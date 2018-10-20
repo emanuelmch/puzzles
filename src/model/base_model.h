@@ -22,14 +22,18 @@
 
 #pragma once
 
-#include "model/board.h"
-#include "model/board_state.h"
-
 namespace CPic {
-
-class BoardSolver {
-public:
-  virtual BoardState solve(const Board *) const = 0;
+enum Color {
+  Blank, C0, C1, C2, C3
 };
 
+class Clue {
+public:
+  Clue(Color color, unsigned short amount, bool contiguous)
+          : color(color), amount(amount), contiguous(contiguous) {}
+
+  Color color;
+  unsigned short amount;
+  bool contiguous;
+};
 }

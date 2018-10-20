@@ -22,13 +22,13 @@
 
 #pragma once
 
-#include "model/board.h"
+#include "model/board_state.h"
 
 namespace CPic {
 
 class BoardLogger {
 public:
-  void log(const std::vector<std::vector<Color>> *) const;
+  void log(const BoardState *) const;
 };
 
 }
