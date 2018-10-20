@@ -23,29 +23,31 @@
 #include "brute_force_board_solver.h"
 
 #include <cassert>
-#include <queue>
+#include <stack>
 #include <utility>
 #include <vector>
 
 using namespace CPic;
 
-using std::queue;
+using std::stack;
 using std::vector;
 
 typedef unsigned short ushort;
 
 struct Node {
 public:
-  explicit Node(const Board *_board, BoardState _state) :
-          board(_board), state(std::move(_state)), nextRow(0), nextCol(0) {}
+  explicit Node(const Board *_board, const BoardState &_state) :
+          board(_board), state(_state), nextRow(0), nextCol(0) {}
 
   Node(const Node &other) = default;
 
   ~Node() = default;
 
   const vector<Node> getNext() const {
+    auto lastCell = board->rowCount * board->columnCount;
     vector<Node> next;
-    if (nextRow == this->board->rowCount) return next;
+    auto nextCell = (nextRow * board->columnCount) + nextCol;
+    if (nextCell == lastCell || !state.isValid(board)) return next;
 
     for (auto color: board->colors) {
       Node other(*this);
@@ -63,6 +65,12 @@ public:
     return next;
   }
 
+  bool isSolution() const {
+    auto nextCell = (nextRow * board->columnCount) + nextCol;
+    auto lastCell = board->rowCount * board->columnCount;
+    return nextCell == lastCell && state.isValid(board);
+  }
+
   const Board *board;
   BoardState state;
 
@@ -73,26 +81,25 @@ private:
 BoardState BruteForceBoardSolver::solve(const Board *board) const {
   assert(board->columnCount > 0);
   assert(board->rowCount > 0);
-  queue<Node> nodes;
-  vector<BoardColumn> emptyBoard(board->columnCount, BoardColumn(vector<Color>(board->rowCount, C0)));
-  nodes.push(Node(board, BoardState(emptyBoard)));
 
-  const Node *lastNode = nullptr;
-  while (!nodes.empty()) {
-    auto front = nodes.front();
-    if (front.state.isValid(front.board)) {
-      return front.state;
+  stack<Node> nodes;
+  vector<BoardColumn> emptyBoard(board->columnCount, BoardColumn(vector<Color>(board->rowCount, Blank)));
+  const BoardState emptyState(emptyBoard);
+
+  nodes.push(Node(board, emptyState));
+
+  do {
+    auto top = nodes.top();
+    if (top.isSolution()) {
+      return top.state;
     } else {
       nodes.pop();
-      auto next = front.getNext();
-      for (const auto &node : next) {
+      for (const auto &node : top.getNext()) {
         nodes.push(node);
-        lastNode = &node;
       }
     }
-  }
+  } while (!nodes.empty());
 
-  assert(lastNode != nullptr);
-
-  return lastNode->state;
+  // Couldn't find anything!
+  return emptyState;
 }

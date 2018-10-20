@@ -54,9 +54,10 @@ void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
     auto blanks = state->countColorInColumn(column, Blank);
 
     for (auto color: board->colors) {
-      auto count = board->clueForColumn(column, color).amount;
+      auto total = board->clueForColumn(column, color).amount;
+      auto count = state->countColorInColumn(column, color);
 
-      if (count == blanks) {
+      if (total - count == blanks) {
         paintBlanksOnColumn(board, state, column, color);
         break;
       }
@@ -78,9 +79,10 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
     auto blanks = state->countColorInRow(row, Blank);
 
     for (auto color: board->colors) {
-      auto count = board->clueForRow(row, color).amount;
+      auto total = board->clueForRow(row, color).amount;
+      auto count = state->countColorInRow(row, color);
 
-      if (count == blanks) {
+      if (total - count == blanks) {
         paintBlanksOnRow(board, state, row, color);
         break;
       }
