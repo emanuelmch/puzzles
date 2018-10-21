@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <cassert>
 
-#include "../common/numbers.h"
+#include "../../common/numbers.h"
 
 typedef unsigned short ushort;
 
@@ -32,6 +32,7 @@ using std::count_if;
 using std::vector;
 
 using namespace CPic;
+using namespace Puzzles;
 
 BoardColumn::BoardColumn(const vector<Color> &values) : internal(values) {
   assert(values.empty() == false);

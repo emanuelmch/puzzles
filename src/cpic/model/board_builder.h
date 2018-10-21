@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,26 @@
 
 #pragma once
 
-#include "model/board.h"
-#include "model/board_state.h"
+#include "board.h"
+
+#include <vector>
 
 namespace CPic {
 
-class BoardSolver {
+class BoardBuilder {
 public:
-  virtual ~BoardSolver() = default;
-  virtual BoardState solve(const Board *) const = 0;
+  explicit BoardBuilder(unsigned short colorCount);
+
+  BoardBuilder *column(std::vector<unsigned short>, std::vector<bool> = std::vector<bool>());
+  BoardBuilder *row(std::vector<unsigned short>, std::vector<bool> = std::vector<bool>());
+
+  Board build();
+
+private:
+  std::vector<Color> colors;
+
+  std::vector<std::vector<Clue>> columns;
+  std::vector<std::vector<Clue>> rows;
 };
 
 }

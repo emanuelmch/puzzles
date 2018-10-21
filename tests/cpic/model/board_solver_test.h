@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,38 +20,38 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#include <string>
-#include <vector>
+#include "cpic/solver/brute_force_board_solver.h"
+#include "cpic/solver/heuristic_board_solver.h"
 
-#include "../model/board.h"
-#include "../model/board_state.h"
+using namespace CPic;
 
-namespace CPic {
+// First, the factory functions
+template<class T>
+BoardSolver *CreateBoardSolver();
 
-struct BoardData {
+template<>
+BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
+  return new BruteForceBoardSolver;
+}
+
+template<>
+BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
+  return new HeuristicBoardSolver;
+}
+
+// Now, the Test template
+template<typename T>
+class BoardSolverTest : public ::testing::Test {
 public:
-  BoardData(const std::string &name,
-            const Board &board,
-            const BoardState &solution)
-          : name(name), board(board), solution(solution) {}
+  BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
 
-  const std::string name;
-  const Board board;
-  const BoardState solution;
+  ~BoardSolverTest() override { delete solver; }
+
+  BoardSolver *solver;
 };
 
-std::vector<BoardData> createTrivialBoards();
-std::vector<BoardData> createEasyBoards();
-
-inline std::vector<BoardData> createAllBoards() {
-  std::vector<BoardData> trivial = createTrivialBoards();
-  std::vector<BoardData> easy = createEasyBoards();
-
-  std::move(easy.begin(), easy.end(), std::back_inserter(trivial));
-
-  return trivial;
-}
-
-}
+// And last, create the Typed Test Case
+using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
+TYPED_TEST_CASE(BoardSolverTest, BoardSolverTypes);

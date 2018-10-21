@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,42 +20,34 @@
  * SOFTWARE.
 */
 
-#include "board_logger.h"
+#include "board_solver_test.h"
 
-#include <iostream>
+#include "cpic/model/board_builder.h"
 
 using namespace CPic;
 
-using std::ostream;
-using std::vector;
+TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
+  Board board = BoardBuilder(2).column({2, 0}, {true})
+          ->column({0, 2}, {false, true})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
 
-typedef unsigned short ushort;
+  auto results = this->solver->solve(&board);
 
-ostream &operator<<(ostream &output, Clue const &clue) {
-  return output << clue.amount << " blocks of color " << clue.color;
+  const int columnCount = 2;
+  const int rowCount = 2;
+
+  ASSERT_EQ(results.columnCount(), columnCount);
+  ASSERT_EQ(results.rowCount(), rowCount);
+
+  EXPECT_EQ(results.colorAt(0, 0), C0);
+  EXPECT_EQ(results.colorAt(0, 1), C0);
+  EXPECT_EQ(results.colorAt(1, 0), C1);
+  EXPECT_EQ(results.colorAt(1, 0), C1);
 }
 
-void BoardLogger::log(const BoardState *board) const {
-  // TODO: Improve logging
-//  for (ushort i = 0; i < board->columnCount; ++i) {
-//    std::cout << "Column " << i + 1 << ": ";
-//    std::cout << board->clueForColumn(i, C0) << " ";
-//    std::cout << board->clueForColumn(i, C1) << " ";
-//    std::cout << std::endl;
-//  }
+//TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
 
-//  for (ushort i = 0; i < board->rowCount; ++i) {
-//    std::cout << "Row " << i + 1 << ": ";
-//    std::cout << board->clueForRow(i, C0) << " ";
-//    std::cout << board->clueForRow(i, C1) << " ";
-//    std::cout << std::endl;
-//  }
-
-//  std::cout << "Final Board:" << std::endl;
-  for (ushort y = 0; y < board[0].columnCount(); ++y) {
-    for (const auto &row : *board) {
-      std::cout << row.row(y) << " ";
-    }
-    std::cout << std::endl;
-  }
-}
+//TODO: ShouldSolveBiggerTrivialBoards
+//TODO: ShouldSolveRectangularTrivialBoards

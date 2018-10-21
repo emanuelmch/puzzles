@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,15 @@
 
 #pragma once
 
-#include "model/board_state.h"
+#include "../model/board.h"
+#include "../model/board_state.h"
 
 namespace CPic {
 
-class BoardLogger {
+class BoardSolver {
 public:
-  void log(const BoardState *) const;
+  virtual ~BoardSolver() = default;
+  virtual BoardState solve(const Board *) const = 0;
 };
 
 }

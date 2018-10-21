@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,9 @@
  * SOFTWARE.
 */
 
-#include "model/board_builder.h"
+#include "cpic/model/board_builder.h"
 
-#include "model/board_state.h"
+#include "cpic/model/board_state.h"
 
 #include <gtest/gtest.h>
 

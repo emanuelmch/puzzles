@@ -24,7 +24,7 @@
 
 #include <limits>
 
-namespace CPic {
+namespace Puzzles {
 
 namespace Numbers {
 

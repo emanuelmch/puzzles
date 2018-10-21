@@ -22,10 +22,10 @@
 
 #include <iostream>
 
-#include "data/board_data.h"
-#include "solver/brute_force_board_solver.h"
-#include "solver/heuristic_board_solver.h"
-#include "view/board_logger.h"
+#include "cpic/data/board_data.h"
+#include "cpic/solver/brute_force_board_solver.h"
+#include "cpic/solver/heuristic_board_solver.h"
+#include "cpic/view/board_logger.h"
 
 using std::cout;
 using std::endl;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +20,38 @@
  * SOFTWARE.
 */
 
-#include "board.h"
+#pragma once
 
-#include <cassert>
+#include <string>
+#include <vector>
 
-using namespace CPic;
+#include "../model/board.h"
+#include "../model/board_state.h"
 
-using std::map;
-using std::vector;
+namespace CPic {
 
-typedef unsigned short ushort;
+struct BoardData {
+public:
+  BoardData(const std::string &name,
+            const Board &board,
+            const BoardState &solution)
+          : name(name), board(board), solution(solution) {}
 
-Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
-        : colors(colors),
-          colorCount(static_cast<int>(colors.size())),
-          columnCount(static_cast<int>(columns.size())),
-          rowCount(static_cast<int>(rows.size())),
-          columns(columns),
-          rows(rows) {}
+  const std::string name;
+  const Board board;
+  const BoardState solution;
+};
 
-Board::~Board() = default;
+std::vector<BoardData> createTrivialBoards();
+std::vector<BoardData> createEasyBoards();
 
-const Clue Board::clueForColumn(ushort column, Color color) const {
-  for (auto clue : columns[column]) {
-    if (clue.color == color) {
-      return clue;
-    }
-  }
+inline std::vector<BoardData> createAllBoards() {
+  std::vector<BoardData> trivial = createTrivialBoards();
+  std::vector<BoardData> easy = createEasyBoards();
 
-  assert(!"Asked for a clue for a non-existing color");
+  std::move(easy.begin(), easy.end(), std::back_inserter(trivial));
+
+  return trivial;
 }
 
-const Clue Board::clueForRow(ushort row, Color color) const {
-  for (auto clue : rows[row]) {
-    if (clue.color == color) {
-      return clue;
-    }
-  }
-
-  assert(!"Asked for a clue for a non-existing color");
 }
