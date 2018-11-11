@@ -20,34 +20,5 @@
  * SOFTWARE.
 */
 
-#include "board_solver_test.h"
-
-#include "cpic/model/board_builder.h"
-
-using namespace CPic;
-
-TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
-  Board board = BoardBuilder(2).column({2, 0}, {true})
-          ->column({0, 2}, {false, true})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->build();
-
-  auto results = this->solver->solve(&board);
-
-  const int columnCount = 2;
-  const int rowCount = 2;
-
-  ASSERT_EQ(results.columnCount(), columnCount);
-  ASSERT_EQ(results.rowCount(), rowCount);
-
-  EXPECT_EQ(results.colorAt(0, 0), C0);
-  EXPECT_EQ(results.colorAt(0, 1), C0);
-  EXPECT_EQ(results.colorAt(1, 0), C1);
-  EXPECT_EQ(results.colorAt(1, 0), C1);
-}
-
-//TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
-
-//TODO: ShouldSolveBiggerTrivialBoards
-//TODO: ShouldSolveRectangularTrivialBoards
+#include "model/sudoku_board_test.cpp"
+#include "model/sudoku_board_validity_test.cpp"
