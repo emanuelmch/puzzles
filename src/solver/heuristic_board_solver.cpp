@@ -52,13 +52,15 @@ BoardState HeuristicBoardSolver::solve(const Board *board) const {
 void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
   for (ushort column = 0; column < board->columnCount; ++column) {
     auto blanks = state->countColorInColumn(column, Blank);
-    ushort count0 = board->clueForColumn(column, C0).amount;
-    ushort count1 = board->clueForColumn(column, C1).amount;
 
-    if (count0 == blanks) {
-      paintBlanksOnColumn(board, state, column, C0);
-    } else if (count1 == blanks) {
-      paintBlanksOnColumn(board, state, column, C1);
+    for (auto color: board->colors) {
+      auto total = board->clueForColumn(column, color).amount;
+      auto count = state->countColorInColumn(column, color);
+
+      if (total - count == blanks) {
+        paintBlanksOnColumn(board, state, column, color);
+        break;
+      }
     }
   }
 }
@@ -75,13 +77,15 @@ void paintBlanksOnColumn(const Board *board, BoardState *state, ushort column, C
 void lookForOneColorLeftRows(const Board *board, BoardState *state) {
   for (ushort row = 0; row < board->rowCount; ++row) {
     auto blanks = state->countColorInRow(row, Blank);
-    ushort count0 = board->clueForRow(row, C0).amount;
-    ushort count1 = board->clueForRow(row, C1).amount;
 
-    if (count0 == blanks) {
-      paintBlanksOnRow(board, state, row, C0);
-    } else if (count1 == blanks) {
-      paintBlanksOnRow(board, state, row, C1);
+    for (auto color: board->colors) {
+      auto total = board->clueForRow(row, color).amount;
+      auto count = state->countColorInRow(row, color);
+
+      if (total - count == blanks) {
+        paintBlanksOnRow(board, state, row, color);
+        break;
+      }
     }
   }
 }

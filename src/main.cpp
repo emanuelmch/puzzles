@@ -22,7 +22,7 @@
 
 #include <iostream>
 
-#include "data/easy.h"
+#include "data/board_data.h"
 #include "solver/brute_force_board_solver.h"
 #include "solver/heuristic_board_solver.h"
 #include "view/board_logger.h"
@@ -37,9 +37,9 @@ int main() {
   HeuristicBoardSolver heuristicSolver;
   BoardLogger logger;
 
-  auto easyBoards = createEasyBoards();
+  auto boards = createAllBoards();
 
-  for (auto data: easyBoards) {
+  for (auto data: boards) {
     auto bruteCopy = Board(data.board);
     auto bruteResults = bruteSolver.solve(&bruteCopy);
     if (bruteResults == data.solution) {

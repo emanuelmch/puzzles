@@ -44,7 +44,7 @@ short findLastColorInColumn(const BoardState *state, ushort column, Color color)
 short findFirstColorInRow(const BoardState *state, ushort row, Color color);
 short findLastColorInRow(const BoardState *state, ushort row, Color color);
 
-bool BoardState::isValid(const Board *board) const {
+bool BoardState::isValid(const CPic::Board *board) const {
   // Has too many of a color in a column?
   for (ushort i = 0; i < board->columnCount; ++i) {
     for (auto color : board->colors) {
