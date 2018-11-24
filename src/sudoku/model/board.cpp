@@ -23,17 +23,23 @@
 #include "board.h"
 
 #include <cassert>
+#include <iostream>
 
 using namespace Sudoku;
 
+using std::cout;
+using std::endl;
+
 typedef unsigned short ushort;
 
+static const int SIZE = 9;
+
 Board::Board(std::vector<std::vector<ushort>> _values) {
-  assert(_values.size() == 9);
-  for (const auto &row: _values) {
-    assert(row.size() == 9);
+  assert(_values.size() == SIZE);
+  for (const auto &row : _values) {
+    assert(row.size() == SIZE);
     for (auto value : row) {
-      assert(value <= 9); // Only values 0-9 are accepted
+      assert(value <= SIZE); // Only values 0-9 are accepted
       this->values.emplace_back(value);
     }
   }
@@ -61,6 +67,46 @@ ushort Board::firstEmptyCell() const {
 
 //FIXME: Implement isValid
 bool Board::isValid() const {
+  // Check for repetition on lines
+  for (auto min = 0; min < (SIZE * SIZE); min += SIZE) {
+    bool used[SIZE] = {false,};
+
+    for (auto i = 0; i < SIZE; ++i) {
+      auto value = values[min + i];
+      if (value == 0) continue;
+      if (used[value - 1]) return false;
+      used[value - 1] = true;
+    }
+  }
+
+  // Check for repetition on columns
+  for (auto min = 0; min < SIZE; min++) {
+    bool used[SIZE] = {false,};
+
+    for (auto i = 0; i < SIZE; ++i) {
+      auto value = values[min + (SIZE * i)];
+      if (value == 0) continue;
+      if (used[value - 1]) return false;
+      used[value - 1] = true;
+    }
+  }
+
+  // Check for repetitions on squares
+  for (auto i = 0; i < SIZE; i += 3) {
+    for (auto j = 0; j < SIZE; j += 3) {
+      const auto first = i + (SIZE * j);
+      const auto indices = {0, 1, 2, 9, 10, 11, 18, 19, 20};
+      bool used[SIZE] = {false,};
+
+      for (auto index : indices) {
+        auto value = values[first + index];
+        if (value == 0) continue;
+        if (used[value - 1]) return false;
+        used[value - 1] = true;
+      }
+    }
+  }
+
   return true;
 }
 

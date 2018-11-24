@@ -24,40 +24,25 @@
 #include "../model/board.h"
 
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace Sudoku {
+
 struct BoardData {
 public:
-  BoardData(const std::string name, const Board &board, const Board &solution) :
-          name(name), board(board), solution(solution) {}
+  BoardData(std::string name, Board board, Board solution) :
+      name(std::move(name)), board(std::move(board)), solution(std::move(solution)) {}
 
   const std::string name;
   const Board board;
   const Board solution;
 };
 
-inline BoardData createBoardTrivial1_0() {
-  Board board({{1, 2, 3, 4, 5, 6, 7, 8, 9},
-               {4, 5, 6, 7, 8, 9, 1, 2, 3},
-               {7, 8, 9, 1, 2, 3, 4, 5, 6},
-               {2, 3, 4, 5, 6, 7, 8, 9, 1},
-               {5, 6, 7, 8, 9, 1, 2, 3, 4},
-               {8, 9, 1, 2, 3, 4, 5, 6, 7},
-               {3, 4, 5, 6, 7, 8, 9, 1, 2},
-               {6, 7, 8, 9, 1, 2, 3, 4, 5},
-               {0, 1, 2, 3, 4, 5, 6, 7, 8}});
-  Board solution({{1, 2, 3, 4, 5, 6, 7, 8, 9},
-                  {4, 5, 6, 7, 8, 9, 1, 2, 3},
-                  {7, 8, 9, 1, 2, 3, 4, 5, 6},
-                  {2, 3, 4, 5, 6, 7, 8, 9, 1},
-                  {5, 6, 7, 8, 9, 1, 2, 3, 4},
-                  {8, 9, 1, 2, 3, 4, 5, 6, 7},
-                  {3, 4, 5, 6, 7, 8, 9, 1, 2},
-                  {6, 7, 8, 9, 1, 2, 3, 4, 5},
-                  {9, 1, 2, 3, 4, 5, 6, 7, 8}});
+std::vector<BoardData> createTrivialBoards();
 
-
-  return BoardData("trivial1_0", board, solution);
+inline std::vector<BoardData> createAllBoards() {
+  return createTrivialBoards();
 }
+
 }

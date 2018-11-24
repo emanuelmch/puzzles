@@ -79,17 +79,19 @@ bool solveSudoku() {
   Sudoku::BruteForceSolver bruteSolver;
   Sudoku::BoardLogger logger;
 
-  auto data = Sudoku::createBoardTrivial1_0();
+  auto boards = Sudoku::createAllBoards();
 
-  auto bruteResults = bruteSolver.solve(&data.board);
-  if (bruteResults == data.solution) {
-    cout << "Sudoku: Brute force solved " << data.name << endl;
-  } else {
-    cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
-    logger.log(&data.solution);
-    cout << "CPic: But got this: " << endl;
-    logger.log(&bruteResults);
-    return false;
+  for (auto data : boards) {
+    auto bruteResults = bruteSolver.solve(&data.board);
+    if (bruteResults == data.solution) {
+      cout << "Sudoku: Brute force solved " << data.name << endl;
+    } else {
+      cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      logger.log(&data.solution);
+      cout << "Sudoku: But got this: " << endl;
+      logger.log(&bruteResults);
+      return  false;
+    }
   }
 
   return true;

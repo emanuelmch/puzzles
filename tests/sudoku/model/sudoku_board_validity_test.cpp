@@ -36,7 +36,7 @@ TEST(BoardValidity, EmptyBoardShouldBeValid) {
                {0, 0, 0, 0, 0, 0, 0, 0, 0},
                {0, 0, 0, 0, 0, 0, 0, 0, 0}});
 
-  EXPECT_EQ(board.isValid(), true);
+  EXPECT_TRUE(board.isValid());
 }
 
 TEST(BoardValidity, FullValidBoardShouldBeValid) {
@@ -50,5 +50,75 @@ TEST(BoardValidity, FullValidBoardShouldBeValid) {
                {6, 7, 8, 9, 1, 2, 3, 4, 5},
                {9, 1, 2, 3, 4, 5, 6, 7, 8}});
 
-  EXPECT_EQ(board.isValid(), true);
+  EXPECT_TRUE(board.isValid());
+}
+
+TEST(BoardValidity, RepeatedNumbersOnSameLineShouldBeInvalid) {
+  Board board({{0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 9, 0, 0, 0, 9},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+  EXPECT_FALSE(board.isValid());
+}
+
+TEST(BoardValidity, RepeatedNumbersOnDifferentLinesShouldBeValid) {
+  Board board({{0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 9},
+               {9, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+  EXPECT_TRUE(board.isValid());
+}
+
+TEST(BoardValidity, RepeatedNumbersOnSameColumnShouldBeInvalid) {
+  Board board({{0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 9, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 9, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+  EXPECT_FALSE(board.isValid());
+}
+
+TEST(BoardValidity, RepeatedNumbersOnDifferentColumnsShouldBeValid) {
+  Board board({{0, 0, 0, 0, 0, 9, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 9, 0, 0, 0, 0}});
+
+  EXPECT_TRUE(board.isValid());
+}
+
+TEST(BoardValidity, RepeatedNumbersOnSameSquareShouldBeInvalid) {
+  Board board({{0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 9, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 9, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0},
+               {0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+  EXPECT_FALSE(board.isValid());
 }
