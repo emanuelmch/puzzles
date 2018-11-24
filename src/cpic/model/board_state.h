@@ -70,6 +70,8 @@ public:
   bool isValid(const Board *) const;
   unsigned short countColorInColumn(unsigned short, Color) const;
   unsigned short countColorInRow(unsigned short, Color) const;
+  short findFirstInRow(unsigned short, Color) const;
+  short findLastInRow(unsigned short, Color) const;
 
   void push_back(const BoardColumn &row) {
     internal.push_back(row);

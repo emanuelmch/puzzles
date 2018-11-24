@@ -192,3 +192,24 @@ ushort BoardState::countColorInRow(ushort row, Color color) const {
     return it.row(row) == color;
   }));
 }
+
+short BoardState::findFirstInRow(ushort row, Color color) const {
+  for (ushort col = 0; col < internal.size(); col++) {
+    if (internal[col].row(row) == color) {
+      return col;
+    }
+  }
+
+  return -1;
+}
+
+short BoardState::findLastInRow(unsigned short row, Color color) const {
+  auto size = static_cast<short>(internal.size() - 1);
+  for (short col = size; col >= 0; col--) {
+    if (internal[col].row(row) == color) {
+      return col;
+    }
+  }
+
+  return -1;
+}
