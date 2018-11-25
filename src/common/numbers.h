@@ -29,12 +29,11 @@ namespace CPic {
 namespace Numbers {
 
 inline bool fitsUShort(unsigned long long value) {
-  return (value >= std::numeric_limits<unsigned short>::min()) &&
-         (value <= std::numeric_limits<unsigned short>::max());
+  return value <= std::numeric_limits<unsigned short>::max();
 }
 
 inline bool fitsUShort(short value) {
-  return (value >= std::numeric_limits<unsigned short>::min());
+  return value >= std::numeric_limits<unsigned short>::min();
 }
 }
 
