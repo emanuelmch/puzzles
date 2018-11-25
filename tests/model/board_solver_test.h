@@ -47,7 +47,7 @@ class BoardSolverTest : public ::testing::Test {
 public:
   BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
 
-  virtual ~BoardSolverTest() { delete solver; }
+  ~BoardSolverTest() override { delete solver; }
 
   BoardSolver *solver;
 };
