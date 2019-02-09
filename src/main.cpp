@@ -28,6 +28,7 @@
 #include "cpic/view/board_logger.h"
 #include "sudoku/data/board_data.h"
 #include "sudoku/solver/brute_force_board_solver.h"
+#include "sudoku/solver/heuristic_board_solver.h"
 #include "sudoku/view/board_logger.h"
 
 using std::cout;
@@ -77,6 +78,7 @@ bool solveCPic() {
 
 bool solveSudoku() {
   Sudoku::BruteForceSolver bruteSolver;
+  Sudoku::HeuristicBoardSolver heuristicSolver;
   Sudoku::BoardLogger logger;
 
   auto boards = Sudoku::createAllBoards();
@@ -91,6 +93,17 @@ bool solveSudoku() {
       cout << "Sudoku: But got this: " << endl;
       logger.log(&bruteResults);
       return  false;
+    }
+
+    auto heuristicResults = heuristicSolver.solve(&data.board);
+    if (heuristicResults == data.solution) {
+      cout << "Sudoku: Heuristics solved " << data.name << endl;
+    } else {
+      cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      logger.log(&data.solution);
+      cout << "Sudoku: But got this: " << endl;
+      logger.log(&heuristicResults);
+      return false;
     }
   }
 
