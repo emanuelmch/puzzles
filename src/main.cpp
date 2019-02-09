@@ -49,6 +49,7 @@ int main() {
       logger.log(&data.solution);
       cout << "But got this: "<< endl;
       logger.log(&bruteResults);
+      return 1;
     }
 
     auto heuristicCopy = Board(data.board);
@@ -60,6 +61,7 @@ int main() {
       logger.log(&data.solution);
       cout << "But got this: "<< endl;
       logger.log(&heuristicResults);
+      return 1;
     }
   }
 }
