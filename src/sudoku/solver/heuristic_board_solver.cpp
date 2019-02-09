@@ -23,50 +23,106 @@
 #include "heuristic_board_solver.h"
 
 #include <cassert>
-#include <list>
+#include <vector>
 
 using namespace Sudoku;
 
+using std::vector;
+
 typedef unsigned short ushort;
 
-inline void findRowWithOneBlank(Board *, ushort row);
+const int SIZE = 9;
+const int CELL_COUNT = SIZE * SIZE;
 
-const Board HeuristicBoardSolver::solve(const Sudoku::Board *board) const {
-  Board oldBoard = *board;
-  Board newBoard = *board;
+const vector<vector<bool>> findCandidates(const Board *board);
+void removeCandidatesFromColumn(int index, ushort value, vector<vector<bool>> *candidates);
+void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *candidates);
+bool applyCandidates(Board *board, const vector<vector<bool>> candidates);
+ushort getSingleCandidate(const vector<bool> candidates);
 
-  do {
-    oldBoard = newBoard;
-
-    for (auto i = 0; i < 9; ++i) {
-      findRowWithOneBlank(&newBoard, i);
-    }
-  } while (oldBoard != newBoard);
-
-  return newBoard;
+const Board HeuristicBoardSolver::solve(const Sudoku::Board *original) const {
+    auto board = *original;
+    bool changedAny;
+    do {
+        auto candidates = findCandidates(&board);
+        changedAny = applyCandidates(&board, candidates);
+    } while (changedAny);
+    return board;
 }
 
-void findRowWithOneBlank(Board *board, ushort row) {
-  auto blankCell = -1;
-  std::list<ushort> missingValues = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+const vector<vector<bool>> findCandidates(const Board *board) {
+    vector<vector<bool>> candidates;
 
-
-  for (ushort i = 0; i < 9; ++i) {
-    auto cell = board->getCell(9 * row + i);
-    if (cell == 0) {
-      if (blankCell == -1) {
-        blankCell = i;
-      } else {
-        return;
-      }
-    } else {
-      missingValues.remove(cell);
+    candidates.reserve(CELL_COUNT);
+    for (auto i = 0; i < CELL_COUNT; ++i) {
+        candidates.push_back({true, true, true, true, true, true, true, true, true});
     }
-  }
 
-  if (blankCell != -1) {
-    assert(missingValues.size() == 1);
+    for (int i = 0; i < CELL_COUNT; ++i) {
+        auto cell = board->getCell(i);
+        if (cell != 0) {
+            removeCandidatesFromColumn(i, cell, &candidates);
+            removeCandidatesFromRow(i, cell, &candidates);
+        }
+    }
 
-    board->setCell(9 * row + blankCell, missingValues.front());
-  }
+    return candidates;
+}
+
+void removeCandidatesFromColumn(int index, ushort value, vector<vector<bool>> *candidates) {
+    short upwards = index - SIZE;
+    while (upwards >= 0) {
+        (*candidates)[upwards][value - 1] = false;
+        upwards -= SIZE;
+    }
+
+    short downwards = index + SIZE;
+    while (downwards < CELL_COUNT) {
+        (*candidates)[downwards][value - 1] = false;
+        downwards += SIZE;
+    }
+}
+
+void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *candidates) {
+    auto rem = index % SIZE;
+    for (auto i = 1; i <= rem; ++i) {
+        (*candidates)[index - i][value - 1] = false;
+    }
+
+    for (auto i = 1; i < (SIZE - rem); ++i) {
+        (*candidates)[index + i][value - 1] = false;
+    }
+}
+
+bool applyCandidates(Board *board, vector<vector<bool>> candidates) {
+    auto changedAny = false;
+
+    for (int i = 0; i < CELL_COUNT; ++i) {
+        if (board->getCell(i) == 0) {
+            auto cands = candidates[i];
+            auto value = getSingleCandidate(cands);
+            if (value != 0) {
+                board->setCell(i, value);
+                changedAny = true;
+            }
+        }
+    }
+
+    return changedAny;
+}
+
+ushort getSingleCandidate(const vector<bool> candidates) {
+    auto value = 0;
+
+    for (auto i = 0; i < SIZE; ++i) {
+        if (candidates[i]) {
+            if (value == 0) {
+                value = i + 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    return value;
 }
