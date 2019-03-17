@@ -37,6 +37,7 @@ const int CELL_COUNT = SIZE * SIZE;
 const vector<vector<bool>> findCandidates(const Board *board);
 void removeCandidatesFromColumn(int index, ushort value, vector<vector<bool>> *candidates);
 void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *candidates);
+void removeCandidatesFromSquare(int index, ushort value, vector<vector<bool>> *candidates);
 bool applyCandidates(Board *board, const vector<vector<bool>> candidates);
 ushort getSingleCandidate(const vector<bool> candidates);
 
@@ -63,6 +64,7 @@ const vector<vector<bool>> findCandidates(const Board *board) {
         if (cell != 0) {
             removeCandidatesFromColumn(i, cell, &candidates);
             removeCandidatesFromRow(i, cell, &candidates);
+            removeCandidatesFromSquare(i, cell, &candidates);
         }
     }
 
@@ -91,6 +93,50 @@ void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *cand
 
     for (auto i = 1; i < (SIZE - rem); ++i) {
         (*candidates)[index + i][value - 1] = false;
+    }
+}
+
+void removeCandidatesFromSquare(int index, ushort value, vector<vector<bool>> *candidates) {
+    ushort rows[3] = {0,};
+    switch ((index / 9) % 3) {
+        case 0:
+            rows[0] = (index / 9);
+            rows[1] = (index / 9) + 1;
+            rows[2] = (index / 9) + 2;
+            break;
+        case 1:
+            rows[0] = (index / 9) - 1;
+            rows[1] = (index / 9);
+            rows[2] = (index / 9) + 1;
+            break;
+        case 2:
+            rows[0] = (index / 9) - 2;
+            rows[1] = (index / 9) - 1;
+            rows[2] = (index / 9);
+    }
+
+    ushort columns[3] = {0,};
+    switch (index % SIZE % 3) {
+        case 0:
+            columns[0] = index % SIZE;
+            columns[1] = index % SIZE + 1;
+            columns[2] = index % SIZE + 2;
+            break;
+        case 1:
+            columns[0] = index % SIZE - 1;
+            columns[1] = index % SIZE;
+            columns[2] = index % SIZE + 1;
+            break;
+        case 2:
+            columns[0] = index % SIZE - 2;
+            columns[1] = index % SIZE - 1;
+            columns[2] = index % SIZE;
+    }
+
+    for (auto row : rows) {
+        for (auto column : columns) {
+            (*candidates)[row * SIZE + column][value - 1] = false;
+        }
     }
 }
 
