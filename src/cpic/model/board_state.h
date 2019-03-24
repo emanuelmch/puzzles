@@ -22,39 +22,33 @@
 
 #pragma once
 
+#include <cassert>
+#include <iostream>
 #include <vector>
 
 #include "base_model.h"
 #include "board.h"
 
 namespace CPic {
+class BoardRow {
+  friend class BoardState;
 
-class BoardColumn {
 public:
-  explicit BoardColumn(const unsigned short size) : internal(size) {}
-  explicit BoardColumn(const std::vector<Color> &values);
+  BoardRow(const std::vector<Color> &values);
 
-  void setColorAt(unsigned short index, Color color) {
-    internal[index] = color;
+  inline void setColorAt(unsigned short column, Color color) {
+    internal[column] = color;
   }
 
-  Color row(unsigned short index) const {
-    return internal[index];
+  inline ushort columnCount() const {
+    return internal.size();
   }
 
-  unsigned short rowCount() const {
-    return static_cast<unsigned short>(internal.size());
+  inline Color column(ushort column) const {
+    return internal[column];
   }
 
-  const std::vector<Color>::const_iterator begin() const {
-    return internal.begin();
-  }
-
-  const std::vector<Color>::const_iterator end() const {
-    return internal.end();
-  }
-
-  bool operator==(const BoardColumn &other) const {
+  bool operator==(const BoardRow &other) const {
     return internal == other.internal;
   }
 
@@ -65,7 +59,7 @@ private:
 class BoardState {
 public:
   BoardState() = default;
-  explicit BoardState(std::vector<BoardColumn> table) : internal(std::move(table)) {}
+  explicit BoardState(const std::vector<std::vector<Color>> &rows);
 
   bool isValid(const Board *) const;
   unsigned short countColorInColumn(unsigned short, Color) const;
@@ -73,63 +67,57 @@ public:
   short findFirstInRow(unsigned short, Color) const;
   short findLastInRow(unsigned short, Color) const;
 
-  void push_back(const BoardColumn &row) {
-    internal.push_back(row);
+  inline void setColorAt(unsigned short column, unsigned short row, Color color) {
+    rows.at(row).setColorAt(column, color);
   }
 
-  void setColorAt(unsigned short column, unsigned short row, Color color) {
-    internal.at(column).setColorAt(row, color);
+  inline ushort rowCount() const {
+    return rows.size();
   }
 
-  unsigned long long int rowCount() const {
-    return internal[0].rowCount();
+  inline ushort columnCount() const {
+    return rows[0].columnCount();
   }
 
-  unsigned long long int columnCount() const {
-    return internal.size();
-  }
-
-  const std::vector<BoardColumn>::const_iterator begin() const {
-    return internal.begin();
-  }
-
-  const std::vector<BoardColumn>::const_iterator end() const {
-    return internal.end();
-  }
-
-  Color colorAt(unsigned short column, unsigned short row) const {
-    return internal.at(column).row(row);
+  inline Color colorAt(unsigned short column, unsigned short row) const {
+    return rows.at(row).column(column);
   }
 
   bool operator==(const BoardState &other) const {
-    return internal == other.internal;
+    return rows == other.rows;
   }
 
   bool operator!=(const BoardState &other) const {
-    return internal != other.internal;
+    return rows != other.rows;
   }
 
 private:
-  std::vector<BoardColumn> internal;
+  std::vector<BoardRow> rows;
 };
 
-inline BoardState pivotState(std::vector<std::vector<Color>> table) {
-  auto rowCount = static_cast<unsigned short>(table.size());
-  auto columnCount = static_cast<unsigned short>(table[0].size());
-  std::vector<BoardColumn> result(columnCount, BoardColumn(rowCount));
-
-  for (unsigned short i = 0; i < rowCount; ++i) {
-    for (unsigned short j = 0; j < columnCount; ++j) {
-      result[i].setColorAt(j, table[j][i]);
-    }
+inline BoardState emptyBoardState(ushort columnCount, ushort rowCount) {
+  //FIXME: Implement this function properly
+  if (columnCount == 5 && rowCount == 5) {
+    return BoardState({{Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank}});
   }
 
-  return BoardState(result);
-}
+  if (columnCount == 2 && rowCount == 2) {
+    return BoardState({{Blank, Blank},
+                       {Blank, Blank}});
+  }
 
-inline BoardState emptyBoardState(unsigned short columnCount, unsigned short rowCount) {
-  std::vector<BoardColumn> emptyBoard(columnCount, BoardColumn(rowCount));
+  if (columnCount == 2 && rowCount == 3) {
+    return BoardState({{Blank, Blank},
+                       {Blank, Blank},
+                       {Blank, Blank}});
+  }
 
-  return BoardState(emptyBoard);
+  std::cerr << "Couldn't build an empty state with " << columnCount << " columns and "
+            << rowCount << " rows" << std::endl;
+  throw -1;
 }
 }

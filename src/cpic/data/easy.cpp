@@ -40,7 +40,7 @@ BoardData createBoardEasy1_1() {
             ->row({2, 3}, {true, true})
             ->row({2, 3}, {true, true})
             ->build();
-    BoardState solution = pivotState({{C0, C0, C0, C0, C0},
+    BoardState solution = BoardState({{C0, C0, C0, C0, C0},
                                       {C0, C0, C0, C0, C0},
                                       {C1, C1, C1, C0, C0},
                                       {C1, C1, C1, C0, C0},
@@ -61,7 +61,7 @@ BoardData createBoardEasy1_2() {
             ->row({1, 4})
             ->row({3, 2}, {true})
             ->build();
-    BoardState solution = pivotState({{C1, C1, C0, C1, C1},
+    BoardState solution = BoardState({{C1, C1, C0, C1, C1},
                                       {C1, C0, C0, C1, C1},
                                       {C1, C1, C0, C1, C1},
                                       {C1, C1, C0, C1, C1},
@@ -82,7 +82,7 @@ BoardData createBoardEasy1_3() {
             ->row({4, 1})
             ->row({4, 1})
             ->build();
-    BoardState solution = pivotState({{C1, C0, C0, C0, C0},
+    BoardState solution = BoardState({{C1, C0, C0, C0, C0},
                                       {C1, C0, C1, C1, C0},
                                       {C1, C0, C1, C1, C0},
                                       {C0, C0, C1, C0, C0},
@@ -103,7 +103,7 @@ BoardData createBoardEasy1_4() {
             ->row({0, 3, 2})
             ->row({0, 4, 1})
             ->build();
-    BoardState solution = pivotState({{C0, C0, C0, C0, C0},
+    BoardState solution = BoardState({{C0, C0, C0, C0, C0},
                                       {C0, C0, C0, C0, C0},
                                       {C1, C1, C1, C1, C1},
                                       {C1, C2, C1, C2, C1},
