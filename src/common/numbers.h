@@ -24,9 +24,7 @@
 
 #include <limits>
 
-namespace Puzzles {
-
-namespace Numbers {
+namespace Puzzles::Numbers {
 
 inline bool fitsUShort(unsigned long long value) {
   return value <= std::numeric_limits<unsigned short>::max();
@@ -35,6 +33,4 @@ inline bool fitsUShort(unsigned long long value) {
 inline bool fitsUShort(short value) {
   return value >= std::numeric_limits<unsigned short>::min();
 }
-}
-
 }
