@@ -32,7 +32,7 @@ using std::vector;
 typedef unsigned short ushort;
 
 BoardBuilder::BoardBuilder(ushort colorCount) {
-  assert(colorCount > 0 && colorCount < 4);
+  assert(colorCount > 0 && colorCount <= 4);
 
   if (colorCount >= 1) colors.push_back(C0);
   if (colorCount >= 2) colors.push_back(C1);
