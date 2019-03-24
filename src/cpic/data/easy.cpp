@@ -91,6 +91,27 @@ BoardData createBoardEasy1_3() {
     return BoardData("easy1_3", board, solution);
 }
 
+BoardData createBoardEasy1_4() {
+    auto board = BoardBuilder(3).column({2, 3}, {true, true})
+            ->column({2, 1, 2}, {true, false, true})
+            ->column({2, 3}, {true, true})
+            ->column({2, 2, 1}, {true})
+            ->column({2, 3}, {true, true})
+            ->row({5}, {true})
+            ->row({5}, {true})
+            ->row({0, 5}, {false, true})
+            ->row({0, 3, 2})
+            ->row({0, 4, 1})
+            ->build();
+    BoardState solution = pivotState({{C0, C0, C0, C0, C0},
+                                      {C0, C0, C0, C0, C0},
+                                      {C1, C1, C1, C1, C1},
+                                      {C1, C2, C1, C2, C1},
+                                      {C1, C2, C1, C1, C1}});
+
+    return BoardData("easy1_4", board, solution);
+}
+
 vector<BoardData> CPic::createEasyBoards() {
-    return {createBoardEasy1_1(), createBoardEasy1_2(), createBoardEasy1_3()};
+    return {createBoardEasy1_1(), createBoardEasy1_2(), createBoardEasy1_3(), createBoardEasy1_4()};
 }
