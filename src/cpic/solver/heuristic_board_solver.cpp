@@ -33,7 +33,8 @@ typedef unsigned short ushort;
 // Strategies
 inline void lookForOneColorLeftColumns(const Board *, BoardState *);
 inline void lookForOneColorLeftRows(const Board *, BoardState *);
-void completeContiguousRows(const Board *board, BoardState *state);
+inline void completeContiguousRows(const Board *, BoardState *);
+inline void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *, BoardState *);
 
 // Tools
 inline void paintBlanksOnColumn(const Board *, BoardState *, ushort column, Color);
@@ -50,6 +51,8 @@ BoardState HeuristicBoardSolver::solve(const Board *board) const {
     lookForOneColorLeftRows(board, &newResults);
 
     completeContiguousRows(board, &newResults);
+
+    lookForColorsWhereRowCountAndPossibilityCountAreTheSame(board, &newResults);
   } while (oldResults != newResults);
 
   return oldResults;
@@ -76,7 +79,7 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
   for (ushort row = 0; row < board->rowCount; ++row) {
     auto blanks = state->countColorInRow(row, Blank);
 
-    for (auto color: board->colors) {
+    for (auto color : board->colors) {
       auto total = board->clueForRow(row, color).amount;
       auto count = state->countColorInRow(row, color);
 
@@ -101,6 +104,25 @@ void completeContiguousRows(const Board *board, BoardState *state) {
       auto ufirst = static_cast<ushort>(first);
       auto ulast = static_cast<ushort>(last);
       paintRangeOnRow(state, color, row, ufirst, ulast);
+    }
+  }
+}
+
+//TODO: Find a better name, this one is too long
+void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board, BoardState *state) {
+  for (ushort row = 0; row < board->rowCount; ++row) {
+    for (auto color : board->colors) {
+      auto total = board->clueForRow(row, color).amount;
+      if (total == 0) continue;
+
+      auto possibilities = board->countPossibilitiesForRow(row, color);
+      if (possibilities == total) {
+        for (auto col = 0; col < board->columnCount; ++col) {
+          if (board->isPossibility(col, row, color)) {
+            state->setColorAt(col, row, color);
+          }
+        }
+      }
     }
   }
 }

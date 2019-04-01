@@ -116,6 +116,19 @@ inline BoardState emptyBoardState(ushort columnCount, ushort rowCount) {
                        {Blank, Blank}});
   }
 
+  if (columnCount == 5 && rowCount == 10) {
+    return BoardState({{Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank},
+                       {Blank, Blank, Blank, Blank, Blank}});
+  }
+
   std::cerr << "Couldn't build an empty state with " << columnCount << " columns and "
             << rowCount << " rows" << std::endl;
   throw -1;

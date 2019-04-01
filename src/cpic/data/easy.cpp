@@ -112,6 +112,38 @@ BoardData createBoardEasy1_4() {
     return BoardData("easy1_4", board, solution);
 }
 
+BoardData createBoardEasy1_20() {
+    auto board = BoardBuilder(4).column({1, 0, 1, 8})
+            ->column({5, 0, 0, 5})
+            ->column({8, 2})
+            ->column({5, 0, 0, 5})
+            ->column({1, 0, 1, 8})
+            ->row({1, 0, 0, 4})
+            ->row({3, 0, 0, 2}, {true})
+            ->row({5}, {true})
+            ->row({0, 1, 0, 4})
+            ->row({1, 0, 0, 4})
+            ->row({3, 0, 0, 2}, {true})
+            ->row({0, 1, 0, 4})
+            ->row({1, 0, 0, 4})
+            ->row({3, 0, 0, 2}, {true})
+            ->row({3, 0, 2}, {true})
+            ->build();
+    BoardState solution = BoardState({{C3, C3, C0, C3, C3},
+                                      {C3, C0, C0, C0, C3},
+                                      {C0, C0, C0, C0, C0},
+                                      {C3, C3, C1, C3, C3},
+                                      {C3, C3, C0, C3, C3},
+                                      {C3, C0, C0, C0, C3},
+                                      {C3, C3, C1, C3, C3},
+                                      {C3, C3, C0, C3, C3},
+                                      {C3, C0, C0, C0, C3},
+                                      {C2, C0, C0, C0, C2}});
+
+    return BoardData("easy1_20", board, solution);
+}
+
 vector<BoardData> CPic::createEasyBoards() {
-    return {createBoardEasy1_1(), createBoardEasy1_2(), createBoardEasy1_3(), createBoardEasy1_4()};
+    return {createBoardEasy1_1(), createBoardEasy1_2(), createBoardEasy1_3(), createBoardEasy1_4(),
+            createBoardEasy1_20()};
 }
