@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,18 @@
 
 #pragma once
 
-#include <limits>
+namespace CPic {
+enum Color {
+  Blank, C0, C1, C2, C3
+};
 
-namespace Puzzles {
+class Clue {
+public:
+  Clue(Color color, unsigned short amount, bool contiguous)
+          : color(color), amount(amount), contiguous(contiguous) {}
 
-namespace Numbers {
-
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
-}
-
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
-
+  Color color;
+  unsigned short amount;
+  bool contiguous;
+};
 }

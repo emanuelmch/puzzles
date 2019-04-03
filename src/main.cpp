@@ -22,46 +22,90 @@
 
 #include <iostream>
 
-#include "data/board_data.h"
-#include "solver/brute_force_board_solver.h"
-#include "solver/heuristic_board_solver.h"
-#include "view/board_logger.h"
+#include "cpic/data/board_data.h"
+#include "cpic/solver/brute_force_board_solver.h"
+#include "cpic/solver/heuristic_board_solver.h"
+#include "cpic/view/board_logger.h"
+#include "sudoku/data/board_data.h"
+#include "sudoku/solver/brute_force_board_solver.h"
+#include "sudoku/solver/heuristic_board_solver.h"
+#include "sudoku/view/board_logger.h"
 
 using std::cout;
 using std::endl;
 
-using namespace CPic;
+inline bool solveCPic();
+inline bool solveSudoku();
 
 int main() {
-  BruteForceBoardSolver bruteSolver;
-  HeuristicBoardSolver heuristicSolver;
-  BoardLogger logger;
+  if (!solveCPic()) return 1;
+  if (!solveSudoku()) return 1;
+}
 
-  auto boards = createAllBoards();
+bool solveCPic() {
+  CPic::BruteForceBoardSolver bruteSolver;
+  CPic::HeuristicBoardSolver heuristicSolver;
+  CPic::BoardLogger logger;
+
+  auto boards = CPic::createAllBoards();
 
   for (auto data: boards) {
-    auto bruteCopy = Board(data.board);
-    auto bruteResults = bruteSolver.solve(&bruteCopy);
+    auto bruteResults = bruteSolver.solve(&data.board);
     if (bruteResults == data.solution) {
-      cout << "Brute force solved board " << data.name << endl;
+      cout << "CPic: Brute force solved board " << data.name << endl;
     } else {
-      cout << "Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
       logger.log(&data.solution);
-      cout << "But got this: "<< endl;
+      cout << "CPic: But got this: " << endl;
       logger.log(&bruteResults);
-      return 1;
+      return false;
     }
 
-    auto heuristicCopy = Board(data.board);
-    auto heuristicResults = heuristicSolver.solve(&heuristicCopy);
+    auto heuristicResults = heuristicSolver.solve(&data.board);
     if (heuristicResults == data.solution) {
-      cout << "Heuristics solved board " << data.name << endl;
+      cout << "CPic: Heuristics solved board " << data.name << endl;
     } else {
-      cout << "Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
       logger.log(&data.solution);
-      cout << "But got this: "<< endl;
+      cout << "CPic: But got this: " << endl;
       logger.log(&heuristicResults);
-      return 1;
+      return false;
     }
   }
+
+  return true;
+}
+
+bool solveSudoku() {
+  Sudoku::BruteForceSolver bruteSolver;
+  Sudoku::HeuristicBoardSolver heuristicSolver;
+  Sudoku::BoardLogger logger;
+
+  auto boards = Sudoku::createAllBoards();
+
+  for (auto data : boards) {
+    auto bruteResults = bruteSolver.solve(&data.board);
+    if (bruteResults == data.solution) {
+      cout << "Sudoku: Brute force solved " << data.name << endl;
+    } else {
+      cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      logger.log(&data.solution);
+      cout << "Sudoku: But got this: " << endl;
+      logger.log(&bruteResults);
+      return  false;
+    }
+
+    auto heuristicResults = heuristicSolver.solve(&data.board);
+    if (heuristicResults == data.solution) {
+      cout << "Sudoku: Heuristics solved " << data.name << endl;
+    } else {
+      cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      logger.log(&data.solution);
+      cout << "Sudoku: But got this: " << endl;
+      logger.log(&heuristicResults);
+      return false;
+    }
+  }
+
+  return true;
 }

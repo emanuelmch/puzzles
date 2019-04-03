@@ -11,10 +11,10 @@ checkv: build/Makefile
 	make -C build build_tests
 	cd build && ctest -V
 
-release: build/cpic
+release: build/puzzles
 
-run: build/cpic
-	./build/cpic
+run: build/puzzles
+	./build/puzzles
 
 tests: build/Makefile
 	make -C build build_tests
@@ -28,5 +28,5 @@ build:
 build/Makefile: build
 	cd build && cmake ..
 
-build/cpic: build/Makefile
-	make -C build cpic
+build/puzzles: build/Makefile
+	make -C build puzzles

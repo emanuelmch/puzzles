@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,43 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include "board.h"
 
-#include <limits>
+#include <cassert>
 
-namespace Puzzles {
+using namespace CPic;
 
-namespace Numbers {
+using std::map;
+using std::vector;
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
+typedef unsigned short ushort;
+
+Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
+        : colors(colors),
+          colorCount(static_cast<int>(colors.size())),
+          columnCount(static_cast<int>(columns.size())),
+          rowCount(static_cast<int>(rows.size())),
+          columns(columns),
+          rows(rows) {}
+
+Board::~Board() = default;
+
+const Clue Board::clueForColumn(ushort column, Color color) const {
+  for (auto clue : columns[column]) {
+    if (clue.color == color) {
+      return clue;
+    }
+  }
+
+  assert(!"Asked for a clue for a non-existing color");
 }
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+const Clue Board::clueForRow(ushort row, Color color) const {
+  for (auto clue : rows[row]) {
+    if (clue.color == color) {
+      return clue;
+    }
+  }
 
+  assert(!"Asked for a clue for a non-existing color");
 }

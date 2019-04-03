@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,38 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#include <limits>
+#include "cpic/solver/brute_force_board_solver.h"
+#include "cpic/solver/heuristic_board_solver.h"
 
-namespace Puzzles {
+using namespace CPic;
 
-namespace Numbers {
+// First, the factory functions
+template<class T>
+BoardSolver *CreateBoardSolver();
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
+template<>
+BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
+  return new BruteForceBoardSolver;
 }
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
+template<>
+BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
+  return new HeuristicBoardSolver;
 }
 
-}
+// Now, the Test template
+template<typename T>
+class BoardSolverTest : public ::testing::Test {
+public:
+  BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
+
+  ~BoardSolverTest() override { delete solver; }
+
+  BoardSolver *solver;
+};
+
+// And last, create the Typed Test Case
+using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
+TYPED_TEST_CASE(BoardSolverTest, BoardSolverTypes);

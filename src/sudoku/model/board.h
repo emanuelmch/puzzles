@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,25 @@
 
 #pragma once
 
-#include <limits>
+#include <vector>
 
-namespace Puzzles {
+namespace Sudoku {
 
-namespace Numbers {
+class Board {
+public:
+  explicit Board(std::vector<std::vector<unsigned short>> values);
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
-}
+  unsigned short firstEmptyCell() const;
+  bool isValid() const;
+  bool isFull() const;
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+  unsigned short getCell(unsigned short index) const;
+  void setCell(unsigned short index, unsigned short value);
 
+  bool operator==(const Board &other) const;
+  bool operator!=(const Board &other) const;
+
+private:
+  std::vector<unsigned short> values;
+};
 }

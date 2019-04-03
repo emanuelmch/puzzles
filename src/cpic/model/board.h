@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,31 @@
 
 #pragma once
 
-#include <limits>
+#include <map>
+#include <vector>
 
-namespace Puzzles {
+#include "base_model.h"
 
-namespace Numbers {
+namespace CPic {
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
-}
+class Board {
+public:
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+  Board(std::vector<Color>, std::vector<std::vector<Clue>> columns, std::vector<std::vector<Clue>> rows);
+  virtual ~Board();
+
+  const std::vector<Color> colors;
+
+  const unsigned short colorCount;
+  const unsigned short columnCount;
+  const unsigned short rowCount;
+
+  const Clue clueForColumn(unsigned short, Color) const;
+  const Clue clueForRow(unsigned short, Color) const;
+
+private:
+  std::vector<std::vector<Clue>> columns;
+  std::vector<std::vector<Clue>> rows;
+};
 
 }

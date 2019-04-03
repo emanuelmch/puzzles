@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,34 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include "cpic_board_solver_test.h"
 
-#include <limits>
+#include "cpic/model/board_builder.h"
 
-namespace Puzzles {
+using namespace CPic;
 
-namespace Numbers {
+TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
+  Board board = BoardBuilder(2).column({2, 0}, {true})
+          ->column({0, 2}, {false, true})
+          ->row({1, 1})
+          ->row({1, 1})
+          ->build();
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
+  auto results = this->solver->solve(&board);
+
+  const int columnCount = 2;
+  const int rowCount = 2;
+
+  ASSERT_EQ(results.columnCount(), columnCount);
+  ASSERT_EQ(results.rowCount(), rowCount);
+
+  EXPECT_EQ(results.colorAt(0, 0), C0);
+  EXPECT_EQ(results.colorAt(0, 1), C0);
+  EXPECT_EQ(results.colorAt(1, 0), C1);
+  EXPECT_EQ(results.colorAt(1, 0), C1);
 }
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+//TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
 
-}
+//TODO: ShouldSolveBiggerTrivialBoards
+//TODO: ShouldSolveRectangularTrivialBoards

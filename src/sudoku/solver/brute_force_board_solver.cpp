@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,54 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include "brute_force_board_solver.h"
 
-#include <limits>
+#include <cassert>
+#include <stack>
+#include <vector>
 
-namespace Puzzles {
+using namespace Sudoku;
 
-namespace Numbers {
+using std::stack;
+using std::vector;
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
+typedef unsigned short ushort;
+
+const vector<Board> getNext(const Board *board) {
+  vector<Board> next;
+
+  auto nextCell = board->firstEmptyCell();
+  assert(nextCell < 81);
+
+  for (ushort i = 1; i <= 9; ++i) {
+    Board copy(*board);
+    copy.setCell(nextCell, i);
+    next.emplace_back(copy);
+  }
+
+  return next;
 }
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+const Board BruteForceSolver::solve(const Board *board) const {
+  stack<Board> nodes;
+  nodes.push(*board);
 
+  do {
+    auto top = nodes.top();
+    auto isValid = top.isValid();
+    if (isValid && top.isFull()) {
+      return top;
+    } else {
+      nodes.pop();
+
+      if (isValid) {
+        for (const auto &node : getNext(&top)) {
+          nodes.push(node);
+        }
+      }
+    }
+  } while (!nodes.empty());
+
+  // Couldn't find anything!
+  return *board;
 }

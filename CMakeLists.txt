@@ -26,12 +26,12 @@ include_directories(src)
 
 # Executable
 file(GLOB_RECURSE sources src/*.cpp)
-add_executable(cpic ${sources})
-target_compile_options(cpic PUBLIC "-std=c++17" "-O3")
+add_executable(puzzles ${sources})
+target_compile_options(puzzles PUBLIC "-std=c++17" "-O3")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-	target_compile_options(cpic BEFORE PUBLIC "-Weverything" "-pedantic" "-Wno-c++98-compat" "-Wno-c++11-extensions" "-Wno-padded")
+	target_compile_options(puzzles BEFORE PUBLIC "-Weverything" "-pedantic" "-Wno-c++98-compat" "-Wno-c++11-extensions" "-Wno-padded")
 else()
-	target_compile_options(cpic BEFORE PUBLIC "-Wall" "-Wextra" "-pedantic")
+	target_compile_options(puzzles BEFORE PUBLIC "-Wall" "-Wextra" "-pedantic")
 endif()
 
 # Testing

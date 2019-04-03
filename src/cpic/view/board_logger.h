@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,13 @@
 
 #pragma once
 
-#include <limits>
+#include "../model/board_state.h"
 
-namespace Puzzles {
+namespace CPic {
 
-namespace Numbers {
-
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
-}
-
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+class BoardLogger {
+public:
+  void log(const BoardState *) const;
+};
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,42 @@
  * SOFTWARE.
 */
 
-#pragma once
+#include "board_logger.h"
 
-#include <limits>
+#include <iostream>
 
-namespace Puzzles {
+using namespace CPic;
 
-namespace Numbers {
+using std::ostream;
+using std::vector;
 
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
+typedef unsigned short ushort;
+
+ostream &operator<<(ostream &output, Clue const &clue) {
+  return output << clue.amount << " blocks of color " << clue.color;
 }
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
-}
-}
+void BoardLogger::log(const BoardState *board) const {
+  // TODO: Improve logging
+//  for (ushort i = 0; i < board->columnCount; ++i) {
+//    std::cout << "Column " << i + 1 << ": ";
+//    std::cout << board->clueForColumn(i, C0) << " ";
+//    std::cout << board->clueForColumn(i, C1) << " ";
+//    std::cout << std::endl;
+//  }
 
+//  for (ushort i = 0; i < board->rowCount; ++i) {
+//    std::cout << "Row " << i + 1 << ": ";
+//    std::cout << board->clueForRow(i, C0) << " ";
+//    std::cout << board->clueForRow(i, C1) << " ";
+//    std::cout << std::endl;
+//  }
+
+//  std::cout << "Final Board:" << std::endl;
+  for (ushort y = 0; y < board[0].columnCount(); ++y) {
+    for (const auto &row : *board) {
+      std::cout << row.row(y) << " ";
+    }
+    std::cout << std::endl;
+  }
 }
