@@ -83,7 +83,7 @@ BoardState BruteForceBoardSolver::solve(const Board *board) const {
   assert(board->rowCount > 0);
 
   stack<Node> nodes;
-  const auto emptyState = emptyBoardState(board->columnCount, board->rowCount);
+  const auto emptyState = BoardState(board->columnCount, board->rowCount);
 
   nodes.push(Node(board, emptyState));
 

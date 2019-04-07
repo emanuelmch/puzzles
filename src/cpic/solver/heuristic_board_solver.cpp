@@ -43,7 +43,7 @@ inline void paintRangeOnRow(BoardState *, Color, ushort row, ushort first, ushor
 
 BoardState HeuristicBoardSolver::solve(const Board *board) const {
   BoardState oldResults;
-  BoardState newResults = emptyBoardState(board->columnCount, board->rowCount);
+  BoardState newResults = BoardState(board->columnCount, board->rowCount);
   do {
     oldResults = newResults;
 

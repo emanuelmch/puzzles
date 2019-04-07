@@ -43,6 +43,14 @@ BoardRow::BoardRow(const vector<Color> &values) : internal(values) {
 short findFirstColorInColumn(const BoardState *state, ushort column, Color color);
 short findLastColorInColumn(const BoardState *state, ushort column, Color color);
 
+BoardState::BoardState(ushort columnCount, ushort rowCount) {
+  vector<Color> column(columnCount, Blank);
+
+  for (auto i = 0; i < rowCount; ++i) {
+    this->rows.emplace_back(BoardRow(column));
+  }
+}
+
 BoardState::BoardState(const vector<vector<Color>> &rows) {
   assert(rows.empty() == false);
   assert(Numbers::fitsUShort(rows.size()));

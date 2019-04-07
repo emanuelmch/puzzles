@@ -59,6 +59,7 @@ private:
 class BoardState {
 public:
   BoardState() = default;
+  BoardState(ushort columnCount, ushort rowCount);
   explicit BoardState(const std::vector<std::vector<Color>> &rows);
 
   bool isValid(const Board *) const;
@@ -94,43 +95,4 @@ public:
 private:
   std::vector<BoardRow> rows;
 };
-
-inline BoardState emptyBoardState(ushort columnCount, ushort rowCount) {
-  //FIXME: Implement this function properly
-  if (columnCount == 5 && rowCount == 5) {
-    return BoardState({{Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank}});
-  }
-
-  if (columnCount == 2 && rowCount == 2) {
-    return BoardState({{Blank, Blank},
-                       {Blank, Blank}});
-  }
-
-  if (columnCount == 2 && rowCount == 3) {
-    return BoardState({{Blank, Blank},
-                       {Blank, Blank},
-                       {Blank, Blank}});
-  }
-
-  if (columnCount == 5 && rowCount == 10) {
-    return BoardState({{Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank},
-                       {Blank, Blank, Blank, Blank, Blank}});
-  }
-
-  std::cerr << "Couldn't build an empty state with " << columnCount << " columns and "
-            << rowCount << " rows" << std::endl;
-  throw -1;
-}
 }
