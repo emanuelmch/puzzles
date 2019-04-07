@@ -37,8 +37,8 @@ inline void completeContiguousRows(const Board *, BoardState *);
 inline void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *, BoardState *);
 
 // Tools
-inline void paintBlanksOnColumn(const Board *, BoardState *, ushort column, Color);
-inline void paintBlanksOnRow(const Board *, BoardState *, ushort row, Color);
+inline void paintBlanksOnColumn(BoardState *, ushort column, Color);
+inline void paintBlanksOnRow(BoardState *, ushort row, Color);
 inline void paintRangeOnRow(BoardState *, Color, ushort row, ushort first, ushort last);
 
 BoardState HeuristicBoardSolver::solve(const Board *board) const {
@@ -68,7 +68,7 @@ void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
       auto count = state->countColorInColumn(column, color);
 
       if (total - count == blanks) {
-        paintBlanksOnColumn(board, state, column, color);
+        paintBlanksOnColumn(state, column, color);
         break;
       }
     }
@@ -84,7 +84,7 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
       auto count = state->countColorInRow(row, color);
 
       if (total - count == blanks) {
-        paintBlanksOnRow(board, state, row, color);
+        paintBlanksOnRow(state, row, color);
         break;
       }
     }
@@ -128,8 +128,8 @@ void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board,
 }
 
 // Tools
-void paintBlanksOnColumn(const Board *board, BoardState *state, ushort column, Color color) {
-  auto rowCount = static_cast<ushort>(board->rowCount);
+void paintBlanksOnColumn(BoardState *state, ushort column, Color color) {
+  auto rowCount = state->rowCount();
   for (ushort row = 0; row < rowCount; ++row) {
     if (state->colorAt(column, row) == Blank) {
       state->setColorAt(column, row, color);
@@ -137,8 +137,8 @@ void paintBlanksOnColumn(const Board *board, BoardState *state, ushort column, C
   }
 }
 
-void paintBlanksOnRow(const Board *board, BoardState *state, ushort row, Color color) {
-  auto columnCount = static_cast<ushort>(board->columnCount);
+void paintBlanksOnRow(BoardState *state, ushort row, Color color) {
+  auto columnCount = state->columnCount();
   for (ushort column = 0; column < columnCount; ++column) {
     if (state->colorAt(column, row) == Blank) {
       state->setColorAt(column, row, color);
