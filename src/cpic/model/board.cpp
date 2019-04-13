@@ -29,6 +29,7 @@ using namespace CPic;
 using std::map;
 using std::vector;
 
+//FIXME: All instances of this should be removed - should use STL's `types.h` instead
 typedef unsigned short ushort;
 
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
@@ -59,4 +60,25 @@ const Clue Board::clueForRow(ushort row, Color color) const {
   }
 
   assert(!"Asked for a clue for a non-existing color");
+}
+
+ushort Board::countPossibilitiesForRow(ushort row, Color color) const {
+  //TODO: Implement this in a more efficient manner
+  ushort count = 0;
+
+  for (auto col = 0; col < this->columnCount; ++col) {
+    if (isPossibility(col, row, color)) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+bool Board::isPossibility(ushort col, ushort row, Color color) const {
+  auto colClue = clueForColumn(col, color);
+  if (colClue.amount  == 0) return false;
+
+  auto rowClue = clueForRow(row, color);
+  return rowClue.amount != 0;
 }

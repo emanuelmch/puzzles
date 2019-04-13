@@ -40,7 +40,7 @@ BoardData createBoardTrivial1_0() {
           ->row({5}, {true})
           ->row({5}, {true})
           ->build();
-  BoardState solution = pivotState({{C0, C0, C0, C0, C0},
+  BoardState solution = BoardState({{C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
@@ -55,7 +55,7 @@ BoardData createBoardTrivial1_1() {
           ->row({0,2}, {false,true})
           ->row({0,2}, {false,true})
           ->build();
-  BoardState solution = pivotState({{C1, C1},
+  BoardState solution = BoardState({{C1, C1},
                                     {C1, C1}});
 
   return BoardData("trivial1_1", board, solution);

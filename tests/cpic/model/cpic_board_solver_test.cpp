@@ -44,7 +44,7 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   EXPECT_EQ(results.colorAt(0, 0), C0);
   EXPECT_EQ(results.colorAt(0, 1), C0);
   EXPECT_EQ(results.colorAt(1, 0), C1);
-  EXPECT_EQ(results.colorAt(1, 0), C1);
+  EXPECT_EQ(results.colorAt(1, 1), C1);
 }
 
 //TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows

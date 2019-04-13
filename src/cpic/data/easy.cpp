@@ -29,47 +29,121 @@ using std::vector;
 using namespace CPic;
 
 BoardData createBoardEasy1_1() {
-  auto board = BoardBuilder(2).column({2, 3}, {true, true})
-          ->column({2, 3}, {true, true})
-          ->column({2, 3}, {true, true})
-          ->column({5}, {true})
-          ->column({5}, {true})
-          ->row({5}, {true})
-          ->row({5}, {true})
-          ->row({2, 3}, {true, true})
-          ->row({2, 3}, {true, true})
-          ->row({2, 3}, {true, true})
-          ->build();
-  BoardState solution = pivotState({{C0, C0, C0, C0, C0},
-                                    {C0, C0, C0, C0, C0},
-                                    {C1, C1, C1, C0, C0},
-                                    {C1, C1, C1, C0, C0},
-                                    {C1, C1, C1, C0, C0}});
+    auto board = BoardBuilder(2).column({2, 3}, {true, true})
+            ->column({2, 3}, {true, true})
+            ->column({2, 3}, {true, true})
+            ->column({5}, {true})
+            ->column({5}, {true})
+            ->row({5}, {true})
+            ->row({5}, {true})
+            ->row({2, 3}, {true, true})
+            ->row({2, 3}, {true, true})
+            ->row({2, 3}, {true, true})
+            ->build();
+    BoardState solution = BoardState({{C0, C0, C0, C0, C0},
+                                      {C0, C0, C0, C0, C0},
+                                      {C1, C1, C1, C0, C0},
+                                      {C1, C1, C1, C0, C0},
+                                      {C1, C1, C1, C0, C0}});
 
-  return BoardData("easy1_1", board, solution);
+    return BoardData("easy1_1", board, solution);
 }
 
 BoardData createBoardEasy1_2() {
-  auto board = BoardBuilder(2).column({0, 5}, {false, true})
-          ->column({2, 3})
-          ->column({5}, {true})
-          ->column({1, 4}, {false, true})
-          ->column({0, 5}, {false, true})
-          ->row({1, 4})
-          ->row({2, 3}, {true, false})
-          ->row({1, 4})
-          ->row({1, 4})
-          ->row({3, 2}, {true})
-          ->build();
-  BoardState solution = pivotState({{C1, C1, C0, C1, C1},
-                                    {C1, C0, C0, C1, C1},
-                                    {C1, C1, C0, C1, C1},
-                                    {C1, C1, C0, C1, C1},
-                                    {C1, C0, C0, C0, C1}});
+    auto board = BoardBuilder(2).column({0, 5}, {false, true})
+            ->column({2, 3})
+            ->column({5}, {true})
+            ->column({1, 4}, {false, true})
+            ->column({0, 5}, {false, true})
+            ->row({1, 4})
+            ->row({2, 3}, {true, false})
+            ->row({1, 4})
+            ->row({1, 4})
+            ->row({3, 2}, {true})
+            ->build();
+    BoardState solution = BoardState({{C1, C1, C0, C1, C1},
+                                      {C1, C0, C0, C1, C1},
+                                      {C1, C1, C0, C1, C1},
+                                      {C1, C1, C0, C1, C1},
+                                      {C1, C0, C0, C0, C1}});
 
-  return BoardData("easy1_2", board, solution);
+    return BoardData("easy1_2", board, solution);
+}
+
+BoardData createBoardEasy1_3() {
+    auto board = BoardBuilder(2).column({2, 3}, {true, true})
+            ->column({5}, {true})
+            ->column({1, 4}, {false, true})
+            ->column({3, 2}, {false, true})
+            ->column({5}, {true})
+            ->row({4, 1}, {true})
+            ->row({2, 3})
+            ->row({2, 3})
+            ->row({4, 1})
+            ->row({4, 1})
+            ->build();
+    BoardState solution = BoardState({{C1, C0, C0, C0, C0},
+                                      {C1, C0, C1, C1, C0},
+                                      {C1, C0, C1, C1, C0},
+                                      {C0, C0, C1, C0, C0},
+                                      {C0, C0, C1, C0, C0}});
+
+    return BoardData("easy1_3", board, solution);
+}
+
+BoardData createBoardEasy1_4() {
+    auto board = BoardBuilder(3).column({2, 3}, {true, true})
+            ->column({2, 1, 2}, {true, false, true})
+            ->column({2, 3}, {true, true})
+            ->column({2, 2, 1}, {true})
+            ->column({2, 3}, {true, true})
+            ->row({5}, {true})
+            ->row({5}, {true})
+            ->row({0, 5}, {false, true})
+            ->row({0, 3, 2})
+            ->row({0, 4, 1})
+            ->build();
+    BoardState solution = BoardState({{C0, C0, C0, C0, C0},
+                                      {C0, C0, C0, C0, C0},
+                                      {C1, C1, C1, C1, C1},
+                                      {C1, C2, C1, C2, C1},
+                                      {C1, C2, C1, C1, C1}});
+
+    return BoardData("easy1_4", board, solution);
+}
+
+BoardData createBoardEasy1_20() {
+    auto board = BoardBuilder(4).column({1, 0, 1, 8})
+            ->column({5, 0, 0, 5})
+            ->column({8, 2})
+            ->column({5, 0, 0, 5})
+            ->column({1, 0, 1, 8})
+            ->row({1, 0, 0, 4})
+            ->row({3, 0, 0, 2}, {true})
+            ->row({5}, {true})
+            ->row({0, 1, 0, 4})
+            ->row({1, 0, 0, 4})
+            ->row({3, 0, 0, 2}, {true})
+            ->row({0, 1, 0, 4})
+            ->row({1, 0, 0, 4})
+            ->row({3, 0, 0, 2}, {true})
+            ->row({3, 0, 2}, {true})
+            ->build();
+    BoardState solution = BoardState({{C3, C3, C0, C3, C3},
+                                      {C3, C0, C0, C0, C3},
+                                      {C0, C0, C0, C0, C0},
+                                      {C3, C3, C1, C3, C3},
+                                      {C3, C3, C0, C3, C3},
+                                      {C3, C0, C0, C0, C3},
+                                      {C3, C3, C1, C3, C3},
+                                      {C3, C3, C0, C3, C3},
+                                      {C3, C0, C0, C0, C3},
+                                      {C2, C0, C0, C0, C2}});
+
+    return BoardData("easy1_20", board, solution);
 }
 
 vector<BoardData> CPic::createEasyBoards() {
-  return {createBoardEasy1_1(), createBoardEasy1_2()};
+    return {createBoardEasy1_1(), createBoardEasy1_2(), createBoardEasy1_3(), createBoardEasy1_4(),
+            createBoardEasy1_20()};
 }

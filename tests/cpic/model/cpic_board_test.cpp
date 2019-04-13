@@ -82,7 +82,7 @@ inline Board createRectangularBoard() {
 
 TEST(Board, ShouldWorkWithRectangularBoards) {
   Board board = createRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   ASSERT_EQ(state.columnCount(), 2);
   ASSERT_EQ(state.rowCount(), 3);
@@ -97,14 +97,14 @@ TEST(Board, ShouldWorkWithRectangularBoards) {
 
 TEST(Board, ShouldBeValidWhenEmpty) {
   Board board = createSquareBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   ASSERT_EQ(state.isValid(&board), true);
 }
 
 TEST(Board, ShouldBeValidWhenDiagonalsAreFilledCorrectly) {
   Board board = createSquareBoardWithDiagonals();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -116,7 +116,7 @@ TEST(Board, ShouldBeValidWhenDiagonalsAreFilledCorrectly) {
 
 TEST(Board, ShouldBeValidWhenDiagonalsArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithDiagonals();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -127,7 +127,7 @@ TEST(Board, ShouldBeValidWhenDiagonalsArePartiallyFilledCorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsAreFilledIncorrectly) {
   Board board = createSquareBoardWithDiagonals();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -139,7 +139,7 @@ TEST(Board, ShouldBeInvalidWhenDiagonalsAreFilledIncorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenDiagonalsArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithDiagonals();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -150,7 +150,7 @@ TEST(Board, ShouldBeInvalidWhenDiagonalsArePartiallyFilledIncorrectly) {
 
 TEST(Board, ShouldBeValidWhenVerticalLinesAreFilledCorrectly) {
   Board board = createSquareBoardWithVerticalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -162,7 +162,7 @@ TEST(Board, ShouldBeValidWhenVerticalLinesAreFilledCorrectly) {
 
 TEST(Board, ShouldBeValidWhenVerticalLinesArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithVerticalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -173,7 +173,7 @@ TEST(Board, ShouldBeValidWhenVerticalLinesArePartiallyFilledCorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesAreFilledIncorrectly) {
   Board board = createSquareBoardWithVerticalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -185,7 +185,7 @@ TEST(Board, ShouldBeInvalidWhenVerticalLinesAreFilledIncorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenVerticalLinesArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithVerticalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -196,7 +196,7 @@ TEST(Board, ShouldBeInvalidWhenVerticalLinesArePartiallyFilledIncorrectly) {
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesAreFilledCorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -208,7 +208,7 @@ TEST(Board, ShouldBeValidWhenHorizontalLinesAreFilledCorrectly) {
 
 TEST(Board, ShouldBeValidWhenHorizontalLinesArePartiallyFilledCorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -219,7 +219,7 @@ TEST(Board, ShouldBeValidWhenHorizontalLinesArePartiallyFilledCorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesAreFilledIncorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -231,7 +231,7 @@ TEST(Board, ShouldBeInvalidWhenHorizontalLinesAreFilledIncorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
   Board board = createSquareBoardWithHorizontalLines();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -242,7 +242,7 @@ TEST(Board, ShouldBeInvalidWhenHorizontalLinesArePartiallyFilledIncorrectly) {
 
 TEST(Board, ShouldBeValidWhenNonContiguousRectangularBoardIsFilledCorrectly) {
   Board board = createNonContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -256,7 +256,7 @@ TEST(Board, ShouldBeValidWhenNonContiguousRectangularBoardIsFilledCorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledWithIncorrectAmounts) {
   Board board = createNonContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -270,7 +270,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledWithIncorrec
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledInInvalidPlaces) {
   Board board = createNonContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -284,7 +284,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsFilledInInvalidPla
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledWithIncorrectAmounts) {
   Board board = createNonContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 1, C1);
   state.setColorAt(1, 1, C1);
@@ -294,7 +294,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledWit
 
 TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledInInvalidPlaces) {
   Board board = createNonContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -304,7 +304,7 @@ TEST(Board, ShouldBeInvalidWhenNonContiguousRectangularBoardIsPartiallyFilledInI
 
 TEST(Board, ShouldBeValidWhenContiguousRectangularBoardIsFilledCorrectly) {
   Board board = createContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C0);
@@ -318,7 +318,7 @@ TEST(Board, ShouldBeValidWhenContiguousRectangularBoardIsFilledCorrectly) {
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledWithIncorrectAmounts) {
   Board board = createContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -332,7 +332,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledWithIncorrectAm
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledInInvalidPlaces) {
   Board board = createContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 1, C1);
@@ -346,7 +346,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsFilledInInvalidPlaces
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledWithIncorrectAmounts) {
   Board board = createContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C1);
   state.setColorAt(0, 1, C1);
@@ -356,7 +356,7 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledWithIn
 
 TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledInInvalidPlaces) {
   Board board = createContiguousRectangularBoard();
-  BoardState state = emptyBoardState(board.columnCount, board.rowCount);
+  BoardState state = BoardState(board.columnCount, board.rowCount);
 
   state.setColorAt(0, 0, C0);
   state.setColorAt(0, 2, C0);

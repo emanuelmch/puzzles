@@ -44,6 +44,9 @@ public:
   const Clue clueForColumn(unsigned short, Color) const;
   const Clue clueForRow(unsigned short, Color) const;
 
+  //FIXME: Add Unit Tests for these two functions
+  unsigned short countPossibilitiesForRow(unsigned short, Color) const;
+  bool isPossibility(unsigned short col, unsigned short row, Color) const;
 private:
   std::vector<std::vector<Clue>> columns;
   std::vector<std::vector<Clue>> rows;

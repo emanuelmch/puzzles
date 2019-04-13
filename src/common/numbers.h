@@ -24,17 +24,13 @@
 
 #include <limits>
 
-namespace Puzzles {
-
-namespace Numbers {
-
-inline bool fitsUShort(unsigned long long value) {
-  return value <= std::numeric_limits<unsigned short>::max();
-}
+namespace Puzzles::Numbers {
 
 inline bool fitsUShort(short value) {
   return value >= std::numeric_limits<unsigned short>::min();
 }
-}
 
+inline bool fitsUShort(size_t value) {
+  return value <= std::numeric_limits<unsigned short>::max();
+}
 }

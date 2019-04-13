@@ -30,25 +30,35 @@ using std::vector;
 
 typedef unsigned short ushort;
 
+// Strategies
 inline void lookForOneColorLeftColumns(const Board *, BoardState *);
-inline void paintBlanksOnColumn(const Board *, BoardState *, ushort column, Color);
 inline void lookForOneColorLeftRows(const Board *, BoardState *);
-inline void paintBlanksOnRow(const Board *, BoardState *, ushort row, Color);
+inline void completeContiguousRows(const Board *, BoardState *);
+inline void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *, BoardState *);
+
+// Tools
+inline void paintBlanksOnColumn(BoardState *, ushort column, Color);
+inline void paintBlanksOnRow(BoardState *, ushort row, Color);
+inline void paintRangeOnRow(BoardState *, Color, ushort row, ushort first, ushort last);
 
 BoardState HeuristicBoardSolver::solve(const Board *board) const {
-  // TODO: Optimize this when we have more heuristics
   BoardState oldResults;
-  BoardState newResults = emptyBoardState(board->columnCount, board->rowCount);
+  BoardState newResults = BoardState(board->columnCount, board->rowCount);
   do {
     oldResults = newResults;
 
     lookForOneColorLeftColumns(board, &newResults);
     lookForOneColorLeftRows(board, &newResults);
+
+    completeContiguousRows(board, &newResults);
+
+    lookForColorsWhereRowCountAndPossibilityCountAreTheSame(board, &newResults);
   } while (oldResults != newResults);
 
   return oldResults;
 }
 
+// Strategies
 void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
   for (ushort column = 0; column < board->columnCount; ++column) {
     auto blanks = state->countColorInColumn(column, Blank);
@@ -58,18 +68,9 @@ void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
       auto count = state->countColorInColumn(column, color);
 
       if (total - count == blanks) {
-        paintBlanksOnColumn(board, state, column, color);
+        paintBlanksOnColumn(state, column, color);
         break;
       }
-    }
-  }
-}
-
-void paintBlanksOnColumn(const Board *board, BoardState *state, ushort column, Color color) {
-  auto rowCount = static_cast<ushort>(board->rowCount);
-  for (ushort row = 0; row < rowCount; ++row) {
-    if (state->colorAt(column, row) == Blank) {
-      state->setColorAt(column, row, color);
     }
   }
 }
@@ -78,23 +79,75 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
   for (ushort row = 0; row < board->rowCount; ++row) {
     auto blanks = state->countColorInRow(row, Blank);
 
-    for (auto color: board->colors) {
+    for (auto color : board->colors) {
       auto total = board->clueForRow(row, color).amount;
       auto count = state->countColorInRow(row, color);
 
       if (total - count == blanks) {
-        paintBlanksOnRow(board, state, row, color);
+        paintBlanksOnRow(state, row, color);
         break;
       }
     }
   }
 }
 
-void paintBlanksOnRow(const Board *board, BoardState *state, ushort row, Color color) {
-  auto columnCount = static_cast<ushort>(board->columnCount);
+void completeContiguousRows(const Board *board, BoardState *state) {
+  for (ushort row = 0; row < board->rowCount; ++row) {
+    for (auto color: board->colors) {
+      auto clue = board->clueForRow(row, color);
+      if (clue.contiguous == false) continue;
+
+      auto first = state->findFirstInRow(row, color);
+      if (first < 0) continue;
+      auto last = state->findLastInRow(row, color);
+
+      auto ufirst = static_cast<ushort>(first);
+      auto ulast = static_cast<ushort>(last);
+      paintRangeOnRow(state, color, row, ufirst, ulast);
+    }
+  }
+}
+
+//TODO: Find a better name, this one is too long
+void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board, BoardState *state) {
+  for (ushort row = 0; row < board->rowCount; ++row) {
+    for (auto color : board->colors) {
+      auto total = board->clueForRow(row, color).amount;
+      if (total == 0) continue;
+
+      auto possibilities = board->countPossibilitiesForRow(row, color);
+      if (possibilities == total) {
+        for (auto col = 0; col < board->columnCount; ++col) {
+          if (board->isPossibility(col, row, color)) {
+            state->setColorAt(col, row, color);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tools
+void paintBlanksOnColumn(BoardState *state, ushort column, Color color) {
+  auto rowCount = state->rowCount();
+  for (ushort row = 0; row < rowCount; ++row) {
+    if (state->colorAt(column, row) == Blank) {
+      state->setColorAt(column, row, color);
+    }
+  }
+}
+
+void paintBlanksOnRow(BoardState *state, ushort row, Color color) {
+  auto columnCount = state->columnCount();
   for (ushort column = 0; column < columnCount; ++column) {
     if (state->colorAt(column, row) == Blank) {
       state->setColorAt(column, row, color);
     }
+  }
+}
+
+void paintRangeOnRow(BoardState *state, Color color, ushort row, ushort first, ushort last) {
+  for (ushort col = first; col <= last; ++col) {
+    state->setColorAt(col, row, color);
   }
 }

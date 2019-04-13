@@ -22,6 +22,7 @@
 
 #include "board_logger.h"
 
+#include <cassert>
 #include <iostream>
 
 using namespace CPic;
@@ -36,25 +37,12 @@ ostream &operator<<(ostream &output, Clue const &clue) {
 }
 
 void BoardLogger::log(const BoardState *board) const {
-  // TODO: Improve logging
-//  for (ushort i = 0; i < board->columnCount; ++i) {
-//    std::cout << "Column " << i + 1 << ": ";
-//    std::cout << board->clueForColumn(i, C0) << " ";
-//    std::cout << board->clueForColumn(i, C1) << " ";
-//    std::cout << std::endl;
-//  }
+  assert(board->columnCount() > 0);
+  assert(board->rowCount() > 0);
 
-//  for (ushort i = 0; i < board->rowCount; ++i) {
-//    std::cout << "Row " << i + 1 << ": ";
-//    std::cout << board->clueForRow(i, C0) << " ";
-//    std::cout << board->clueForRow(i, C1) << " ";
-//    std::cout << std::endl;
-//  }
-
-//  std::cout << "Final Board:" << std::endl;
-  for (ushort y = 0; y < board[0].columnCount(); ++y) {
-    for (const auto &row : *board) {
-      std::cout << row.row(y) << " ";
+  for (ushort y = 0; y < board->rowCount(); ++y) {
+    for (ushort x = 0; x < board->columnCount(); ++x) {
+      std::cout << board->colorAt(x, y) << " ";
     }
     std::cout << std::endl;
   }

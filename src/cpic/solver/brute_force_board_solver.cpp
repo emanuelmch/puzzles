@@ -51,7 +51,7 @@ public:
 
     for (auto color: board->colors) {
       Node other(*this);
-      other.state.setColorAt(nextRow, nextCol, color);
+      other.state.setColorAt(nextCol, nextRow, color);
       other.nextCol++;
 
       if (other.nextCol == this->board->columnCount) {
@@ -83,8 +83,7 @@ BoardState BruteForceBoardSolver::solve(const Board *board) const {
   assert(board->rowCount > 0);
 
   stack<Node> nodes;
-  vector<BoardColumn> emptyBoard(board->columnCount, BoardColumn(vector<Color>(board->rowCount, Blank)));
-  const BoardState emptyState(emptyBoard);
+  const auto emptyState = BoardState(board->columnCount, board->rowCount);
 
   nodes.push(Node(board, emptyState));
 

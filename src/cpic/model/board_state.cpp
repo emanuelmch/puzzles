@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
 */
+
 #include "board_state.h"
 
 #include <algorithm>
@@ -34,15 +35,30 @@ using std::vector;
 using namespace CPic;
 using namespace Puzzles;
 
-BoardColumn::BoardColumn(const vector<Color> &values) : internal(values) {
+BoardRow::BoardRow(const vector<Color> &values) : internal(values) {
   assert(values.empty() == false);
-  assert(Numbers::fitsUShort(static_cast<unsigned long long int>(values.size())));
+  assert(Numbers::fitsUShort(values.size()));
 }
 
 short findFirstColorInColumn(const BoardState *state, ushort column, Color color);
 short findLastColorInColumn(const BoardState *state, ushort column, Color color);
-short findFirstColorInRow(const BoardState *state, ushort row, Color color);
-short findLastColorInRow(const BoardState *state, ushort row, Color color);
+
+BoardState::BoardState(ushort columnCount, ushort rowCount) {
+  vector<Color> column(columnCount, Blank);
+
+  for (auto i = 0; i < rowCount; ++i) {
+    this->rows.emplace_back(BoardRow(column));
+  }
+}
+
+BoardState::BoardState(const vector<vector<Color>> &rows) {
+  assert(rows.empty() == false);
+  assert(Numbers::fitsUShort(rows.size()));
+
+  for (const auto &row : rows) {
+    this->rows.emplace_back(row);
+  }
+}
 
 bool BoardState::isValid(const CPic::Board *board) const {
   // Has too many of a color in a column?
@@ -106,9 +122,9 @@ bool BoardState::isValid(const CPic::Board *board) const {
       auto clue = board->clueForRow(i, color);
       if (clue.amount == 1) continue;
 
-      auto first = findFirstColorInRow(this, i, color);
+      auto first = findFirstInRow(i, color);
       if (first == -1) continue;
-      auto last = findLastColorInRow(this, i, color);
+      auto last = findLastInRow(i, color);
 
       if (clue.contiguous) {
         if ((last - first) >= clue.amount) {
@@ -155,40 +171,38 @@ short findLastColorInColumn(const BoardState *state, ushort column, Color color)
   return index;
 }
 
-short findFirstColorInRow(const BoardState *state, ushort row, Color color) {
-  auto size = static_cast<ushort>(state->columnCount());
-  for (ushort i = 0; i < size; ++i) {
-    if (state->colorAt(i, row) == color) {
-      return i;
-    }
-  }
-  return -1;
+ushort BoardState::countColorInColumn(ushort column, Color color) const {
+  return count_if(rows.begin(), rows.end(), [column, color](auto it) {
+    return it.column(column) == color;
+  });
 }
 
-short findLastColorInRow(const BoardState *state, ushort row, Color color) {
-  auto size = static_cast<ushort>(state->columnCount());
-  short index = -1;
-
-  for (ushort i = 0; i < size; ++i) {
-    if (state->colorAt(i, row) == color) {
-      index = i;
-    }
-  }
-  return index;
-}
-
-ushort BoardState::countColorInColumn(ushort index, Color color) const {
-  auto column = this->internal.at(index);
-  auto begin = column.begin();
-  auto end = column.end();
+ushort BoardState::countColorInRow(ushort index, Color color) const {
+  auto row = this->rows.at(index);
+  auto begin = row.internal.begin();
+  auto end = row.internal.end();
 
   return static_cast<ushort>(count_if(begin, end, [color](auto it) {
     return it == color;
   }));
 }
 
-ushort BoardState::countColorInRow(ushort row, Color color) const {
-  return static_cast<ushort>(count_if(begin(), end(), [color, row](auto it) {
-    return it.row(row) == color;
-  }));
+short BoardState::findFirstInRow(ushort index, Color color) const {
+  assert(rows.size() > index);
+
+  auto row = rows[index];
+  auto result = std::find(row.internal.begin(), row.internal.end(), color);
+  if (result == row.internal.end()) {
+    return -1;
+  } else {
+    return result - row.internal.begin();
+  }
+}
+
+short BoardState::findLastInRow(unsigned short index, Color color) const {
+  assert(rows.size() > index);
+
+  auto row = rows[index];
+  auto result = std::find(row.internal.rbegin(), row.internal.rend(), color);
+  return row.internal.rend() - result - 1;
 }

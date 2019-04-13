@@ -22,4 +22,5 @@
 
 #include "model/cpic_board_builder_test.cpp"
 #include "model/cpic_board_solver_test.cpp"
+#include "model/cpic_board_state_test.cpp"
 #include "model/cpic_board_test.cpp"
