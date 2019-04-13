@@ -31,8 +31,6 @@ using namespace Sudoku;
 using std::stack;
 using std::vector;
 
-typedef unsigned short ushort;
-
 const vector<Board> getNext(const Board *board) {
   vector<Board> next;
 

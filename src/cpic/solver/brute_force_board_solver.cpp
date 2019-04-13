@@ -32,8 +32,6 @@ using namespace CPic;
 using std::stack;
 using std::vector;
 
-typedef unsigned short ushort;
-
 struct Node {
 public:
   explicit Node(const Board *_board, const BoardState &_state) : board(_board), state(_state), nextRow(0), nextCol(0) {}

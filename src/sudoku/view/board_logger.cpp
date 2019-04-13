@@ -29,8 +29,6 @@ using namespace Sudoku;
 using std::cout;
 using std::endl;
 
-typedef unsigned short ushort;
-
 const int COLUMN_COUNT = 9;
 
 void BoardLogger::log(const Sudoku::Board *board) const {

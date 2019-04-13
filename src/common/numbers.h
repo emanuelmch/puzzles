@@ -27,10 +27,10 @@
 namespace Puzzles::Numbers {
 
 inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<unsigned short>::min();
+  return value >= std::numeric_limits<ushort>::min();
 }
 
 inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<unsigned short>::max();
+  return value <= std::numeric_limits<ushort>::max();
 }
 }

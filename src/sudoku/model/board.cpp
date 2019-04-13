@@ -30,8 +30,6 @@ using namespace Sudoku;
 using std::cout;
 using std::endl;
 
-typedef unsigned short ushort;
-
 static const int SIZE = 9;
 
 Board::Board(std::vector<std::vector<ushort>> _values) {
@@ -127,7 +125,7 @@ bool Board::isFull() const {
   return true;
 }
 
-ushort Board::getCell(unsigned short index) const {
+ushort Board::getCell(ushort index) const {
   return values[index];
 }
 

@@ -29,9 +29,6 @@ using namespace CPic;
 using std::map;
 using std::vector;
 
-// FIXME: All instances of this should be removed - should use STL's `types.h` instead
-typedef unsigned short ushort;
-
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
     : colors(colors), colorCount(static_cast<int>(colors.size())), columnCount(static_cast<int>(columns.size())),
       rowCount(static_cast<int>(rows.size())), columns(columns), rows(rows) {}

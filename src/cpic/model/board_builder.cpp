@@ -29,8 +29,6 @@ using namespace CPic;
 using std::map;
 using std::vector;
 
-typedef unsigned short ushort;
-
 BoardBuilder::BoardBuilder(ushort colorCount) {
   assert(colorCount > 0 && colorCount <= 4);
 

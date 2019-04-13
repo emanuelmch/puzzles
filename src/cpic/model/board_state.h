@@ -36,7 +36,7 @@ class BoardRow {
 public:
   BoardRow(const std::vector<Color> &values);
 
-  inline void setColorAt(unsigned short column, Color color) { internal[column] = color; }
+  inline void setColorAt(ushort column, Color color) { internal[column] = color; }
 
   inline ushort columnCount() const { return internal.size(); }
 
@@ -55,21 +55,18 @@ public:
   explicit BoardState(const std::vector<std::vector<Color>> &rows);
 
   bool isValid(const Board *) const;
-  unsigned short countColorInColumn(unsigned short, Color) const;
-  unsigned short countColorInRow(unsigned short, Color) const;
-  short findFirstInRow(unsigned short, Color) const;
-  short findLastInRow(unsigned short, Color) const;
+  ushort countColorInColumn(ushort, Color) const;
+  ushort countColorInRow(ushort, Color) const;
+  short findFirstInRow(ushort, Color) const;
+  short findLastInRow(ushort, Color) const;
 
-  inline void setColorAt(unsigned short column, unsigned short row, Color color) {
-    rows.at(row).setColorAt(column, color);
-  }
+  inline void setColorAt(ushort column, ushort row, Color color) { rows.at(row).setColorAt(column, color); }
 
   inline ushort rowCount() const { return rows.size(); }
 
   inline ushort columnCount() const { return rows[0].columnCount(); }
 
-  inline Color colorAt(unsigned short column, unsigned short row) const { return rows.at(row).column(column); }
-
+  inline Color colorAt(ushort column, ushort row) const { return rows.at(row).column(column); }
   bool operator==(const BoardState &other) const { return rows == other.rows; }
 
   bool operator!=(const BoardState &other) const { return rows != other.rows; }

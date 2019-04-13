@@ -29,8 +29,6 @@ using namespace Sudoku;
 
 using std::vector;
 
-typedef unsigned short ushort;
-
 const int SIZE = 9;
 const int CELL_COUNT = SIZE * SIZE;
 

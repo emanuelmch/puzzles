@@ -30,10 +30,10 @@ namespace CPic {
 
 class BoardBuilder {
 public:
-  explicit BoardBuilder(unsigned short colorCount);
+  explicit BoardBuilder(ushort colorCount);
 
-  BoardBuilder *column(std::vector<unsigned short>, std::vector<bool> = std::vector<bool>());
-  BoardBuilder *row(std::vector<unsigned short>, std::vector<bool> = std::vector<bool>());
+  BoardBuilder *column(std::vector<ushort>, std::vector<bool> = std::vector<bool>());
+  BoardBuilder *row(std::vector<ushort>, std::vector<bool> = std::vector<bool>());
 
   Board build();
 

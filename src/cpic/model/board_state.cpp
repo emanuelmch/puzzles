@@ -27,8 +27,6 @@
 
 #include "../../common/numbers.h"
 
-typedef unsigned short ushort;
-
 using std::count_if;
 using std::vector;
 
@@ -196,7 +194,7 @@ short BoardState::findFirstInRow(ushort index, Color color) const {
   }
 }
 
-short BoardState::findLastInRow(unsigned short index, Color color) const {
+short BoardState::findLastInRow(ushort index, Color color) const {
   assert(rows.size() > index);
 
   auto row = rows[index];
