@@ -28,8 +28,6 @@
 
 using namespace CPic;
 
-// FIXME: Should differentiate between contiguous and non-contiguous colors
-
 inline Board createSquareBoardWithDiagonals() {
   return BoardBuilder(2) //
       .column({1, 1})

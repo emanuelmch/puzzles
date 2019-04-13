@@ -63,7 +63,6 @@ ushort Board::firstEmptyCell() const {
   return static_cast<ushort>(values.size());
 }
 
-// FIXME: Implement isValid
 bool Board::isValid() const {
   // Check for repetition on lines
   for (auto min = 0; min < (SIZE * SIZE); min += SIZE) {
