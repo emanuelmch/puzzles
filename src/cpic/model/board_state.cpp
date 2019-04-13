@@ -98,8 +98,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
         if ((last - first) >= clue.amount) {
           return false;
         } else {
-          // FIXME: Shouldn't bother test the case `j == first`
-          for (ushort j = first; j < last; ++j) {
+          for (ushort j = first + 1; j < last; ++j) {
             auto result = colorAt(i, j);
             if (result != clue.color && result != Blank) {
               return false;
