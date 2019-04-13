@@ -43,7 +43,6 @@ public:
   const Clue clueForColumn(ushort, Color) const;
   const Clue clueForRow(ushort, Color) const;
 
-  // FIXME: Add Unit Tests for these two functions
   ushort countPossibilitiesForRow(ushort, Color) const;
   bool isPossibility(ushort col, ushort row, Color) const;
 
