@@ -26,6 +26,9 @@
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
+#include "minesweeper/data/board_data.h"
+#include "minesweeper/solver/brute_force_solver.h"
+#include "minesweeper/view/board_logger.h"
 #include "sudoku/data/board_data.h"
 #include "sudoku/solver/brute_force_board_solver.h"
 #include "sudoku/solver/heuristic_board_solver.h"
@@ -35,10 +38,12 @@ using std::cout;
 using std::endl;
 
 inline bool solveCPic();
+inline bool solveMinesweeper();
 inline bool solveSudoku();
 
 int main() {
   if (!solveCPic()) return 1;
+  if (!solveMinesweeper()) return 1;
   if (!solveSudoku()) return 1;
 }
 
@@ -69,6 +74,31 @@ bool solveCPic() {
       logger.log(&data.solution);
       cout << "CPic: But got this: " << endl;
       logger.log(&heuristicResults);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool solveMinesweeper() {
+  Minesweeper::BruteForceSolver bruteSolver;
+  Minesweeper::BoardLogger logger;
+
+  auto boards = Minesweeper::createAllBoards();
+
+  for (auto data : boards) {
+    auto bruteResults = bruteSolver.solve(&data.board);
+    auto finalBoard = data.board.apply(bruteResults);
+    if (finalBoard.isSolved()) {
+      cout << "Minesweeper: Brute force solved " << data.name << endl;
+    } else {
+      cout << "Minesweeper: Brute force failed to solve board " << data.name << " with this layout: " << endl;
+      logger.log(&data.board);
+      cout << "Minesweeper: And got this solution: " << endl;
+      logger.log(&bruteResults);
+      cout << "Minesweeper: Which led to this: " << endl;
+      logger.log(&finalBoard);
       return false;
     }
   }
