@@ -24,6 +24,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <limits>
 
 using namespace Sudoku;
 
@@ -59,8 +60,7 @@ ushort Board::firstEmptyCell() const {
     }
   }
 
-  // FIXME: Should return UNSIGNED_SHORT_MAX
-  return static_cast<ushort>(values.size());
+  return std::numeric_limits<ushort>::max();
 }
 
 bool Board::isValid() const {
