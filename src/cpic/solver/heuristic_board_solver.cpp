@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "heuristic_board_solver.h"
 
@@ -63,7 +63,7 @@ void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
   for (ushort column = 0; column < board->columnCount; ++column) {
     auto blanks = state->countColorInColumn(column, Blank);
 
-    for (auto color: board->colors) {
+    for (auto color : board->colors) {
       auto total = board->clueForColumn(column, color).amount;
       auto count = state->countColorInColumn(column, color);
 
@@ -93,7 +93,7 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
 
 void completeContiguousRows(const Board *board, BoardState *state) {
   for (ushort row = 0; row < board->rowCount; ++row) {
-    for (auto color: board->colors) {
+    for (auto color : board->colors) {
       auto clue = board->clueForRow(row, color);
       if (clue.contiguous == false) continue;
 
@@ -108,8 +108,9 @@ void completeContiguousRows(const Board *board, BoardState *state) {
   }
 }
 
-//TODO: Find a better name, this one is too long
-void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board, BoardState *state) {
+// TODO: Find a better name, this one is too long
+void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board,
+                                                             BoardState *state) {
   for (ushort row = 0; row < board->rowCount; ++row) {
     for (auto color : board->colors) {
       auto total = board->clueForRow(row, color).amount;

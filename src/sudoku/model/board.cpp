@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "board.h"
 
@@ -61,15 +61,17 @@ ushort Board::firstEmptyCell() const {
     }
   }
 
-  //FIXME: Should return UNSIGNED_SHORT_MAX
+  // FIXME: Should return UNSIGNED_SHORT_MAX
   return static_cast<ushort>(values.size());
 }
 
-//FIXME: Implement isValid
+// FIXME: Implement isValid
 bool Board::isValid() const {
   // Check for repetition on lines
   for (auto min = 0; min < (SIZE * SIZE); min += SIZE) {
-    bool used[SIZE] = {false,};
+    bool used[SIZE] = {
+        false,
+    };
 
     for (auto i = 0; i < SIZE; ++i) {
       auto value = values[min + i];
@@ -81,7 +83,9 @@ bool Board::isValid() const {
 
   // Check for repetition on columns
   for (auto min = 0; min < SIZE; min++) {
-    bool used[SIZE] = {false,};
+    bool used[SIZE] = {
+        false,
+    };
 
     for (auto i = 0; i < SIZE; ++i) {
       auto value = values[min + (SIZE * i)];
@@ -96,7 +100,9 @@ bool Board::isValid() const {
     for (auto j = 0; j < SIZE; j += 3) {
       const auto first = i + (SIZE * j);
       const auto indices = {0, 1, 2, 9, 10, 11, 18, 19, 20};
-      bool used[SIZE] = {false,};
+      bool used[SIZE] = {
+          false,
+      };
 
       for (auto index : indices) {
         auto value = values[first + index];
@@ -111,7 +117,7 @@ bool Board::isValid() const {
 }
 
 bool Board::isFull() const {
-  //TODO: Replace this with something from algorithms
+  // TODO: Replace this with something from algorithms
   for (auto value : values) {
     if (value == 0) {
       return false;
@@ -128,5 +134,3 @@ ushort Board::getCell(unsigned short index) const {
 void Board::setCell(ushort index, ushort value) {
   values[index] = value;
 }
-
-

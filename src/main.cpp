@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include <iostream>
 
@@ -49,12 +49,13 @@ bool solveCPic() {
 
   auto boards = CPic::createAllBoards();
 
-  for (auto data: boards) {
+  for (auto data : boards) {
     auto bruteResults = bruteSolver.solve(&data.board);
     if (bruteResults == data.solution) {
       cout << "CPic: Brute force solved board " << data.name << endl;
     } else {
-      cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "CPic: Brute force failed to solve board " << data.name
+           << ", was expecting this: " << endl;
       logger.log(&data.solution);
       cout << "CPic: But got this: " << endl;
       logger.log(&bruteResults);
@@ -65,7 +66,8 @@ bool solveCPic() {
     if (heuristicResults == data.solution) {
       cout << "CPic: Heuristics solved board " << data.name << endl;
     } else {
-      cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "CPic: Heuristics failed to solve board " << data.name
+           << ", was expecting this: " << endl;
       logger.log(&data.solution);
       cout << "CPic: But got this: " << endl;
       logger.log(&heuristicResults);
@@ -88,18 +90,20 @@ bool solveSudoku() {
     if (bruteResults == data.solution) {
       cout << "Sudoku: Brute force solved " << data.name << endl;
     } else {
-      cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "Sudoku: Brute force failed to solve board " << data.name
+           << ", was expecting this: " << endl;
       logger.log(&data.solution);
       cout << "Sudoku: But got this: " << endl;
       logger.log(&bruteResults);
-      return  false;
+      return false;
     }
 
     auto heuristicResults = heuristicSolver.solve(&data.board);
     if (heuristicResults == data.solution) {
       cout << "Sudoku: Heuristics solved " << data.name << endl;
     } else {
-      cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "Sudoku: Heuristics failed to solve board " << data.name
+           << ", was expecting this: " << endl;
       logger.log(&data.solution);
       cout << "Sudoku: But got this: " << endl;
       logger.log(&heuristicResults);

@@ -18,19 +18,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #pragma once
 
 namespace CPic {
-enum Color {
-  Blank, C0, C1, C2, C3
-};
+enum Color { Blank, C0, C1, C2, C3 };
 
 class Clue {
 public:
   Clue(Color color, unsigned short amount, bool contiguous)
-          : color(color), amount(amount), contiguous(contiguous) {}
+      : color(color), amount(amount), contiguous(contiguous) {}
 
   Color color;
   unsigned short amount;

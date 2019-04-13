@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "brute_force_board_solver.h"
 
@@ -36,8 +36,8 @@ typedef unsigned short ushort;
 
 struct Node {
 public:
-  explicit Node(const Board *_board, const BoardState &_state) :
-          board(_board), state(_state), nextRow(0), nextCol(0) {}
+  explicit Node(const Board *_board, const BoardState &_state)
+      : board(_board), state(_state), nextRow(0), nextCol(0) {}
 
   Node(const Node &other) = default;
 
@@ -49,7 +49,7 @@ public:
     auto nextCell = (nextRow * board->columnCount) + nextCol;
     if (nextCell == lastCell || !state.isValid(board)) return next;
 
-    for (auto color: board->colors) {
+    for (auto color : board->colors) {
       Node other(*this);
       other.state.setColorAt(nextCol, nextRow, color);
       other.nextCol++;

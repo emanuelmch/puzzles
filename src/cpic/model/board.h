@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #pragma once
 
@@ -31,8 +31,8 @@ namespace CPic {
 
 class Board {
 public:
-
-  Board(std::vector<Color>, std::vector<std::vector<Clue>> columns, std::vector<std::vector<Clue>> rows);
+  Board(std::vector<Color>, std::vector<std::vector<Clue>> columns,
+        std::vector<std::vector<Clue>> rows);
   virtual ~Board();
 
   const std::vector<Color> colors;
@@ -44,9 +44,10 @@ public:
   const Clue clueForColumn(unsigned short, Color) const;
   const Clue clueForRow(unsigned short, Color) const;
 
-  //FIXME: Add Unit Tests for these two functions
+  // FIXME: Add Unit Tests for these two functions
   unsigned short countPossibilitiesForRow(unsigned short, Color) const;
   bool isPossibility(unsigned short col, unsigned short row, Color) const;
+
 private:
   std::vector<std::vector<Clue>> columns;
   std::vector<std::vector<Clue>> rows;

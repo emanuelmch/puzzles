@@ -18,7 +18,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
+
 #pragma once
 
 #include "../model/board.h"
@@ -31,8 +32,8 @@ namespace Sudoku {
 
 struct BoardData {
 public:
-  BoardData(std::string name, Board board, Board solution) :
-      name(std::move(name)), board(std::move(board)), solution(std::move(solution)) {}
+  BoardData(std::string name, Board board, Board solution)
+      : name(std::move(name)), board(std::move(board)), solution(std::move(solution)) {}
 
   const std::string name;
   const Board board;
