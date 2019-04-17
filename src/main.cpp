@@ -27,6 +27,7 @@
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
 #include "minesweeper/data/board_data.h"
+#include "minesweeper/model/board_state.h"
 #include "minesweeper/solver/brute_force_solver.h"
 #include "minesweeper/view/board_logger.h"
 #include "sudoku/data/board_data.h"
@@ -89,16 +90,17 @@ bool solveMinesweeper() {
 
   for (auto data : boards) {
     auto bruteResults = bruteSolver.solve(&data.board);
-    auto finalBoard = data.board.apply(bruteResults);
+    auto state = Minesweeper::BoardState(data.board);
+    auto finalBoard = state.applyAll(bruteResults);
     if (finalBoard.isSolved()) {
       cout << "Minesweeper: Brute force solved " << data.name << endl;
     } else {
       cout << "Minesweeper: Brute force failed to solve board " << data.name << " with this layout: " << endl;
-      logger.log(&data.board);
-      cout << "Minesweeper: And got this solution: " << endl;
-      logger.log(&bruteResults);
-      cout << "Minesweeper: Which led to this: " << endl;
-      logger.log(&finalBoard);
+      logger.log(data.board);
+      cout << endl << "Minesweeper: And got this solution: " << endl;
+      logger.log(bruteResults);
+      cout << endl << "Minesweeper: Which led to this: " << endl;
+      logger.log(finalBoard);
       return false;
     }
   }

@@ -22,15 +22,86 @@
 
 #include "board.h"
 
-using namespace Minesweeper;
+#include "common/numbers.h"
 
+#include <algorithm>
+#include <cassert>
+#include <iostream>
+
+using namespace Minesweeper;
+using Puzzles::Numbers::fitsUShort;
+
+using std::count_if;
+using std::to_string;
 using std::vector;
 
-const Board Minesweeper::Board::apply(std::vector<Minesweeper::Move>) const {
-  // FIXME: Implement this
+std::ostream &Minesweeper::operator<<(std::ostream &os, const Move &move) {
+  return os << "(" << move.x << "," << move.y << ") ";
 }
 
-bool Minesweeper::Board::isSolved() const {
-  // FIXME: Implement this
-  return false;
+inline ushort countBombsAround(const vector<bool> &bombs, ushort rows, ushort i) {
+  auto bombCount = static_cast<ushort>(bombs.size());
+  ushort columns = bombCount / rows;
+
+  vector<int> indexes = {i - columns, i + columns};
+
+  if (i % columns != 0) {
+    indexes.push_back(i - columns - 1);
+    indexes.push_back(i - 1);
+    indexes.push_back(i + columns - 1);
+  }
+
+  if (i % columns != (columns - 1)) {
+    indexes.push_back(i - columns + 1);
+    indexes.push_back(i + 1);
+    indexes.push_back(i + columns + 1);
+  }
+
+  ushort count = 0;
+  for (auto index : indexes) {
+    if (index < 0 || index >= bombCount) continue;
+
+    if (bombs[index]) count++;
+  }
+
+  return count;
+}
+
+inline vector<char> prepareBoard(const vector<bool> &bombs, ushort rows) {
+  assert(fitsUShort(bombs.size()));
+  ushort cellCount = bombs.size();
+
+  vector<char> cells;
+  for (auto i = 0; i < cellCount; ++i) {
+    if (bombs[i]) {
+      cells.push_back('B');
+    } else {
+      auto count = countBombsAround(bombs, rows, i);
+      cells.push_back(to_string(count).at(0));
+    }
+  }
+
+  return cells;
+}
+
+Board::Board(const vector<bool> &bombs, ushort rows, const Move &firstMove)
+    : firstMove(firstMove), cells(prepareBoard(bombs, rows)), rows(rows) {
+  ushort cellCount = bombs.size();
+  ushort columns = columnCount();
+
+  assert(cellCount % rows == 0);
+  assert(firstMove.x < rows);
+  assert(firstMove.y < columns);
+}
+
+ushort Board::bombCount() const {
+  auto begin = cells.begin();
+  auto end = cells.end();
+
+  return count_if(begin, end, [](auto it) { return it == 'B'; });
+}
+
+char Board::cellAt(ushort index) const {
+  assert(index < cells.size());
+  return cells.at(index);
 }

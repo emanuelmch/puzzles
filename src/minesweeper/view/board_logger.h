@@ -23,12 +23,14 @@
 #pragma once
 
 #include "../model/board.h"
+#include "../model/board_state.h"
 
 namespace Minesweeper {
 
 class BoardLogger {
 public:
-  void log(const Board *) const;
-  void log(const std::vector<Move> *) const;
+  void log(const Board &) const;
+  void log(const BoardState &) const;
+  void log(const std::vector<Move> &) const;
 };
 }

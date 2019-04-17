@@ -22,10 +22,32 @@
 
 #include "brute_force_solver.h"
 
+#include "minesweeper/model/board_state.h"
+
+#include <cassert>
+
 using namespace Minesweeper;
 
 using std::vector;
 
-const vector<Minesweeper::Move> BruteForceSolver::solve(const Minesweeper::Board *) const {
-  return {};
+const vector<Minesweeper::Move> BruteForceSolver::solve(const Minesweeper::Board *board) const {
+  vector<Move> moves = {board->firstMove};
+
+  BoardState initialState(*board);
+  initialState.apply(board->firstMove);
+  assert(initialState.isFailed() == false);
+
+  for (auto x = 0; x < board->columnCount(); ++x) {
+    for (auto y = 0; y < board->rowCount(); ++y) {
+      Move move(x, y);
+      if (move == board->firstMove) continue;
+
+      auto tempState = initialState.apply(move);
+      if (tempState.isFailed() == false) {
+        moves.push_back(move);
+      }
+    }
+  }
+
+  return moves;
 }

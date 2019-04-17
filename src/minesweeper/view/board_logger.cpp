@@ -22,19 +22,41 @@
 
 #include "board_logger.h"
 
+#include <algorithm>
 #include <iostream>
 
 using namespace Minesweeper;
 
 using std::cout;
 using std::endl;
+using std::for_each;
 
-void BoardLogger::log(const Minesweeper::Board *) const {
-  // FIXME: Implement this
-  cout << "<board should go here>" << endl;
+void BoardLogger::log(const Board &board) const {
+  auto cellCount = board.cellCount();
+  auto columns = board.columnCount();
+
+  for (auto i = 0; i < cellCount; ++i) {
+    cout << board.cellAt(i) << " ";
+    if ((i + 1) % columns == 0) {
+      cout << endl;
+    }
+  }
 }
 
-void BoardLogger::log(const std::vector<Minesweeper::Move> *) const {
-  // FIXME: Implement this
-  cout << "<solution should go here>" << endl;
+void BoardLogger::log(const BoardState &state) const {
+  auto cellCount = state.cellCount();
+  auto columns = state.columnCount();
+
+  for (auto i = 0; i < cellCount; ++i) {
+    cout << state.cellAt(i) << " ";
+    if ((i + 1) % columns == 0) {
+      cout << endl;
+    }
+  }
+}
+
+void BoardLogger::log(const std::vector<Move> &moves) const {
+  auto begin = moves.begin();
+  auto end = moves.end();
+  for_each(begin, end, [](auto it) { cout << it << " "; });
 }

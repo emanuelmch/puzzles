@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <sys/types.h>
 #include <vector>
 
@@ -30,19 +31,31 @@ namespace Minesweeper {
 struct Move {
   const int x;
   const int y;
+
+  Move(const Move &other) = default;
+  Move(int x, int y) : x(x), y(y) {}
+
+  bool operator==(const Move &other) { return x == other.x && y == other.y; }
 };
+
+std::ostream &operator<<(std::ostream &, const Move &);
 
 class Board {
 public:
-  Board(std::vector<ushort> values) : values(values) {}
+  Board(const std::vector<bool> &bombs, ushort rows, const Move &firstMove);
 
-  const Board apply(std::vector<Move>) const;
+  const Move firstMove;
 
-  bool isSolved() const;
+  ushort bombCount() const;
+  ushort cellCount() const { return cells.size(); }
+  ushort columnCount() const { return cells.size() / rows; }
+  ushort rowCount() const { return rows; }
 
-  bool operator==(const Board &) const { return true; }
+  // FIXME: I've been misusing this motherfucker
+  char cellAt(ushort) const;
 
 private:
-  std::vector<ushort> values;
+  const std::vector<char> cells;
+  const ushort rows;
 };
 }

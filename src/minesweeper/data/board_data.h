@@ -29,11 +29,22 @@
 namespace Minesweeper {
 
 struct BoardData {
+  BoardData(std::string name, Board &board) : name(std::move(name)), board(board) {}
   const std::string name;
   const Board board;
 };
 
 inline std::vector<BoardData> createAllBoards() {
-  return std::vector<BoardData>();
+  Board board(
+      {
+          false, false, false, false, false, false, //
+          false, false, true,  false, true,  false, //
+          false, false, false, false, false, false, //
+          false, false, false, false, false, false  //
+      },
+      4, Move(0, 0));
+  BoardData trivial0("trivial0", board);
+
+  return {trivial0};
 }
 }
