@@ -20,29 +20,17 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "board.h"
 
-#include <sys/types.h>
-#include <vector>
+using namespace Minesweeper;
 
-namespace Minesweeper {
+using std::vector;
 
-struct Move {
-  const int x;
-  const int y;
-};
+const Board Minesweeper::Board::apply(std::vector<Minesweeper::Move>) const {
+  // FIXME: Implement this
+}
 
-class Board {
-public:
-  Board(std::vector<ushort> values) : values(values) {}
-
-  const Board apply(std::vector<Move>) const;
-
-  bool isSolved() const;
-
-  bool operator==(const Board &) const { return true; }
-
-private:
-  std::vector<ushort> values;
-};
+bool Minesweeper::Board::isSolved() const {
+  // FIXME: Implement this
+  return false;
 }

@@ -22,6 +22,19 @@
 
 #include "board_logger.h"
 
+#include <iostream>
+
 using namespace Minesweeper;
 
-void BoardLogger::log(const Minesweeper::Board *) const {}
+using std::cout;
+using std::endl;
+
+void BoardLogger::log(const Minesweeper::Board *) const {
+  // FIXME: Implement this
+  cout << "<board should go here>" << endl;
+}
+
+void BoardLogger::log(const std::vector<Minesweeper::Move> *) const {
+  // FIXME: Implement this
+  cout << "<solution should go here>" << endl;
+}
