@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "board.h"
 
@@ -29,16 +29,12 @@ using namespace CPic;
 using std::map;
 using std::vector;
 
-//FIXME: All instances of this should be removed - should use STL's `types.h` instead
+// FIXME: All instances of this should be removed - should use STL's `types.h` instead
 typedef unsigned short ushort;
 
 Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<Clue>> rows)
-        : colors(colors),
-          colorCount(static_cast<int>(colors.size())),
-          columnCount(static_cast<int>(columns.size())),
-          rowCount(static_cast<int>(rows.size())),
-          columns(columns),
-          rows(rows) {}
+    : colors(colors), colorCount(static_cast<int>(colors.size())), columnCount(static_cast<int>(columns.size())),
+      rowCount(static_cast<int>(rows.size())), columns(columns), rows(rows) {}
 
 Board::~Board() = default;
 
@@ -63,7 +59,7 @@ const Clue Board::clueForRow(ushort row, Color color) const {
 }
 
 ushort Board::countPossibilitiesForRow(ushort row, Color color) const {
-  //TODO: Implement this in a more efficient manner
+  // TODO: Implement this in a more efficient manner
   ushort count = 0;
 
   for (auto col = 0; col < this->columnCount; ++col) {
@@ -77,7 +73,7 @@ ushort Board::countPossibilitiesForRow(ushort row, Color color) const {
 
 bool Board::isPossibility(ushort col, ushort row, Color color) const {
   auto colClue = clueForColumn(col, color);
-  if (colClue.amount  == 0) return false;
+  if (colClue.amount == 0) return false;
 
   auto rowClue = clueForRow(row, color);
   return rowClue.amount != 0;

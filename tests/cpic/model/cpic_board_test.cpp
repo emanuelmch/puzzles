@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "cpic/model/board_builder.h"
 
@@ -31,45 +31,50 @@ using namespace CPic;
 // FIXME: Should differentiate between contiguous and non-contiguous colors
 
 inline Board createSquareBoardWithDiagonals() {
-  return BoardBuilder(2).column({1, 1})
-          ->column({1, 1})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->build();
+  return BoardBuilder(2) //
+      .column({1, 1})
+      ->column({1, 1})
+      ->row({1, 1})
+      ->row({1, 1})
+      ->build();
 }
 
 inline Board createSquareBoardWithVerticalLines() {
-  return BoardBuilder(2).column({2, 0}, {true})
-          ->column({0, 2}, {false, true})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->build();
+  return BoardBuilder(2) //
+      .column({2, 0}, {true})
+      ->column({0, 2}, {false, true})
+      ->row({1, 1})
+      ->row({1, 1})
+      ->build();
 }
 
 inline Board createSquareBoardWithHorizontalLines() {
-  return BoardBuilder(2).column({1, 1})
-          ->column({1, 1})
-          ->row({2, 0}, {true})
-          ->row({0, 2}, {false, true})
-          ->build();
+  return BoardBuilder(2) //
+      .column({1, 1})
+      ->column({1, 1})
+      ->row({2, 0}, {true})
+      ->row({0, 2}, {false, true})
+      ->build();
 }
 
 inline Board createNonContiguousRectangularBoard() {
-  return BoardBuilder(2).column({2, 1})
-          ->column({1, 2})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->build();
+  return BoardBuilder(2) //
+      .column({2, 1})
+      ->column({1, 2})
+      ->row({1, 1})
+      ->row({1, 1})
+      ->row({1, 1})
+      ->build();
 }
 
 inline Board createContiguousRectangularBoard() {
-  return BoardBuilder(2).column({2, 1}, {true})
-          ->column({1, 2}, {false, true})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->build();
+  return BoardBuilder(2)
+      .column({2, 1}, {true})
+      ->column({1, 2}, {false, true})
+      ->row({1, 1})
+      ->row({1, 1})
+      ->row({1, 1})
+      ->build();
 }
 
 inline Board createSquareBoard() {
@@ -364,5 +369,5 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledInInva
   ASSERT_EQ(state.isValid(&board), false);
 }
 
-//TODO: Tests for  ushort countColorIn{Column,Row}
-//TODO: Tests for  ushort clueFor{Column,Row}
+// TODO: Tests for  ushort countColorIn{Column,Row}
+// TODO: Tests for  ushort clueFor{Column,Row}

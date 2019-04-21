@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include <iostream>
 
@@ -49,7 +49,7 @@ bool solveCPic() {
 
   auto boards = CPic::createAllBoards();
 
-  for (auto data: boards) {
+  for (auto data : boards) {
     auto bruteResults = bruteSolver.solve(&data.board);
     if (bruteResults == data.solution) {
       cout << "CPic: Brute force solved board " << data.name << endl;
@@ -92,7 +92,7 @@ bool solveSudoku() {
       logger.log(&data.solution);
       cout << "Sudoku: But got this: " << endl;
       logger.log(&bruteResults);
-      return  false;
+      return false;
     }
 
     auto heuristicResults = heuristicSolver.solve(&data.board);

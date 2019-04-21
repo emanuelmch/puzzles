@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 #include "cpic/model/board_state.h"
 
 #include <gtest/gtest.h>
@@ -26,7 +26,7 @@
 using namespace CPic;
 
 TEST(BoardState, ShouldCreateASquareState) {
-  BoardState board({{C0, C1},
+  BoardState board({{C0, C1}, //
                     {C1, C0}});
 
   ASSERT_EQ(board.columnCount(), 2);
@@ -39,7 +39,7 @@ TEST(BoardState, ShouldCreateASquareState) {
 }
 
 TEST(BoardState, ShouldCreateAWideState) {
-  BoardState board({{C0, C1, C0},
+  BoardState board({{C0, C1, C0}, //
                     {C1, C0, C1}});
 
   ASSERT_EQ(board.columnCount(), 3);
@@ -54,7 +54,7 @@ TEST(BoardState, ShouldCreateAWideState) {
 }
 
 TEST(BoardState, ShouldCreateATallState) {
-  BoardState board({{C0, C1},
+  BoardState board({{C0, C1}, //
                     {C1, C0},
                     {C0, C1}});
 

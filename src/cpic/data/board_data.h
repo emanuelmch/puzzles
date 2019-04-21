@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #pragma once
 
@@ -33,7 +33,7 @@ namespace CPic {
 struct BoardData {
 public:
   BoardData(const std::string &name, const Board &board, const BoardState &solution)
-          : name(name), board(board), solution(solution) {}
+      : name(name), board(board), solution(solution) {}
 
   const std::string name;
   const Board board;

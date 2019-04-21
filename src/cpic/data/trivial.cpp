@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "board_data.h"
 
@@ -29,18 +29,19 @@ using std::vector;
 using namespace CPic;
 
 BoardData createBoardTrivial1_0() {
-  auto board = BoardBuilder(1).column({5}, {true})
-          ->column({5}, {true})
-          ->column({5}, {true})
-          ->column({5}, {true})
-          ->column({5}, {true})
-          ->row({5}, {true})
-          ->row({5}, {true})
-          ->row({5}, {true})
-          ->row({5}, {true})
-          ->row({5}, {true})
-          ->build();
-  BoardState solution = BoardState({{C0, C0, C0, C0, C0},
+  auto board = BoardBuilder(1)
+                   .column({5}, {true})
+                   ->column({5}, {true})
+                   ->column({5}, {true})
+                   ->column({5}, {true})
+                   ->column({5}, {true})
+                   ->row({5}, {true})
+                   ->row({5}, {true})
+                   ->row({5}, {true})
+                   ->row({5}, {true})
+                   ->row({5}, {true})
+                   ->build();
+  BoardState solution = BoardState({{C0, C0, C0, C0, C0}, //
                                     {C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
                                     {C0, C0, C0, C0, C0},
@@ -50,12 +51,13 @@ BoardData createBoardTrivial1_0() {
 }
 
 BoardData createBoardTrivial1_1() {
-  auto board = BoardBuilder(2).column({0,2}, {false,true})
-          ->column({0,2}, {false,true})
-          ->row({0,2}, {false,true})
-          ->row({0,2}, {false,true})
-          ->build();
-  BoardState solution = BoardState({{C1, C1},
+  auto board = BoardBuilder(2)
+                   .column({0, 2}, {false, true})
+                   ->column({0, 2}, {false, true})
+                   ->row({0, 2}, {false, true})
+                   ->row({0, 2}, {false, true})
+                   ->build();
+  BoardState solution = BoardState({{C1, C1}, //
                                     {C1, C1}});
 
   return BoardData("trivial1_1", board, solution);

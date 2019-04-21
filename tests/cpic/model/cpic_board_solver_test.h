@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include <gtest/gtest.h>
 
@@ -28,22 +28,18 @@
 using namespace CPic;
 
 // First, the factory functions
-template<class T>
-BoardSolver *CreateBoardSolver();
+template <class T> BoardSolver *CreateBoardSolver();
 
-template<>
-BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
+template <> BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
   return new BruteForceBoardSolver;
 }
 
-template<>
-BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
+template <> BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
   return new HeuristicBoardSolver;
 }
 
 // Now, the Test template
-template<typename T>
-class BoardSolverTest : public ::testing::Test {
+template <typename T> class BoardSolverTest : public ::testing::Test {
 public:
   BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
 

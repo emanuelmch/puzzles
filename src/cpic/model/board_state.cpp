@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "board_state.h"
 
@@ -172,9 +172,9 @@ short findLastColorInColumn(const BoardState *state, ushort column, Color color)
 }
 
 ushort BoardState::countColorInColumn(ushort column, Color color) const {
-  return count_if(rows.begin(), rows.end(), [column, color](auto it) {
-    return it.column(column) == color;
-  });
+  auto begin = rows.begin();
+  auto end = rows.end();
+  return count_if(begin, end, [column, color](auto it) { return it.column(column) == color; });
 }
 
 ushort BoardState::countColorInRow(ushort index, Color color) const {
@@ -182,9 +182,7 @@ ushort BoardState::countColorInRow(ushort index, Color color) const {
   auto begin = row.internal.begin();
   auto end = row.internal.end();
 
-  return static_cast<ushort>(count_if(begin, end, [color](auto it) {
-    return it == color;
-  }));
+  return static_cast<ushort>(count_if(begin, end, [color](auto it) { return it == color; }));
 }
 
 short BoardState::findFirstInRow(ushort index, Color color) const {
