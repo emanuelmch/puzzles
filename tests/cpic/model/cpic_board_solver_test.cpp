@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #include "cpic_board_solver_test.h"
 
@@ -27,11 +27,12 @@
 using namespace CPic;
 
 TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
-  Board board = BoardBuilder(2).column({2, 0}, {true})
-          ->column({0, 2}, {false, true})
-          ->row({1, 1})
-          ->row({1, 1})
-          ->build();
+  Board board = BoardBuilder(2) //
+                    .column({2, 0}, {true})
+                    ->column({0, 2}, {false, true})
+                    ->row({1, 1})
+                    ->row({1, 1})
+                    ->build();
 
   auto results = this->solver->solve(&board);
 
@@ -47,7 +48,7 @@ TYPED_TEST(BoardSolverTest, ShouldSolveSmallTrivialBoards_HomogeneousColumns) {
   EXPECT_EQ(results.colorAt(1, 1), C1);
 }
 
-//TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
+// TODO: ShouldSolveSmallTrivialBoards_HomogeneousRows
 
-//TODO: ShouldSolveBiggerTrivialBoards
-//TODO: ShouldSolveRectangularTrivialBoards
+// TODO: ShouldSolveBiggerTrivialBoards
+// TODO: ShouldSolveRectangularTrivialBoards

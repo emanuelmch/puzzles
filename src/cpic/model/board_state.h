@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 #pragma once
 
@@ -36,21 +36,13 @@ class BoardRow {
 public:
   BoardRow(const std::vector<Color> &values);
 
-  inline void setColorAt(unsigned short column, Color color) {
-    internal[column] = color;
-  }
+  inline void setColorAt(unsigned short column, Color color) { internal[column] = color; }
 
-  inline ushort columnCount() const {
-    return internal.size();
-  }
+  inline ushort columnCount() const { return internal.size(); }
 
-  inline Color column(ushort column) const {
-    return internal[column];
-  }
+  inline Color column(ushort column) const { return internal[column]; }
 
-  bool operator==(const BoardRow &other) const {
-    return internal == other.internal;
-  }
+  bool operator==(const BoardRow &other) const { return internal == other.internal; }
 
 private:
   std::vector<Color> internal;
@@ -72,25 +64,15 @@ public:
     rows.at(row).setColorAt(column, color);
   }
 
-  inline ushort rowCount() const {
-    return rows.size();
-  }
+  inline ushort rowCount() const { return rows.size(); }
 
-  inline ushort columnCount() const {
-    return rows[0].columnCount();
-  }
+  inline ushort columnCount() const { return rows[0].columnCount(); }
 
-  inline Color colorAt(unsigned short column, unsigned short row) const {
-    return rows.at(row).column(column);
-  }
+  inline Color colorAt(unsigned short column, unsigned short row) const { return rows.at(row).column(column); }
 
-  bool operator==(const BoardState &other) const {
-    return rows == other.rows;
-  }
+  bool operator==(const BoardState &other) const { return rows == other.rows; }
 
-  bool operator!=(const BoardState &other) const {
-    return rows != other.rows;
-  }
+  bool operator!=(const BoardState &other) const { return rows != other.rows; }
 
 private:
   std::vector<BoardRow> rows;
