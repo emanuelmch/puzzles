@@ -21,7 +21,7 @@
 #
 
 cmake_minimum_required(VERSION 2.6) # TODO: Check for actual minimum version required
-project(ColoredPicross)
+project(Puzzles)
 include_directories(src)
 
 # Executable
