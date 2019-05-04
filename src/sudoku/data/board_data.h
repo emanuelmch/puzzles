@@ -51,5 +51,4 @@ inline std::vector<BoardData> createAllBoards() {
 
   return trivial;
 }
-
 }

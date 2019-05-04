@@ -30,5 +30,4 @@ class BoardLogger {
 public:
   void log(const BoardState *) const;
 };
-
 }

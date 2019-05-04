@@ -30,5 +30,4 @@ class BruteForceBoardSolver : public BoardSolver {
 public:
   BoardState solve(const Board *) const override;
 };
-
 }
