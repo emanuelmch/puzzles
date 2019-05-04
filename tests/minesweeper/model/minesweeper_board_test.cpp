@@ -34,6 +34,10 @@ inline Board trivialBoardWithBlanks() {
   return Board({false, false, false, false, false, true}, 2, {0, 0});
 }
 
+inline Board trivialBoardWithTwoBombs() {
+  return Board({true, true, false, false}, 2, {1, 1});
+}
+
 TEST(Board, CountFunctionsShouldWorkOnATrivalOneBombBoard) {
   auto board = trivialBoard();
 
@@ -68,4 +72,13 @@ TEST(Board, BoardShouldAddNumberOnesAndBlanks) {
   EXPECT_EQ(board.cellAt(3), '0');
   EXPECT_EQ(board.cellAt(4), '1');
   EXPECT_EQ(board.cellAt(5), 'B');
+}
+
+TEST(Board, BoardShouldMarkNumbersOverOne) {
+  auto board = trivialBoardWithTwoBombs();
+
+  EXPECT_EQ(board.cellAt(0), 'B');
+  EXPECT_EQ(board.cellAt(1), 'B');
+  EXPECT_EQ(board.cellAt(2), '2');
+  EXPECT_EQ(board.cellAt(3), '2');
 }
