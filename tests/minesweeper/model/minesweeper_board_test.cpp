@@ -27,11 +27,11 @@
 using namespace Minesweeper;
 
 inline Board trivialBoard() {
-  return Board({false, false, false, true}, 2, Move(0, 0));
+  return Board({false, false, false, true}, 2, {0, 0});
 }
 
 inline Board trivialBoardWithBlanks() {
-  return Board({false, false, false, false, false, true}, 2, Move(0, 0));
+  return Board({false, false, false, false, false, true}, 2, {0, 0});
 }
 
 TEST(Board, CountFunctionsShouldWorkOnATrivalOneBombBoard) {

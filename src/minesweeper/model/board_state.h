@@ -39,8 +39,8 @@ public:
   bool isFailed() const;
   bool isSolved() const;
 
-  BoardState apply(const Move) const;
-  BoardState applyAll(const std::vector<Move> &moves) const;
+  BoardState apply(const Point2D &) const;
+  BoardState applyAll(const std::vector<Point2D> &moves) const;
 
 private:
   const Board board;

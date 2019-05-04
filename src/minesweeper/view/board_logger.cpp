@@ -55,7 +55,7 @@ void BoardLogger::log(const BoardState &state) const {
   }
 }
 
-void BoardLogger::log(const std::vector<Move> &moves) const {
+void BoardLogger::log(const std::vector<Point2D> &moves) const {
   auto begin = moves.begin();
   auto end = moves.end();
   for_each(begin, end, [](auto it) { cout << it << " "; });

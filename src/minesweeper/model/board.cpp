@@ -35,7 +35,7 @@ using std::count_if;
 using std::to_string;
 using std::vector;
 
-std::ostream &Minesweeper::operator<<(std::ostream &os, const Move &move) {
+std::ostream &Minesweeper::operator<<(std::ostream &os, const Point2D &move) {
   return os << "(" << move.x << "," << move.y << ") ";
 }
 
@@ -84,7 +84,7 @@ inline vector<char> prepareBoard(const vector<bool> &bombs, ushort rows) {
   return cells;
 }
 
-Board::Board(const vector<bool> &bombs, ushort rows, const Move &firstMove)
+Board::Board(const vector<bool> &bombs, ushort rows, const Point2D &firstMove)
     : firstMove(firstMove), cells(prepareBoard(bombs, rows)), rows(rows) {
   ushort cellCount = bombs.size();
   ushort columns = columnCount();

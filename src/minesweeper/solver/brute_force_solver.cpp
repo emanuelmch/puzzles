@@ -30,8 +30,8 @@ using namespace Minesweeper;
 
 using std::vector;
 
-const vector<Minesweeper::Move> BruteForceSolver::solve(const Minesweeper::Board *board) const {
-  vector<Move> moves = {board->firstMove};
+const vector<Minesweeper::Point2D> BruteForceSolver::solve(const Minesweeper::Board *board) const {
+  vector<Point2D> moves = {board->firstMove};
 
   BoardState initialState(*board);
   initialState.apply(board->firstMove);
@@ -39,7 +39,7 @@ const vector<Minesweeper::Move> BruteForceSolver::solve(const Minesweeper::Board
 
   for (auto x = 0; x < board->columnCount(); ++x) {
     for (auto y = 0; y < board->rowCount(); ++y) {
-      Move move(x, y);
+      Point2D move(x, y);
       if (move == board->firstMove) continue;
 
       auto tempState = initialState.apply(move);

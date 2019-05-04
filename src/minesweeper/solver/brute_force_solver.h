@@ -28,6 +28,6 @@ namespace Minesweeper {
 
 class BruteForceSolver {
 public:
-  const std::vector<Move> solve(const Board *) const;
+  const std::vector<Point2D> solve(const Board *) const;
 };
 }

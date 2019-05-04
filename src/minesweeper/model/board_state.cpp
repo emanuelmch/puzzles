@@ -30,7 +30,7 @@ using std::vector;
 
 BoardState::BoardState(const Board &board) : board(board), cells(board.cellCount(), 'X') {}
 
-BoardState BoardState::apply(const Move move) const {
+BoardState BoardState::apply(const Point2D &move) const {
   // FIXME: Should handle blanks
   auto index = move.x + (move.y * columnCount());
 
@@ -40,7 +40,7 @@ BoardState BoardState::apply(const Move move) const {
   return BoardState(board, newCells);
 }
 
-BoardState BoardState::applyAll(const vector<Move> &moves) const {
+BoardState BoardState::applyAll(const vector<Point2D> &moves) const {
   // FIXME: Stop doing the new/delete thing
   auto newState = new BoardState(*this);
   for (const auto &move : moves) {

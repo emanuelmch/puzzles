@@ -31,6 +31,6 @@ class BoardLogger {
 public:
   void log(const Board &) const;
   void log(const BoardState &) const;
-  void log(const std::vector<Move> &) const;
+  void log(const std::vector<Point2D> &) const;
 };
 }

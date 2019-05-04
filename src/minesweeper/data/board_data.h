@@ -42,7 +42,7 @@ inline std::vector<BoardData> createAllBoards() {
           false, false, false, false, false, false, //
           false, false, false, false, false, false  //
       },
-      4, Move(0, 0));
+      4, {0, 0});
   BoardData trivial0("trivial0", board);
 
   return {trivial0};

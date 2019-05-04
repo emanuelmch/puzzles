@@ -28,23 +28,22 @@
 
 namespace Minesweeper {
 
-struct Move {
+struct Point2D {
   const int x;
   const int y;
 
-  Move(const Move &other) = default;
-  Move(int x, int y) : x(x), y(y) {}
+  Point2D(int x, int y) : x(x), y(y) {}
 
-  bool operator==(const Move &other) { return x == other.x && y == other.y; }
+  bool operator==(const Point2D &other) { return x == other.x && y == other.y; }
 };
 
-std::ostream &operator<<(std::ostream &, const Move &);
+std::ostream &operator<<(std::ostream &, const Point2D &);
 
 class Board {
 public:
-  Board(const std::vector<bool> &bombs, ushort rows, const Move &firstMove);
+  Board(const std::vector<bool> &bombs, ushort rows, const Point2D &firstMove);
 
-  const Move firstMove;
+  const Point2D firstMove;
 
   ushort bombCount() const;
   ushort cellCount() const { return cells.size(); }
