@@ -41,7 +41,7 @@ std::ostream &operator<<(std::ostream &, const Point2D &);
 
 class Board {
 public:
-  Board(const std::vector<bool> &bombs, ushort rows, const Point2D &firstMove);
+  Board(ushort columns, ushort rows, const Point2D &firstMove, const std::initializer_list<Point2D> &bombs);
 
   const Point2D firstMove;
 

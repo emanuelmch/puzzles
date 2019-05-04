@@ -32,6 +32,7 @@ using namespace Minesweeper;
 using Puzzles::Numbers::fitsUShort;
 
 using std::count_if;
+using std::initializer_list;
 using std::to_string;
 using std::vector;
 
@@ -84,12 +85,18 @@ inline vector<char> prepareBoard(const vector<bool> &bombs, ushort rows) {
   return cells;
 }
 
-Board::Board(const vector<bool> &bombs, ushort rows, const Point2D &firstMove)
-    : firstMove(firstMove), cells(prepareBoard(bombs, rows)), rows(rows) {
-  ushort cellCount = bombs.size();
-  ushort columns = columnCount();
+// FIXME: Rewrite the board preparation so this function becomes unnecessary
+inline vector<bool> getBools(ushort columns, ushort rows, const initializer_list<Point2D> &bombs) {
+  vector<bool> bools(columns * rows, false);
+  for (auto bomb : bombs) {
+    bools[bomb.x + (bomb.y * columns)] = true;
+  }
+  return bools;
+}
 
-  assert(cellCount % rows == 0);
+Board::Board(ushort columns, ushort rows, const Point2D &firstMove, const initializer_list<Point2D> &bombs)
+    : firstMove(firstMove), cells(prepareBoard(getBools(columns, rows, bombs), rows)), rows(rows) {
+  assert(bombs.size() > 0 && fitsUShort(bombs.size()));
   assert(firstMove.x < rows);
   assert(firstMove.y < columns);
 }
