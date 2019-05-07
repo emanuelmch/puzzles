@@ -24,6 +24,9 @@
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
+#include "shurikens/data.h"
+#include "shurikens/logger.h"
+#include "shurikens/solver/breadth_search_solver.h"
 #include "sudoku/data/board_data.h"
 #include "sudoku/solver/brute_force_board_solver.h"
 #include "sudoku/solver/heuristic_board_solver.h"
@@ -38,11 +41,12 @@ using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
 inline bool solveCPic();
+inline bool solveShurikens();
 inline bool solveSudoku();
 
 int main() {
   auto start = steady_clock::now();
-  if (!solveCPic() || !solveSudoku()) return 1;
+  if (!solveCPic() || !solveShurikens() || !solveSudoku()) return 1;
   auto end = steady_clock::now();
   cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
 }
@@ -82,6 +86,32 @@ bool solveCPic() {
       logger.log(&data.solution);
       cout << "CPic: But got this:\n";
       logger.log(&heuristicResults);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool solveShurikens() {
+  Shurikens::BruteForceSolver bruteSolver;
+  Shurikens::Logger logger;
+
+  auto shurikens = Shurikens::createAllShurikens();
+
+  for (const auto &data : shurikens) {
+    auto start = steady_clock::now();
+    auto moves = bruteSolver.solve(data.shuriken);
+    auto end = steady_clock::now();
+
+    if (moves == data.moves) {
+      auto duration = duration_cast<microseconds>(end - start).count();
+      cout << "Shuriken: Brute solved " << data.name << ",it took about" << duration << " microseconds!\n";
+    } else {
+      cout << "Shuriken: Brute failed to solved " << data.name << ", was expecting this:\n";
+      logger.log(data.moves);
+      cout << "Shuriken: But got this:\n";
+      logger.log(moves);
       return false;
     }
   }

@@ -29,9 +29,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Weverything -pedantic")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Weverything -pedantic -Wno-missing-braces")
 else ()
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -pedantic")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -pedantic -Wno-missing-braces")
 endif ()
 
 # Source Files
@@ -45,6 +45,8 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/brute_force_board_solver.cpp
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
+        src/shurikens/logger.cpp
+        src/shurikens/solver/breadth_search_solver.cpp
         src/sudoku/data/easy.cpp
         src/sudoku/data/trivial.cpp
         src/sudoku/model/board.cpp
