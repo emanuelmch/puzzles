@@ -23,6 +23,7 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 #include <sys/types.h>
 
 namespace Shurikens {
@@ -47,12 +48,61 @@ const Cell J = 9;
 const Cell K = 10;
 const Cell L = 11;
 
+const std::array<Move, 3> allMoves = {swap_top, turn_a, turn_b};
+
 class Shuriken {
 public:
   explicit Shuriken(std::array<Cell, 12> cells) : cells(cells) {}
 
+  Shuriken apply(Move move) const {
+    switch (move) {
+    case turn_a:
+      return doTurnA();
+    case turn_b:
+      return doTurnB();
+    case swap_top:
+      return doSwapTop();
+    default:
+      assert(!"Tried to apply an invalid move!");
+      return *this;
+    }
+  }
+
   bool isSolved() const { return cells == std::array<Cell, 12>({A, B, C, D, E, F, G, H, I, J, K, L}); }
 
   const std::array<Cell, 12> cells;
+
+private:
+  inline Shuriken doSwapTop() const {
+    auto swapped = this->cells;
+
+    std::swap(swapped[0], swapped[6]);
+    std::swap(swapped[1], swapped[7]);
+    std::swap(swapped[2], swapped[8]);
+
+    return Shuriken(swapped);
+  }
+
+  inline Shuriken doTurnA() const {
+    std::array<Cell, 12> turned = {};
+
+    for (int i = 0; i < 6; ++i) {
+      turned[(i + 1) % 6] = this->cells[i];
+      turned[i + 6] = this->cells[i + 6];
+    }
+
+    return Shuriken(turned);
+  }
+
+  inline Shuriken doTurnB() const {
+    std::array<Cell, 12> turned = {};
+
+    for (int i = 0; i < 6; ++i) {
+      turned[i] = this->cells[i];
+      turned[((i + 1) % 6) + 6] = this->cells[i + 6];
+    }
+
+    return Shuriken(turned);
+  }
 };
 }

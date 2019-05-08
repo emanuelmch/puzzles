@@ -94,7 +94,7 @@ bool solveCPic() {
 }
 
 bool solveShurikens() {
-  Shurikens::BruteForceSolver bruteSolver;
+  Shurikens::BreadthSearchSolver bruteSolver;
   Shurikens::Logger logger;
 
   auto shurikens = Shurikens::createAllShurikens();

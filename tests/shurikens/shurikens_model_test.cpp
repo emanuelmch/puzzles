@@ -20,15 +20,34 @@
  * SOFTWARE.
  */
 
-#pragma once
-
 #include "shurikens/model.h"
 
-#include <vector>
+#include <gtest/gtest.h>
 
-namespace Shurikens {
-class BreadthSearchSolver {
-public:
-  std::vector<Move> solve(const Shuriken &) const;
-};
+using namespace Shurikens;
+
+using std::array;
+
+TEST(Shuriken, Swap) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto swapped = shuriken.apply(swap_top);
+
+  array<Cell, 12> cells = {G, H, I, D, E, F, A, B, C, J, K, L};
+  EXPECT_EQ(swapped.cells, cells);
+}
+
+TEST(Shuriken, TurnSideA) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto swapped = shuriken.apply(turn_a);
+
+  array<Cell, 12> cells = {F, A, B, C, D, E, G, H, I, J, K, L};
+  EXPECT_EQ(swapped.cells, cells);
+}
+
+TEST(Shuriken, TurnSideB) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto swapped = shuriken.apply(turn_b);
+
+  array<Cell, 12> cells = {A, B, C, D, E, F, L, G, H, I, J, K};
+  EXPECT_EQ(swapped.cells, cells);
 }

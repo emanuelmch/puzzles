@@ -74,6 +74,7 @@ set(test_sources
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp
         tests/cpic/model/cpic_board_test.cpp
+        tests/shurikens/shurikens_model_test.cpp
         tests/sudoku/model/sudoku_board_test.cpp
         tests/sudoku/model/sudoku_board_validity_test.cpp
         )

@@ -22,11 +22,46 @@
 
 #include "breadth_search_solver.h"
 
+#include <queue>
+#include <utility>
+
 using namespace Shurikens;
 
+using std::move;
+using std::queue;
 using std::vector;
 
-vector<Move> BruteForceSolver::solve(const Shuriken &) const {
-  // FIXME: Implement this properly
-  return {swap_top};
+namespace {
+struct Node {
+  const Shuriken shuriken;
+  const vector<Move> moves;
+
+  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
+  Node(Shuriken shuriken, vector<Move> moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+};
+}
+
+vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken) const {
+  queue<Node> nodes;
+  nodes.emplace(shuriken);
+
+  do {
+    auto next = nodes.front();
+    if (next.shuriken.isSolved()) {
+      return next.moves;
+    }
+
+    nodes.pop();
+
+    for (auto &move : allMoves) {
+      auto newShuriken = next.shuriken.apply(move);
+      vector<Move> newMoves(next.moves);
+      newMoves.push_back(move);
+      newMoves.shrink_to_fit();
+
+      nodes.emplace(newShuriken, newMoves);
+    }
+  } while (!nodes.empty());
+
+  return {};
 }
