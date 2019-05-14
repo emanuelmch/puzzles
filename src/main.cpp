@@ -24,6 +24,7 @@
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
+#include "maths/runner.h"
 #include "shurikens/data/data.h"
 #include "shurikens/logger.h"
 #include "shurikens/solver/breadth_search_solver.h"
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
   auto fullRun = arg == "full";
 
   auto start = steady_clock::now();
-  if (!solveCPic() || !solveShurikens(fullRun) || !solveSudoku()) return 1;
+  if (!solveCPic() || !Maths::run() || !solveShurikens(fullRun) || !solveSudoku()) return 1;
   auto end = steady_clock::now();
   cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
 }
