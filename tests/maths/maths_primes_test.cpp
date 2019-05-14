@@ -20,37 +20,17 @@
  * SOFTWARE.
  */
 
-#include "runner.h"
+#include "maths/primes.h"
 
-#include "primes.h"
-
-#include <chrono>
-#include <iostream>
+#include <gtest/gtest.h>
 
 using namespace Maths;
 
-using std::cout;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
-using std::chrono::steady_clock;
-
-bool runLargestPrimeFactor(long value, long expected) {
-  auto start = steady_clock::now();
-  auto result = largestPrimeFactor(value);
-  auto end = steady_clock::now();
-
-  if (result == expected) {
-    auto duration = duration_cast<microseconds>(end - start).count();
-    cout << "Maths: Success! Found the Largest Prime Factor of " << value << ", it took " << duration
-         << " microseconds!\n";
-    return true;
-  } else {
-    cout << "Maths: Failure! Calculated the Largest Prime Factor of " << value << " to be " << result
-         << ", but it's actually " << expected << "\n";
-    return false;
-  }
-}
-
-bool Maths::run() {
-  return runLargestPrimeFactor(13195, 29);
+TEST(Maths, LargestPrimeFactor) {
+  EXPECT_EQ(largestPrimeFactor(2), 2);
+  EXPECT_EQ(largestPrimeFactor(3), 3);
+  EXPECT_EQ(largestPrimeFactor(4), 2);
+  EXPECT_EQ(largestPrimeFactor(5), 5);
+  EXPECT_EQ(largestPrimeFactor(6), 3);
+  EXPECT_EQ(largestPrimeFactor(13195), 29);
 }

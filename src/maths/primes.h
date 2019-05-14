@@ -20,37 +20,30 @@
  * SOFTWARE.
  */
 
-#include "runner.h"
+#pragma once
 
-#include "primes.h"
+namespace Maths {
 
-#include <chrono>
-#include <iostream>
+static bool isPrime(long n) {
+  if (n == 1) return false;
+  if (n == 2) return true;
 
-using namespace Maths;
-
-using std::cout;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
-using std::chrono::steady_clock;
-
-bool runLargestPrimeFactor(long value, long expected) {
-  auto start = steady_clock::now();
-  auto result = largestPrimeFactor(value);
-  auto end = steady_clock::now();
-
-  if (result == expected) {
-    auto duration = duration_cast<microseconds>(end - start).count();
-    cout << "Maths: Success! Found the Largest Prime Factor of " << value << ", it took " << duration
-         << " microseconds!\n";
-    return true;
-  } else {
-    cout << "Maths: Failure! Calculated the Largest Prime Factor of " << value << " to be " << result
-         << ", but it's actually " << expected << "\n";
-    return false;
+  for (long i = 2; i < n; ++i) {
+    if (n % i == 0) return false;
   }
+
+  return true;
 }
 
-bool Maths::run() {
-  return runLargestPrimeFactor(13195, 29);
+static long largestPrimeFactor(long n) {
+  long largest = (n % 2 == 0) ? 2 : 1;
+
+  for (long i = 3; i <= n; i += 2) {
+    if (n % i == 0 && isPrime(i)) {
+      largest = i;
+    }
+  }
+
+  return largest;
+}
 }
