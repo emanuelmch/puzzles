@@ -70,6 +70,8 @@ public:
 
   bool isSolved() const { return cells == std::array<Cell, 12>({A, B, C, D, E, F, G, H, I, J, K, L}); }
 
+  bool operator==(const Shuriken &other) const { return cells == other.cells; }
+
   const std::array<Cell, 12> cells;
 
 private:
@@ -103,6 +105,18 @@ private:
     }
 
     return Shuriken(turned);
+  }
+};
+}
+
+namespace std {
+template <> struct hash<Shurikens::Shuriken> {
+  std::size_t operator()(const Shurikens::Shuriken &shuriken) const {
+    auto result = 0;
+    for (auto cell : shuriken.cells) {
+      result = (result * 31) + hash<int>()(cell);
+    }
+    return result;
   }
 };
 }

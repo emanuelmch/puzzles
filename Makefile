@@ -19,6 +19,10 @@ release: build/release/Makefile
 run: debug
 	./build/debug/puzzles
 
+# TODO Find a better name than "full"
+run_full: debug
+	./build/debug/puzzles full
+
 .PHONY: all clean check debug debug_all release run
 
 # Specific file targets

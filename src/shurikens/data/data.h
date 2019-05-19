@@ -24,6 +24,8 @@
 
 #include "shurikens/model.h"
 
+#include <cassert>
+#include <set>
 #include <string>
 #include <utility>
 #include <vector>
@@ -31,17 +33,35 @@
 namespace Shurikens {
 
 struct ShurikenData {
-  ShurikenData(std::string name, Shuriken shuriken, std::vector<Move> moves)
-      : name(std::move(name)), shuriken(std::move(shuriken)), moves(std::move(moves)) {}
+
+  ShurikenData(std::string name, Shuriken shuriken, const std::vector<Move> &solution)
+      : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution}) {}
+
+  ShurikenData(std::string name, Shuriken shuriken, const std::vector<Move> &solution0,
+               const std::vector<Move> &solution1)
+      : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution0, solution1}) {
+    assert(solution0.size() == solution1.size());
+  }
+
+  inline size_t solutionSize() const { return solutions.cbegin()->size(); }
+  inline bool isSolution(const std::vector<Move> &solution) const {
+    return solutions.find(solution) != solutions.end();
+  }
 
   const std::string name;
   const Shuriken shuriken;
-  const std::vector<Move> moves;
+  const std::set<std::vector<Move>> solutions;
 };
 
 std::vector<ShurikenData> createTrivialShurikens();
+std::vector<ShurikenData> createRealShurikens();
 
 inline std::vector<ShurikenData> createAllShurikens() {
-  return createTrivialShurikens();
+  std::vector<ShurikenData> data = createTrivialShurikens();
+
+  std::vector<ShurikenData> real = createRealShurikens();
+  std::move(real.begin(), real.end(), std::back_inserter(data));
+
+  return data;
 }
 }

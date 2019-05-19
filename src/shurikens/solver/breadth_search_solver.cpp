@@ -23,12 +23,14 @@
 #include "breadth_search_solver.h"
 
 #include <queue>
+#include <unordered_set>
 #include <utility>
 
 using namespace Shurikens;
 
 using std::move;
 using std::queue;
+using std::unordered_set;
 using std::vector;
 
 namespace {
@@ -42,6 +44,9 @@ struct Node {
 }
 
 vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken) const {
+  unordered_set<Shuriken> cache;
+  cache.insert(shuriken);
+
   queue<Node> nodes;
   nodes.emplace(shuriken);
 
@@ -55,11 +60,13 @@ vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken) const {
 
     for (auto &move : allMoves) {
       auto newShuriken = next.shuriken.apply(move);
-      vector<Move> newMoves(next.moves);
-      newMoves.push_back(move);
-      newMoves.shrink_to_fit();
+      if (cache.insert(newShuriken).second) {
+        vector<Move> newMoves(next.moves);
+        newMoves.push_back(move);
+        newMoves.shrink_to_fit();
 
-      nodes.emplace(newShuriken, newMoves);
+        nodes.emplace(newShuriken, newMoves);
+      }
     }
   } while (!nodes.empty());
 

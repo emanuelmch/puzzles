@@ -34,19 +34,25 @@
 
 #include <chrono>
 #include <iostream>
+#include <string>
 
 using std::cout;
+using std::string;
 using std::chrono::duration_cast;
 using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
 inline bool solveCPic();
-inline bool solveShurikens();
+inline bool solveShurikens(bool fullRun);
 inline bool solveSudoku();
 
-int main() {
+int main(int argc, char *argv[]) {
+  // TODO Maybe creating a parsing unit?
+  string arg = argc >= 2 ? argv[1] : "";
+  auto fullRun = arg == "full";
+
   auto start = steady_clock::now();
-  if (!solveCPic() || !solveShurikens() || !solveSudoku()) return 1;
+  if (!solveCPic() || !solveShurikens(fullRun) || !solveSudoku()) return 1;
   auto end = steady_clock::now();
   cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
 }
@@ -93,25 +99,32 @@ bool solveCPic() {
   return true;
 }
 
-bool solveShurikens() {
-  Shurikens::BreadthSearchSolver bruteSolver;
+bool solveShurikens(bool fullRun) {
+  Shurikens::BreadthSearchSolver solver;
   Shurikens::Logger logger;
 
   auto shurikens = Shurikens::createAllShurikens();
 
   for (const auto &data : shurikens) {
+    if (fullRun == false && data.solutionSize() > solver.quickSolveLimit) {
+      cout << "Shuriken: Skipped brute solve for " << data.name << "\n";
+      continue;
+    }
+
     auto start = steady_clock::now();
-    auto moves = bruteSolver.solve(data.shuriken);
+    auto solution = solver.solve(data.shuriken);
     auto end = steady_clock::now();
 
-    if (moves == data.moves) {
+    if (data.isSolution(solution)) {
       auto duration = duration_cast<microseconds>(end - start).count();
-      cout << "Shuriken: Brute solved " << data.name << ",it took about" << duration << " microseconds!\n";
+      cout << "Shuriken: Brute solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
-      cout << "Shuriken: Brute failed to solved " << data.name << ", was expecting this:\n";
-      logger.log(data.moves);
+      cout << "Shuriken: Brute solver failed to solve " << data.name << ", was expecting one of these:\n";
+      for (auto &expected : data.solutions) {
+        logger.log(expected);
+      }
       cout << "Shuriken: But got this:\n";
-      logger.log(moves);
+      logger.log(solution);
       return false;
     }
   }
