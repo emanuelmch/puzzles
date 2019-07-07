@@ -32,6 +32,7 @@ using namespace CPic;
 using std::stack;
 using std::vector;
 
+namespace {
 struct Node {
 public:
   explicit Node(const Board *_board, const BoardState &_state) : board(_board), state(_state), nextRow(0), nextCol(0) {}
@@ -74,6 +75,7 @@ public:
 private:
   ushort nextRow, nextCol;
 };
+}
 
 BoardState BruteForceBoardSolver::solve(const Board *board) const {
   assert(board->columnCount > 0);
