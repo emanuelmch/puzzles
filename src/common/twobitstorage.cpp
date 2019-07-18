@@ -20,58 +20,39 @@
  * SOFTWARE.
  */
 
-#include "breadth_search_solver.h"
+#include "twobitstorage.h"
 
-#include "common/twobitstorage.h"
-
-#include <queue>
-#include <unordered_set>
-#include <utility>
-
-using namespace Shurikens;
+#include <cassert>
 
 using Puzzles::TwoBitStorage;
 
-using std::move;
-using std::queue;
-using std::unordered_set;
 using std::vector;
 
-namespace {
-struct Node {
-  const Shuriken shuriken;
-  const TwoBitStorage moves;
+TwoBitStorage::TwoBitStorage() : internal(0), _size(0) {}
 
-  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, const TwoBitStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
-};
+void TwoBitStorage::push(u_int8_t value) {
+  assert(value <= 3);
+  assert(_size < MAX_SIZE);
+
+  _size++;
+  auto shift = (MAX_SIZE - _size) * 2;
+  internal += static_cast<u_int64_t>(value) << shift;
 }
 
-vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken) const {
-  unordered_set<Shuriken> cache;
-  cache.insert(shuriken);
+u_int8_t TwoBitStorage::operator[](size_t i) const {
+  assert(i < _size);
+  auto shift = (MAX_SIZE - 1 - i) * 2;
+  return (internal & (static_cast<u_int64_t>(3) << shift)) >> shift;
+}
 
-  queue<Node> nodes;
-  nodes.emplace(shuriken);
+TwoBitStorage::operator std::vector<u_int8_t>() const {
+  vector<u_int8_t> result;
+  result.reserve(_size);
 
-  do {
-    auto next = nodes.front();
-    if (next.shuriken.isSolved()) {
-      return static_cast<vector<Move>>(next.moves);
-    }
+  for (auto i = 0; i < _size; ++i) {
+    u_int8_t value = (*this)[i];
+    result.push_back(value);
+  }
 
-    nodes.pop();
-
-    for (auto &move : allMoves) {
-      auto newShuriken = next.shuriken.apply(move);
-      if (cache.insert(newShuriken).second) {
-        TwoBitStorage newMoves(next.moves);
-        newMoves.push(move);
-
-        nodes.emplace(newShuriken, newMoves);
-      }
-    }
-  } while (!nodes.empty());
-
-  return {};
+  return result;
 }

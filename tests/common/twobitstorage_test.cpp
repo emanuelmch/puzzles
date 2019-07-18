@@ -20,58 +20,35 @@
  * SOFTWARE.
  */
 
-#include "breadth_search_solver.h"
-
 #include "common/twobitstorage.h"
 
-#include <queue>
-#include <unordered_set>
-#include <utility>
-
-using namespace Shurikens;
+#include <gtest/gtest.h>
 
 using Puzzles::TwoBitStorage;
 
-using std::move;
-using std::queue;
-using std::unordered_set;
-using std::vector;
+TEST(TwoBitStorage, ShouldStartAtZero) {
+  TwoBitStorage storage;
 
-namespace {
-struct Node {
-  const Shuriken shuriken;
-  const TwoBitStorage moves;
-
-  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, const TwoBitStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
-};
+  EXPECT_EQ(storage.size(), 0);
 }
 
-vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken) const {
-  unordered_set<Shuriken> cache;
-  cache.insert(shuriken);
+TEST(TwoBitStorage, PushToEmpty) {
+  TwoBitStorage storage;
 
-  queue<Node> nodes;
-  nodes.emplace(shuriken);
+  storage.push(3);
 
-  do {
-    auto next = nodes.front();
-    if (next.shuriken.isSolved()) {
-      return static_cast<vector<Move>>(next.moves);
-    }
+  EXPECT_EQ(storage.size(), 1);
+  EXPECT_EQ(storage[0], 3);
+}
 
-    nodes.pop();
+TEST(TwoBitStorage, PushMultiple) {
+  const auto max = TwoBitStorage::MAX_SIZE;
+  TwoBitStorage storage;
 
-    for (auto &move : allMoves) {
-      auto newShuriken = next.shuriken.apply(move);
-      if (cache.insert(newShuriken).second) {
-        TwoBitStorage newMoves(next.moves);
-        newMoves.push(move);
+  for (size_t i = 0; i < max; ++i)
+    storage.push((max - i) % 4);
 
-        nodes.emplace(newShuriken, newMoves);
-      }
-    }
-  } while (!nodes.empty());
-
-  return {};
+  EXPECT_EQ(storage.size(), max);
+  for (size_t i = 0; i < max; ++i)
+    EXPECT_EQ(storage[i], (max - i) % 4) << "Comparison failed on position " << i;
 }
