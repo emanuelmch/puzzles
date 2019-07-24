@@ -24,13 +24,12 @@
 
 #include <cassert>
 #include <iostream>
+#include <limits>
 
 using namespace Sudoku;
 
 using std::cout;
 using std::endl;
-
-typedef unsigned short ushort;
 
 static const int SIZE = 9;
 
@@ -61,11 +60,9 @@ ushort Board::firstEmptyCell() const {
     }
   }
 
-  // FIXME: Should return UNSIGNED_SHORT_MAX
-  return static_cast<ushort>(values.size());
+  return std::numeric_limits<ushort>::max();
 }
 
-// FIXME: Implement isValid
 bool Board::isValid() const {
   // Check for repetition on lines
   for (auto min = 0; min < (SIZE * SIZE); min += SIZE) {
@@ -127,7 +124,7 @@ bool Board::isFull() const {
   return true;
 }
 
-ushort Board::getCell(unsigned short index) const {
+ushort Board::getCell(ushort index) const {
   return values[index];
 }
 

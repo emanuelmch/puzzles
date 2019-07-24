@@ -28,8 +28,6 @@ using namespace CPic;
 
 using std::vector;
 
-typedef unsigned short ushort;
-
 // Strategies
 inline void lookForOneColorLeftColumns(const Board *, BoardState *);
 inline void lookForOneColorLeftRows(const Board *, BoardState *);

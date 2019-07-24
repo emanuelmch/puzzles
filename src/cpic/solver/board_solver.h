@@ -32,5 +32,4 @@ public:
   virtual ~BoardSolver() = default;
   virtual BoardState solve(const Board *) const = 0;
 };
-
 }

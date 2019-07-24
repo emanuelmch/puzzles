@@ -22,15 +22,17 @@
 
 #pragma once
 
+#include <sys/types.h>
+
 namespace CPic {
 enum Color { Blank, C0, C1, C2, C3 };
 
 class Clue {
 public:
-  Clue(Color color, unsigned short amount, bool contiguous) : color(color), amount(amount), contiguous(contiguous) {}
+  Clue(Color color, ushort amount, bool contiguous) : color(color), amount(amount), contiguous(contiguous) {}
 
   Color color;
-  unsigned short amount;
+  ushort amount;
   bool contiguous;
 };
 }

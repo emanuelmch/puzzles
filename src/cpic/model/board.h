@@ -36,16 +36,15 @@ public:
 
   const std::vector<Color> colors;
 
-  const unsigned short colorCount;
-  const unsigned short columnCount;
-  const unsigned short rowCount;
+  const ushort colorCount;
+  const ushort columnCount;
+  const ushort rowCount;
 
-  const Clue clueForColumn(unsigned short, Color) const;
-  const Clue clueForRow(unsigned short, Color) const;
+  const Clue clueForColumn(ushort, Color) const;
+  const Clue clueForRow(ushort, Color) const;
 
-  // FIXME: Add Unit Tests for these two functions
-  unsigned short countPossibilitiesForRow(unsigned short, Color) const;
-  bool isPossibility(unsigned short col, unsigned short row, Color) const;
+  ushort countPossibilitiesForRow(ushort, Color) const;
+  bool isPossibility(ushort col, ushort row, Color) const;
 
 private:
   std::vector<std::vector<Clue>> columns;

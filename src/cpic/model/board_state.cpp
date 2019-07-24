@@ -27,8 +27,6 @@
 
 #include "../../common/numbers.h"
 
-typedef unsigned short ushort;
-
 using std::count_if;
 using std::vector;
 
@@ -98,8 +96,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
         if ((last - first) >= clue.amount) {
           return false;
         } else {
-          // FIXME: Shouldn't bother test the case `j == first`
-          for (ushort j = first; j < last; ++j) {
+          for (ushort j = first + 1; j < last; ++j) {
             auto result = colorAt(i, j);
             if (result != clue.color && result != Blank) {
               return false;
@@ -197,7 +194,7 @@ short BoardState::findFirstInRow(ushort index, Color color) const {
   }
 }
 
-short BoardState::findLastInRow(unsigned short index, Color color) const {
+short BoardState::findLastInRow(ushort index, Color color) const {
   assert(rows.size() > index);
 
   auto row = rows[index];

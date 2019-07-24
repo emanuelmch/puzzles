@@ -22,25 +22,26 @@
 
 #pragma once
 
+#include <sys/types.h>
 #include <vector>
 
 namespace Sudoku {
 
 class Board {
 public:
-  explicit Board(std::vector<std::vector<unsigned short>> values);
+  explicit Board(std::vector<std::vector<ushort>> values);
 
-  unsigned short firstEmptyCell() const;
+  ushort firstEmptyCell() const;
   bool isValid() const;
   bool isFull() const;
 
-  unsigned short getCell(unsigned short index) const;
-  void setCell(unsigned short index, unsigned short value);
+  ushort getCell(ushort index) const;
+  void setCell(ushort index, ushort value);
 
   bool operator==(const Board &other) const;
   bool operator!=(const Board &other) const;
 
 private:
-  std::vector<unsigned short> values;
+  std::vector<ushort> values;
 };
 }
