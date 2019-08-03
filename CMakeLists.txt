@@ -20,8 +20,9 @@
 # SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.0) # CMP0048
+cmake_minimum_required(VERSION 3.9) # CMP0069
 cmake_policy(SET CMP0048 NEW)
+cmake_policy(SET CMP0069 NEW)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 include_directories(src)
@@ -29,6 +30,13 @@ include_directories(src)
 # Executable
 file(GLOB_RECURSE sources src/*.cpp)
 add_executable(puzzles ${sources})
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT supportsIPO)
+if (supportsIPO)
+    set_property(TARGET puzzles PROPERTY INTERPROCEDURAL_OPTIMIZATION true)
+endif ()
+
 target_compile_options(puzzles PUBLIC "-std=c++17" "-O3")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
     target_compile_options(puzzles BEFORE PUBLIC "-Weverything" "-pedantic" "-Wno-c++98-compat" "-Wno-c++11-extensions" "-Wno-padded")
