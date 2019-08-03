@@ -20,8 +20,10 @@
 # SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 2.6) # TODO: Check for actual minimum version required
-project(Puzzles)
+cmake_minimum_required(VERSION 3.0) # CMP0048
+cmake_policy(SET CMP0048 NEW)
+
+project(Puzzles VERSION 0.1 LANGUAGES CXX)
 include_directories(src)
 
 # Executable
