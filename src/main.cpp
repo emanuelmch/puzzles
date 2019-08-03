@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+#include <chrono>
 #include <iostream>
 
 #include "cpic/data/board_data.h"
@@ -33,13 +34,19 @@
 
 using std::cout;
 using std::endl;
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::steady_clock;
 
 inline bool solveCPic();
 inline bool solveSudoku();
 
 int main() {
+  auto start = steady_clock::now();
   if (!solveCPic()) return 1;
   if (!solveSudoku()) return 1;
+  auto end = steady_clock::now();
+  cout << "All good, we took roughly " << duration_cast<milliseconds>(end - start).count() << " milliseconds!" << endl;
 }
 
 bool solveCPic() {
