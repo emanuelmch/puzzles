@@ -60,5 +60,10 @@ foreach (testfile ${test_sources})
     add_test(${test_name} ${test_name})
     list(APPEND tests ${test_name})
 endforeach (testfile)
-
 add_custom_target(build_tests DEPENDS ${tests})
+
+# Workaround test for running all tests under one target
+add_executable(all_tests ${sources} ${test_sources})
+target_compile_options(all_tests PUBLIC -std=c++17 -O3)
+target_link_libraries(all_tests gtest gtest_main pthread)
+add_test(all_tests all_tests)

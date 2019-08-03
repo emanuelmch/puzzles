@@ -4,12 +4,11 @@ all: tests release
 clean:
 	rm -rf build
 
-check: build/Makefile
-	make -C build build_tests test
+check: tests
+	cd build && ctest -E all_tests
 
-checkv: build/Makefile
-	make -C build build_tests
-	cd build && ctest -V
+checkv: tests
+	cd build && ctest -E all_tests -V
 
 release: build/puzzles
 
