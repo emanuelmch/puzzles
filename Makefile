@@ -1,31 +1,38 @@
 # Generic phony targets
-all: tests release
+all: debug release tests
 
 clean:
 	rm -rf build
 
 check: tests
-	cd build && ctest -E all_tests
+	cd build/debug && ctest -E all_tests
 
 checkv: tests
-	cd build && ctest -E all_tests -V
+	cd build/debug && ctest -E all_tests -V
 
-release: build/puzzles
+debug: build/debug/Makefile
+	cmake --build build/debug --target puzzles
 
-run: build/puzzles
-	./build/puzzles
+release: build/release/Makefile
+	cmake --build build/release --target puzzles
 
-tests: build/Makefile
-	make -C build build_tests
+run: debug
+	./build/debug/puzzles
 
-.PHONY: all clean check checkv release run tests
+tests: build/debug/Makefile
+	cmake --build build/debug --target build_tests
+
+.PHONY: all clean check checkv debug release run tests
 
 # Specific file targets
-build:
-	mkdir build
+build/debug/Makefile: CMakeLists.txt
+	@#The -B parameter was only introduced in cmake 3.13
+	@#cmake . -DCMAKE_BUILD_TYPE=Debug -B build/debug
+	@mkdir -p build/debug
+	cd build/debug && cmake ../.. -DCMAKE_BUILD_TYPE=Debug
 
-build/Makefile: build
-	cd build && cmake ..
-
-build/puzzles: build/Makefile
-	make -C build puzzles
+build/release/Makefile: CMakeLists.txt
+	@#The -B parameter was only introduced in cmake 3.13
+	@#cmake . -DCMAKE_BUILD_TYPE=Release -B build/release
+	@mkdir -p build/release
+	cd build/release && cmake ../.. -DCMAKE_BUILD_TYPE=Release

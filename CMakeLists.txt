@@ -26,9 +26,15 @@ cmake_policy(SET CMP0069 NEW)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
-include_directories(src)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Weverything -pedantic -Wno-c++98-compat -Wno-c++11-extensions -Wno-padded")
+else ()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -pedantic")
+endif ()
 
 # Executable
+include_directories(src)
 file(GLOB_RECURSE sources src/*.cpp)
 add_executable(puzzles ${sources})
 
@@ -39,11 +45,6 @@ if (supportsIPO)
 endif ()
 
 target_compile_options(puzzles PUBLIC "-O3")
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-    target_compile_options(puzzles BEFORE PUBLIC "-Weverything" "-pedantic" "-Wno-c++98-compat" "-Wno-c++11-extensions" "-Wno-padded")
-else ()
-    target_compile_options(puzzles BEFORE PUBLIC "-Wall" "-Wextra" "-pedantic")
-endif ()
 
 # Testing
 enable_testing()

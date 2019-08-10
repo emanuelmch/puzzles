@@ -5,7 +5,7 @@ os:
 compiler:
   - clang
   - gcc
-script: make check run
+script: make all check run
 install:
   - if [[ "$TRAVIS_OS_NAME" = "linux" ]] && [[ "$CXX" = "g++" ]] ; then export CXX="g++-6" CC="gcc-6" ; fi
 addons:
