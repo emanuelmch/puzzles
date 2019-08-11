@@ -26,6 +26,7 @@ cmake_policy(SET CMP0069 NEW)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Weverything -pedantic -Wno-c++98-compat -Wno-c++11-extensions -Wno-padded")
@@ -44,8 +45,6 @@ if (supportsIPO)
     set_property(TARGET puzzles PROPERTY INTERPROCEDURAL_OPTIMIZATION true)
 endif ()
 
-target_compile_options(puzzles PUBLIC "-O3")
-
 # Testing
 enable_testing()
 add_subdirectory(libs/googletest)
@@ -56,7 +55,6 @@ file(GLOB_RECURSE test_sources tests/*_test.cpp)
 foreach (testfile ${test_sources})
     get_filename_component(test_name ${testfile} NAME_WE)
     add_executable(${test_name} ${sources} ${testfile})
-    target_compile_options(${test_name} PUBLIC -O3)
     target_link_libraries(${test_name} gtest gtest_main pthread)
 
     add_test(${test_name} ${test_name})
@@ -66,6 +64,5 @@ add_custom_target(build_tests DEPENDS ${tests})
 
 # Workaround test for running all tests under one target
 add_executable(all_tests ${sources} ${test_sources})
-target_compile_options(all_tests PUBLIC -O3)
 target_link_libraries(all_tests gtest gtest_main pthread)
 add_test(all_tests all_tests)
