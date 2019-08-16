@@ -34,10 +34,14 @@ else ()
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -pedantic")
 endif ()
 
-# Executable
+# Source Files
 include_directories(src)
 file(GLOB_RECURSE sources src/*.cpp)
-add_executable(puzzles ${sources})
+list(REMOVE_ITEM sources "${CMAKE_SOURCE_DIR}/src/main.cpp")
+add_library(puzzles_lib OBJECT ${sources})
+
+# Executable
+add_executable(puzzles "${CMAKE_SOURCE_DIR}/src/main.cpp" $<TARGET_OBJECTS:puzzles_lib>)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supportsIPO)
@@ -49,12 +53,10 @@ endif ()
 enable_testing()
 add_subdirectory(libs/googletest)
 
-list(REMOVE_ITEM sources "${CMAKE_SOURCE_DIR}/src/main.cpp")
 file(GLOB_RECURSE test_sources tests/*_test.cpp)
-
 foreach (testfile ${test_sources})
     get_filename_component(test_name ${testfile} NAME_WE)
-    add_executable(${test_name} ${sources} ${testfile})
+    add_executable(${test_name} ${testfile} $<TARGET_OBJECTS:puzzles_lib>)
     target_link_libraries(${test_name} gtest gtest_main pthread)
 
     add_test(${test_name} ${test_name})
@@ -63,6 +65,6 @@ endforeach (testfile)
 add_custom_target(build_tests DEPENDS ${tests})
 
 # Workaround test for running all tests under one target
-add_executable(all_tests ${sources} ${test_sources})
+add_executable(all_tests ${sources} ${test_sources} $<TARGET_OBJECTS:puzzles_lib>)
 target_link_libraries(all_tests gtest gtest_main pthread)
 add_test(all_tests all_tests)
