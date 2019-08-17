@@ -51,6 +51,7 @@ endif ()
 
 # Testing
 enable_testing()
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
 file(GLOB_RECURSE test_sources tests/*_test.cpp)
@@ -60,11 +61,9 @@ foreach (testfile ${test_sources})
     target_link_libraries(${test_name} gtest gtest_main pthread)
 
     add_test(${test_name} ${test_name})
-    list(APPEND tests ${test_name})
+    add_dependencies(check ${test_name})
 endforeach (testfile)
-add_custom_target(build_tests DEPENDS ${tests})
 
-# Workaround test for running all tests under one target
-add_executable(all_tests ${sources} ${test_sources} $<TARGET_OBJECTS:puzzles_lib>)
+# Workaround for running all tests under one target
+add_executable(all_tests ${test_sources} $<TARGET_OBJECTS:puzzles_lib>)
 target_link_libraries(all_tests gtest gtest_main pthread)
-add_test(all_tests all_tests)

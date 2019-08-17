@@ -1,17 +1,17 @@
 # Generic phony targets
-all: debug release tests
+all: debug_all release
 
 clean:
 	rm -rf build
 
-check: tests
-	cd build/debug && ctest -E all_tests
-
-checkv: tests
-	cd build/debug && ctest -E all_tests -V
+check: build/debug/Makefile
+	cmake --build build/debug --target check
 
 debug: build/debug/Makefile
 	cmake --build build/debug --target puzzles
+
+debug_all: build/debug/Makefile
+	cmake --build build/debug
 
 release: build/release/Makefile
 	cmake --build build/release --target puzzles
@@ -19,10 +19,7 @@ release: build/release/Makefile
 run: debug
 	./build/debug/puzzles
 
-tests: build/debug/Makefile
-	cmake --build build/debug --target build_tests
-
-.PHONY: all clean check checkv debug release run tests
+.PHONY: all clean check debug debug_all release run
 
 # Specific file targets
 build/debug/Makefile: CMakeLists.txt
