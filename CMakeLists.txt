@@ -20,35 +20,50 @@
 # SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 2.6) # TODO: Check for actual minimum version required
-project(Puzzles)
+cmake_minimum_required(VERSION 3.9) # CMP0069
+cmake_policy(SET CMP0048 NEW)
+cmake_policy(SET CMP0069 NEW)
+
+project(Puzzles VERSION 0.1 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Weverything -pedantic -Wno-c++98-compat -Wno-c++11-extensions -Wno-padded")
+else ()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -pedantic")
+endif ()
+
+# Source Files
 include_directories(src)
+file(GLOB_RECURSE sources src/*.cpp)
+list(REMOVE_ITEM sources "${CMAKE_SOURCE_DIR}/src/main.cpp")
+add_library(puzzles_lib OBJECT ${sources})
 
 # Executable
-file(GLOB_RECURSE sources src/*.cpp)
-add_executable(puzzles ${sources})
-target_compile_options(puzzles PUBLIC "-std=c++17" "-O3")
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-    target_compile_options(puzzles BEFORE PUBLIC "-Weverything" "-pedantic" "-Wno-c++98-compat" "-Wno-c++11-extensions" "-Wno-padded")
-else ()
-    target_compile_options(puzzles BEFORE PUBLIC "-Wall" "-Wextra" "-pedantic")
+add_executable(puzzles "${CMAKE_SOURCE_DIR}/src/main.cpp" $<TARGET_OBJECTS:puzzles_lib>)
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT supportsIPO)
+if (supportsIPO)
+    set_property(TARGET puzzles PROPERTY INTERPROCEDURAL_OPTIMIZATION true)
 endif ()
 
 # Testing
 enable_testing()
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
-list(REMOVE_ITEM sources "${CMAKE_SOURCE_DIR}/src/main.cpp")
 file(GLOB_RECURSE test_sources tests/*_test.cpp)
-
 foreach (testfile ${test_sources})
     get_filename_component(test_name ${testfile} NAME_WE)
-    add_executable(${test_name} ${sources} ${testfile})
-    target_compile_options(${test_name} PUBLIC -std=c++17 -O3)
+    add_executable(${test_name} ${testfile} $<TARGET_OBJECTS:puzzles_lib>)
     target_link_libraries(${test_name} gtest gtest_main pthread)
 
     add_test(${test_name} ${test_name})
-    list(APPEND tests ${test_name})
+    add_dependencies(check ${test_name})
 endforeach (testfile)
 
-add_custom_target(build_tests DEPENDS ${tests})
+# Workaround for running all tests under one target
+add_executable(all_tests ${test_sources} $<TARGET_OBJECTS:puzzles_lib>)
+target_link_libraries(all_tests gtest gtest_main pthread)

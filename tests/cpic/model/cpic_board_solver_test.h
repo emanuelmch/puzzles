@@ -50,4 +50,4 @@ public:
 
 // And last, create the Typed Test Case
 using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
-TYPED_TEST_CASE(BoardSolverTest, BoardSolverTypes);
+TYPED_TEST_SUITE(BoardSolverTest, BoardSolverTypes,);
