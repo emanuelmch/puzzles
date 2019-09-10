@@ -26,24 +26,29 @@
 
 using namespace Puzzles::LeetCode;
 
-TEST(LeetCode, LeetCode_10) {
-  EXPECT_FALSE(isMatch("aa", "a"));
-  EXPECT_TRUE(isMatch("aa", "a."));
-  EXPECT_TRUE(isMatch("aa", "a*"));
-  EXPECT_TRUE(isMatch("ab", ".*"));
-  EXPECT_TRUE(isMatch("aab", "c*a*b"));
-  EXPECT_FALSE(isMatch("mississippi", "mis*is*p*."));
-  EXPECT_FALSE(isMatch("ab", ".*c"));
-  EXPECT_TRUE(isMatch("aaa", "a*a"));
-  EXPECT_TRUE(isMatch("aaa", "ab*a*c*a"));
-  EXPECT_FALSE(isMatch("b", "b.*c"));
+#define CREATE_TEST_WORKAROUND(string, pattern, name, expected)                                                                   \
+  TEST(LeetCode_10, LeetCode_10_##name) { EXPECT_##expected(isMatch(string, pattern)); }
+#define CREATE_TEST(string, pattern, name, expected)                                                                   \
+  CREATE_TEST_WORKAROUND(string, pattern, name, expected)
+#define TEST_FALSE(string, pattern) CREATE_TEST(string, pattern, __LINE__, FALSE)
+#define TEST_TRUE(string, pattern) CREATE_TEST(string, pattern, __LINE__, TRUE)
 
-  EXPECT_FALSE(isMatch("a", "aa"));
-  EXPECT_TRUE(isMatch("", "a*"));
-  EXPECT_FALSE(isMatch("a*bb", "bb"));
-  EXPECT_TRUE(isMatch("bb", "a*bb"));
-  EXPECT_TRUE(isMatch("aaa", "aa*aa"));
-  EXPECT_TRUE(isMatch("aaa", "aa*ab*a"));
-  EXPECT_TRUE(isMatch("aaa", "aa*b*aa"));
-  EXPECT_TRUE(isMatch("aaa", "a*a*a*a*a*a"));
-}
+TEST_FALSE("aa", "a")
+TEST_TRUE("aa", "aa")
+TEST_TRUE("aa", "a*")
+TEST_TRUE("ab", ".*")
+TEST_TRUE("aab", "c*a*b")
+TEST_FALSE("mississippi", "mis*is*p*.")
+TEST_FALSE("ab", ".*c")
+TEST_TRUE("aaa", "a*a")
+TEST_TRUE("aaa", "ab*a*c*a")
+TEST_FALSE("b", "b.*c")
+
+TEST_FALSE("a", "aa")
+TEST_TRUE("", "a*")
+TEST_FALSE("a*bb", "bb")
+TEST_TRUE("bb", "a*bb")
+TEST_TRUE("aaa", "aa*aa")
+TEST_TRUE("aaa", "aa*ab*a")
+TEST_TRUE("aaa", "aa*b*aa")
+TEST_TRUE("aaa", "a*a*a*a*a*a")

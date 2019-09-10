@@ -26,34 +26,28 @@
 
 using namespace Puzzles::LeetCode;
 
-using std::make_tuple;
-using std::string;
-using std::tuple;
-using ::testing::TestWithParam;
-using ::testing::Values;
-
-typedef int (*AtoiFunction)(const string &);
-
-TEST(LeetCode, LeetCode_8) {
-  AtoiFunction atois[] = {myAtoi_firstAttempt, myAtoi_refined, myAtoi_cretino};
-  for (auto i = 0; i < 3; ++i) {
-    auto myAtoi = atois[i];
-
-    EXPECT_EQ(myAtoi(""), 0) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("   "), 0) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("42"), 42) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("  -42"), -42) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("4193 with words"), 4193) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("words and 987"), 0) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("2147483648"), 2147483647) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("-1089159117"), -1089159117) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("-2147483648"), -2147483648) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("-91283472332"), -2147483648) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("20000000000000000000"), 2147483647) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("  0000000000012345678"), 12345678) << "Using function #" << i;
-    EXPECT_EQ(myAtoi("+-2"), 0) << "Using function #" << i;
-  }
+#define CREATE_TEST_WORKAROUND(ascii, result, name) \
+  TEST(LeetCode_8, LeetCode_8_##name) { \
+  EXPECT_EQ(myAtoi_firstAttempt(ascii), result) << "Using function \"firstAttempt\""; \
+  EXPECT_EQ(myAtoi_refined(ascii), result) << "Using function \"refined\""; \
+  EXPECT_EQ(myAtoi_cretino(ascii), result) << "Using function \"cretino\""; \
 }
+#define CREATE_TEST(ascii, result, name) CREATE_TEST_WORKAROUND(ascii, result, name)
+#define TEST_EQ(ascii, result) CREATE_TEST(ascii, result, __LINE__)
+
+TEST_EQ("", 0)
+TEST_EQ("   ", 0)
+TEST_EQ("42", 42)
+TEST_EQ("  -42", -42)
+TEST_EQ("4193 with words", 4193)
+TEST_EQ("words and 987", 0)
+TEST_EQ("2147483648", 2147483647)
+TEST_EQ("-1089159117", -1089159117)
+TEST_EQ("-2147483648", -2147483648)
+TEST_EQ("-91283472332", -2147483648)
+TEST_EQ("20000000000000000000", 2147483647)
+TEST_EQ("  0000000000012345678", 12345678)
+TEST_EQ("+-2", 0)
 
 TEST(LeetCode, CountDigits) {
   EXPECT_EQ(countDigits(7), 1);
