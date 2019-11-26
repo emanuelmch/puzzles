@@ -43,8 +43,7 @@ inline bool solveSudoku();
 
 int main() {
   auto start = steady_clock::now();
-  if (!solveCPic()) return 1;
-  if (!solveSudoku()) return 1;
+  if (!solveCPic() || !solveSudoku()) return 1;
   auto end = steady_clock::now();
   cout << "All good, we took roughly " << duration_cast<milliseconds>(end - start).count() << " milliseconds!" << endl;
 }
