@@ -20,9 +20,6 @@
  * SOFTWARE.
  */
 
-#include <chrono>
-#include <iostream>
-
 #include "cpic/data/board_data.h"
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
@@ -31,6 +28,9 @@
 #include "sudoku/solver/brute_force_board_solver.h"
 #include "sudoku/solver/heuristic_board_solver.h"
 #include "sudoku/view/board_logger.h"
+
+#include <chrono>
+#include <iostream>
 
 using std::cout;
 using std::endl;
