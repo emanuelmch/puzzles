@@ -24,7 +24,7 @@
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
-#include "shurikens/data.h"
+#include "shurikens/data/data.h"
 #include "shurikens/logger.h"
 #include "shurikens/solver/breadth_search_solver.h"
 #include "sudoku/data/board_data.h"

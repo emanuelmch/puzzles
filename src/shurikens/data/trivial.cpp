@@ -20,29 +20,22 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "data.h"
 
-#include "model.h"
+using namespace Shurikens;
 
-#include <string>
-#include <utility>
-#include <vector>
+using std::vector;
 
-namespace Shurikens {
-
-struct ShurikenData {
-  ShurikenData(std::string name, Shuriken shuriken, std::vector<Move> moves)
-      : name(std::move(name)), shuriken(std::move(shuriken)), moves(std::move(moves)) {}
-
-  const std::string name;
-  const Shuriken shuriken;
-  const std::vector<Move> moves;
-};
-
-inline std::vector<ShurikenData> createAllShurikens() {
-  Shuriken shuriken({G, H, I, D, E, F, A, B, C, J, K, L});
-  ShurikenData data("trivial0", shuriken, {swap_top});
-
-  return {data};
+inline ShurikenData createTrivial0() {
+  Shuriken shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  return ShurikenData("trivial0", shuriken, {});
 }
+
+inline ShurikenData createTrivial1() {
+  Shuriken shuriken({G, H, I, D, E, F, A, B, C, J, K, L});
+  return ShurikenData("trivial1", shuriken, {swap_top});
+}
+
+vector<ShurikenData> Shurikens::createTrivialShurikens() {
+  return {createTrivial0(), createTrivial1()};
 }
