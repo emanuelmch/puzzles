@@ -54,10 +54,14 @@ struct ShurikenData {
 };
 
 std::vector<ShurikenData> createTrivialShurikens();
+std::vector<ShurikenData> createEasyShurikens();
 std::vector<ShurikenData> createRealShurikens();
 
 inline std::vector<ShurikenData> createAllShurikens() {
   std::vector<ShurikenData> data = createTrivialShurikens();
+
+  std::vector<ShurikenData> easy = createEasyShurikens();
+  std::move(easy.begin(), easy.end(), std::back_inserter(data));
 
   std::vector<ShurikenData> real = createRealShurikens();
   std::move(real.begin(), real.end(), std::back_inserter(data));
