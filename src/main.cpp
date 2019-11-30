@@ -34,7 +34,7 @@
 
 using std::cout;
 using std::chrono::duration_cast;
-using std::chrono::milliseconds;
+using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
 inline bool solveCPic();
@@ -44,7 +44,7 @@ int main() {
   auto start = steady_clock::now();
   if (!solveCPic() || !solveSudoku()) return 1;
   auto end = steady_clock::now();
-  cout << "All good, we took roughly " << duration_cast<milliseconds>(end - start).count() << " milliseconds!\n";
+  cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
 }
 
 bool solveCPic() {
@@ -55,9 +55,13 @@ bool solveCPic() {
   auto boards = CPic::createAllBoards();
 
   for (auto data : boards) {
+    auto bruteStart = steady_clock::now();
     auto bruteResults = bruteSolver.solve(&data.board);
+    auto bruteEnd = steady_clock::now();
+
     if (bruteResults == data.solution) {
-      cout << "CPic: Brute force solved board " << data.name << "\n";
+      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
+      cout << "CPic: Brute force solved board " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
@@ -66,9 +70,13 @@ bool solveCPic() {
       return false;
     }
 
+    auto heuristicStart = steady_clock::now();
     auto heuristicResults = heuristicSolver.solve(&data.board);
+    auto heuristicEnd = steady_clock::now();
+
     if (heuristicResults == data.solution) {
-      cout << "CPic: Heuristics solved board " << data.name << "\n";
+      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
+      cout << "CPic: Heuristics solved board " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
@@ -89,9 +97,13 @@ bool solveSudoku() {
   auto boards = Sudoku::createAllBoards();
 
   for (auto data : boards) {
+    auto bruteStart = steady_clock::now();
     auto bruteResults = bruteSolver.solve(&data.board);
+    auto bruteEnd = steady_clock::now();
+
     if (bruteResults == data.solution) {
-      cout << "Sudoku: Brute force solved " << data.name << "\n";
+      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
+      cout << "Sudoku: Brute force solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
@@ -100,9 +112,13 @@ bool solveSudoku() {
       return false;
     }
 
+    auto heuristicStart = steady_clock::now();
     auto heuristicResults = heuristicSolver.solve(&data.board);
+    auto heuristicEnd = steady_clock::now();
+
     if (heuristicResults == data.solution) {
-      cout << "Sudoku: Heuristics solved " << data.name << "\n";
+      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
+      cout << "Sudoku: Heuristics solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
