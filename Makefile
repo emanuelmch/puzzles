@@ -5,16 +5,16 @@ clean:
 	rm -rf build
 
 check: build/debug/Makefile
-	cmake --build build/debug --target check
+	cmake --build build/debug --target check -- --no-print-directory
 
 debug: build/debug/Makefile
-	cmake --build build/debug --target puzzles
+	cmake --build build/debug --target puzzles -- --no-print-directory
 
 debug_all: build/debug/Makefile
-	cmake --build build/debug
+	cmake --build build/debug -- --no-print-directory
 
 release: build/release/Makefile
-	cmake --build build/release --target puzzles
+	cmake --build build/release --target puzzles -- --no-print-directory
 
 run: debug
 	./build/debug/puzzles
