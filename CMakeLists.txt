@@ -36,12 +36,25 @@ endif ()
 
 # Source Files
 include_directories(src)
-file(GLOB_RECURSE sources src/*.cpp)
-list(REMOVE_ITEM sources "${CMAKE_SOURCE_DIR}/src/main.cpp")
-add_library(puzzles_lib OBJECT ${sources})
+add_library(puzzles_lib OBJECT
+        src/cpic/data/easy.cpp
+        src/cpic/data/trivial.cpp
+        src/cpic/model/board.cpp
+        src/cpic/model/board_builder.cpp
+        src/cpic/model/board_state.cpp
+        src/cpic/solver/brute_force_board_solver.cpp
+        src/cpic/solver/heuristic_board_solver.cpp
+        src/cpic/view/board_logger.cpp
+        src/sudoku/data/easy.cpp
+        src/sudoku/data/trivial.cpp
+        src/sudoku/model/board.cpp
+        src/sudoku/solver/brute_force_board_solver.cpp
+        src/sudoku/solver/heuristic_board_solver.cpp
+        src/sudoku/view/board_logger.cpp
+        )
 
 # Executable
-add_executable(puzzles "${CMAKE_SOURCE_DIR}/src/main.cpp" $<TARGET_OBJECTS:puzzles_lib>)
+add_executable(puzzles src/main.cpp $<TARGET_OBJECTS:puzzles_lib>)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supportsIPO)
@@ -54,7 +67,15 @@ enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
-file(GLOB_RECURSE test_sources tests/*_test.cpp)
+set(test_sources
+        tests/cpic/model/cpic_board_builder_test.cpp
+        tests/cpic/model/cpic_board_solver_test.cpp
+        tests/cpic/model/cpic_board_state_test.cpp
+        tests/cpic/model/cpic_board_test.cpp
+        tests/sudoku/model/sudoku_board_test.cpp
+        tests/sudoku/model/sudoku_board_validity_test.cpp
+        )
+
 foreach (testfile ${test_sources})
     get_filename_component(test_name ${testfile} NAME_WE)
     add_executable(${test_name} ${testfile} $<TARGET_OBJECTS:puzzles_lib>)
