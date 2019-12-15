@@ -74,6 +74,7 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
 set(test_sources
+        tests/common/numbers_test.cpp
         tests/common/twobitstorage_test.cpp
         tests/cpic/model/cpic_board_builder_test.cpp
         tests/cpic/model/cpic_board_solver_test.cpp

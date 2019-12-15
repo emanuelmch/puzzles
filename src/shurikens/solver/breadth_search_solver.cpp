@@ -22,12 +22,15 @@
 
 #include "breadth_search_solver.h"
 
+#include "common/numbers.h"
 #include "common/twobitstorage.h"
 
+#include <cmath>
 #include <queue>
 #include <unordered_set>
 #include <utility>
 
+using namespace Puzzles;
 using namespace Shurikens;
 
 using Puzzles::TwoBitStorage;
@@ -47,8 +50,12 @@ struct Node {
 };
 }
 
-vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken) const {
+vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
+  auto maxNodes = std::pow(allMoves.size(), knownUpperBound) + 1;
+  auto maxShurikens = static_cast<double>(Numbers::factorial(12));
+
   unordered_set<Shuriken> cache;
+  cache.reserve(std::min(maxNodes, maxShurikens));
   cache.insert(shuriken);
 
   queue<Node> nodes;

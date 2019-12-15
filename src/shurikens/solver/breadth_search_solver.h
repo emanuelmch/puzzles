@@ -32,6 +32,6 @@ public:
   // TODO Adjust this number
   const u_int8_t quickSolveLimit = 10;
 
-  std::vector<Move> solve(const Shuriken &) const;
+  std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const;
 };
 }

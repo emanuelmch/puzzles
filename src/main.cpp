@@ -112,7 +112,7 @@ bool solveShurikens(bool fullRun) {
     }
 
     auto start = steady_clock::now();
-    auto solution = solver.solve(data.shuriken);
+    auto solution = solver.solve(data.shuriken, data.solutionSize());
     auto end = steady_clock::now();
 
     if (data.isSolution(solution)) {

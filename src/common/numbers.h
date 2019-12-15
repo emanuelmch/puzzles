@@ -23,6 +23,7 @@
 #pragma once
 
 #include <limits>
+#include <sys/types.h>
 
 namespace Puzzles::Numbers {
 
@@ -32,5 +33,9 @@ inline bool fitsUShort(short value) {
 
 inline bool fitsUShort(size_t value) {
   return value <= std::numeric_limits<ushort>::max();
+}
+
+inline unsigned long long factorial(unsigned int value) {
+  return (value < 2) ? 1 : value * factorial(value - 1);
 }
 }
