@@ -27,6 +27,7 @@
 #include "shurikens/data/data.h"
 #include "shurikens/logger.h"
 #include "shurikens/solver/breadth_search_solver.h"
+#include "shurikens/solver/depth_search_solver.h"
 #include "sudoku/data/board_data.h"
 #include "sudoku/solver/brute_force_board_solver.h"
 #include "sudoku/solver/heuristic_board_solver.h"
@@ -100,32 +101,39 @@ bool solveCPic() {
 }
 
 bool solveShurikens(bool fullRun) {
-  Shurikens::BreadthSearchSolver solver;
+  Shurikens::BreadthSearchSolver breadthSearchSolver;
+  Shurikens::DepthSearchSolver depthSearchSolver;
+
+  Shurikens::Solver *solvers[] = {&breadthSearchSolver, &depthSearchSolver};
   Shurikens::Logger logger;
 
   auto shurikens = Shurikens::createAllShurikens();
 
   for (const auto &data : shurikens) {
-    if (fullRun == false && data.solutionSize() > solver.quickSolveLimit) {
-      cout << "Shuriken: Skipped brute solve for " << data.name << "\n";
-      continue;
-    }
-
-    auto start = steady_clock::now();
-    auto solution = solver.solve(data.shuriken, data.solutionSize());
-    auto end = steady_clock::now();
-
-    if (data.isSolution(solution)) {
-      auto duration = duration_cast<microseconds>(end - start).count();
-      cout << "Shuriken: Brute solved " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "Shuriken: Brute solver failed to solve " << data.name << ", was expecting one of these:\n";
-      for (auto &expected : data.solutions) {
-        logger.log(expected);
+    for (const auto &solver : solvers) {
+      if (fullRun == false && data.solutionSize() > solver->quickSolveLimit) {
+        cout << "Shuriken: Skipped " << solver->name << " solve for " << data.name << "\n";
+        continue;
       }
-      cout << "Shuriken: But got this:\n";
-      logger.log(solution);
-      return false;
+
+      auto start = steady_clock::now();
+      auto solution = solver->solve(data.shuriken, data.solutionSize());
+      auto end = steady_clock::now();
+
+      if (data.isSolution(solution)) {
+        auto duration = duration_cast<microseconds>(end - start).count();
+        cout << "Shuriken: " << solver->name << " solved " << data.name << ", it took about " << duration
+             << " microseconds!\n";
+      } else {
+        cout << "Shuriken: " << solver->name << " solver failed to solve " << data.name
+             << ", was expecting one of these:\n";
+        for (auto &expected : data.solutions) {
+          logger.log(expected);
+        }
+        cout << "Shuriken: But got this:\n";
+        logger.log(solution);
+        return false;
+      }
     }
   }
 

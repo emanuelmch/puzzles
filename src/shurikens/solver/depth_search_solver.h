@@ -25,9 +25,9 @@
 #include "solver.h"
 
 namespace Shurikens {
-class BreadthSearchSolver : public Solver {
+class DepthSearchSolver : public Solver {
 public:
-  BreadthSearchSolver() : Solver("Breadth", 10) {}
+  DepthSearchSolver() : Solver("  Depth", 10) {}
 
   std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const override;
 };

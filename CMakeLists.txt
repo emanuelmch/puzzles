@@ -52,6 +52,7 @@ add_library(puzzles_lib OBJECT
         src/shurikens/logger.cpp
         src/shurikens/model.cpp
         src/shurikens/solver/breadth_search_solver.cpp
+        src/shurikens/solver/depth_search_solver.cpp
         src/sudoku/data/easy.cpp
         src/sudoku/data/trivial.cpp
         src/sudoku/model/board.cpp

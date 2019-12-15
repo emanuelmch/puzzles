@@ -22,13 +22,22 @@
 
 #pragma once
 
-#include "solver.h"
+#include "shurikens/model.h"
+
+#include <string>
+#include <sys/types.h>
+#include <utility>
+#include <vector>
 
 namespace Shurikens {
-class BreadthSearchSolver : public Solver {
+class Solver {
 public:
-  BreadthSearchSolver() : Solver("Breadth", 10) {}
+  Solver(std::string name, u_int8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
+  virtual ~Solver() = default;
 
-  std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const override;
+  const std::string name;
+  const u_int8_t quickSolveLimit;
+
+  virtual std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const = 0;
 };
 }
