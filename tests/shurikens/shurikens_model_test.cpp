@@ -51,3 +51,39 @@ TEST(Shuriken, TurnSideB) {
   array<Cell, 12> cells = {A, B, C, D, E, F, L, G, H, I, J, K};
   EXPECT_EQ(swapped.cells, cells);
 }
+
+TEST(Shuriken, PerfectlySolvedShurikenShouldBeSolved) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+
+  EXPECT_TRUE(shuriken.isSolved());
+}
+
+TEST(Shuriken, InvertedSolvedShurikenShouldBeSolved) {
+  auto shuriken = Shuriken({G, H, I, J, K, L, A, B, C, D, E, F});
+
+  EXPECT_TRUE(shuriken.isSolved());
+}
+
+TEST(Shuriken, EqualsAndHash) {
+  auto shuriken1 = Shuriken({B, A, C, J, G, F, H, D, K, E, I, L});
+  auto shuriken2 = Shuriken({B, A, C, J, G, F, H, D, K, E, I, L});
+
+  EXPECT_EQ(shuriken1, shuriken2);
+
+  auto hash1 = std::hash<Shuriken>()(shuriken1);
+  auto hash2 = std::hash<Shuriken>()(shuriken2);
+
+  EXPECT_EQ(hash1, hash2);
+}
+
+TEST(Shuriken, EqualsAndHashDontConsiderBothSidesDifferent) {
+  auto shuriken1 = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto shuriken2 = Shuriken({G, H, I, J, K, L, A, B, C, D, E, F});
+
+  EXPECT_EQ(shuriken1, shuriken2);
+
+  auto hash1 = std::hash<Shuriken>()(shuriken1);
+  auto hash2 = std::hash<Shuriken>()(shuriken2);
+
+  EXPECT_EQ(hash1, hash2);
+}

@@ -52,7 +52,7 @@ struct Node {
 
 vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
   auto maxNodes = std::pow(allMoves.size(), knownUpperBound) + 1;
-  auto maxShurikens = static_cast<double>(Numbers::factorial(12));
+  auto maxShurikens = static_cast<double>(Numbers::factorial(12)) / 2;
 
   unordered_set<Shuriken> cache;
   cache.reserve(std::min(maxNodes, maxShurikens));
