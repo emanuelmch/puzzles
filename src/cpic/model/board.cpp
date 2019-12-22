@@ -43,6 +43,7 @@ const Clue Board::clueForColumn(ushort column, Color color) const {
   }
 
   assert(!"Asked for a clue for a non-existing color");
+  return Clue(Blank, 0, false);
 }
 
 const Clue Board::clueForRow(ushort row, Color color) const {
@@ -53,6 +54,7 @@ const Clue Board::clueForRow(ushort row, Color color) const {
   }
 
   assert(!"Asked for a clue for a non-existing color");
+  return Clue(Blank, 0, false);
 }
 
 ushort Board::countPossibilitiesForRow(ushort row, Color color) const {

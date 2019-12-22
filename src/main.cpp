@@ -20,9 +20,6 @@
  * SOFTWARE.
  */
 
-#include <chrono>
-#include <iostream>
-
 #include "cpic/data/board_data.h"
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
@@ -32,10 +29,12 @@
 #include "sudoku/solver/heuristic_board_solver.h"
 #include "sudoku/view/board_logger.h"
 
+#include <chrono>
+#include <iostream>
+
 using std::cout;
-using std::endl;
 using std::chrono::duration_cast;
-using std::chrono::milliseconds;
+using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
 inline bool solveCPic();
@@ -43,10 +42,9 @@ inline bool solveSudoku();
 
 int main() {
   auto start = steady_clock::now();
-  if (!solveCPic()) return 1;
-  if (!solveSudoku()) return 1;
+  if (!solveCPic() || !solveSudoku()) return 1;
   auto end = steady_clock::now();
-  cout << "All good, we took roughly " << duration_cast<milliseconds>(end - start).count() << " milliseconds!" << endl;
+  cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
 }
 
 bool solveCPic() {
@@ -57,24 +55,32 @@ bool solveCPic() {
   auto boards = CPic::createAllBoards();
 
   for (auto data : boards) {
+    auto bruteStart = steady_clock::now();
     auto bruteResults = bruteSolver.solve(&data.board);
+    auto bruteEnd = steady_clock::now();
+
     if (bruteResults == data.solution) {
-      cout << "CPic: Brute force solved board " << data.name << endl;
+      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
+      cout << "CPic: Brute force solved board " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
-      cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
-      cout << "CPic: But got this: " << endl;
+      cout << "CPic: But got this:\n";
       logger.log(&bruteResults);
       return false;
     }
 
+    auto heuristicStart = steady_clock::now();
     auto heuristicResults = heuristicSolver.solve(&data.board);
+    auto heuristicEnd = steady_clock::now();
+
     if (heuristicResults == data.solution) {
-      cout << "CPic: Heuristics solved board " << data.name << endl;
+      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
+      cout << "CPic: Heuristics solved board " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
-      cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
-      cout << "CPic: But got this: " << endl;
+      cout << "CPic: But got this:\n";
       logger.log(&heuristicResults);
       return false;
     }
@@ -91,24 +97,32 @@ bool solveSudoku() {
   auto boards = Sudoku::createAllBoards();
 
   for (auto data : boards) {
+    auto bruteStart = steady_clock::now();
     auto bruteResults = bruteSolver.solve(&data.board);
+    auto bruteEnd = steady_clock::now();
+
     if (bruteResults == data.solution) {
-      cout << "Sudoku: Brute force solved " << data.name << endl;
+      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
+      cout << "Sudoku: Brute force solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
-      cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
-      cout << "Sudoku: But got this: " << endl;
+      cout << "Sudoku: But got this:\n";
       logger.log(&bruteResults);
       return false;
     }
 
+    auto heuristicStart = steady_clock::now();
     auto heuristicResults = heuristicSolver.solve(&data.board);
+    auto heuristicEnd = steady_clock::now();
+
     if (heuristicResults == data.solution) {
-      cout << "Sudoku: Heuristics solved " << data.name << endl;
+      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
+      cout << "Sudoku: Heuristics solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
-      cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this: " << endl;
+      cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
       logger.log(&data.solution);
-      cout << "Sudoku: But got this: " << endl;
+      cout << "Sudoku: But got this:\n";
       logger.log(&heuristicResults);
       return false;
     }
