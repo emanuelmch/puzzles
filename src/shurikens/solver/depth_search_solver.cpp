@@ -87,5 +87,5 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
     }
   } while (nodes.empty() == false);
 
-  return static_cast<vector<uint8_t>>(bestSolution);
+  return static_cast<vector<Move>>(bestSolution);
 }

@@ -29,8 +29,7 @@
 #include <vector>
 
 namespace Shurikens {
-class Solver {
-public:
+struct Solver {
   Solver(std::string name, uint8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
   virtual ~Solver() = default;
 
