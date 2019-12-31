@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,22 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "data.h"
 
-#include <limits>
-#include <sys/types.h>
+using namespace Shurikens;
 
-namespace Puzzles::Numbers {
+using std::vector;
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
+inline ShurikenData createTrivial0() {
+  Shuriken shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  return ShurikenData("trivial0", shuriken, {});
 }
 
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
+inline ShurikenData createTrivial1() {
+  Shuriken shuriken({G, H, I, D, E, F, A, B, C, J, K, L});
+  return ShurikenData("trivial1", shuriken, {swap_top});
 }
 
-inline unsigned long long factorial(unsigned int value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
-}
+vector<ShurikenData> Shurikens::createTrivialShurikens() {
+  return {createTrivial0(), createTrivial1()};
 }

@@ -29,14 +29,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Weverything -pedantic")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Weverything -pedantic -Wno-missing-braces")
 else ()
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -pedantic")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -pedantic -Wno-missing-braces")
 endif ()
 
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
+        src/common/twobitstorage.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
@@ -45,6 +46,13 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/brute_force_board_solver.cpp
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
+        src/shurikens/data/easy.cpp
+        src/shurikens/data/real.cpp
+        src/shurikens/data/trivial.cpp
+        src/shurikens/logger.cpp
+        src/shurikens/model.cpp
+        src/shurikens/solver/breadth_search_solver.cpp
+        src/shurikens/solver/depth_search_solver.cpp
         src/sudoku/data/easy.cpp
         src/sudoku/data/trivial.cpp
         src/sudoku/model/board.cpp
@@ -68,10 +76,13 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
 set(test_sources
+        tests/common/numbers_test.cpp
+        tests/common/twobitstorage_test.cpp
         tests/cpic/model/cpic_board_builder_test.cpp
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp
         tests/cpic/model/cpic_board_test.cpp
+        tests/shurikens/shurikens_model_test.cpp
         tests/sudoku/model/sudoku_board_test.cpp
         tests/sudoku/model/sudoku_board_validity_test.cpp
         )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,24 @@
 
 #pragma once
 
-#include <limits>
 #include <sys/types.h>
+#include <vector>
 
-namespace Puzzles::Numbers {
+namespace Puzzles {
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
-}
+struct TwoBitStorage {
+  static const size_t MAX_SIZE = 32;
 
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
-}
+  TwoBitStorage();
 
-inline unsigned long long factorial(unsigned int value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
-}
+  inline size_t size() const { return _size; }
+
+  void push(u_int8_t);
+  u_int8_t operator[](size_t i) const;
+  explicit operator std::vector<u_int8_t>() const;
+
+private:
+  u_int64_t internal;
+  u_int8_t _size;
+};
 }

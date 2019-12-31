@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,35 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "common/twobitstorage.h"
 
-#include <limits>
-#include <sys/types.h>
+#include <gtest/gtest.h>
 
-namespace Puzzles::Numbers {
+using Puzzles::TwoBitStorage;
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
+TEST(TwoBitStorage, ShouldStartAtZero) {
+  TwoBitStorage storage;
+
+  EXPECT_EQ(storage.size(), 0);
 }
 
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
+TEST(TwoBitStorage, PushToEmpty) {
+  TwoBitStorage storage;
+
+  storage.push(3);
+
+  EXPECT_EQ(storage.size(), 1);
+  EXPECT_EQ(storage[0], 3);
 }
 
-inline unsigned long long factorial(unsigned int value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
-}
+TEST(TwoBitStorage, PushMultiple) {
+  const auto max = TwoBitStorage::MAX_SIZE;
+  TwoBitStorage storage;
+
+  for (size_t i = 0; i < max; ++i)
+    storage.push((max - i) % 4);
+
+  EXPECT_EQ(storage.size(), max);
+  for (size_t i = 0; i < max; ++i)
+    EXPECT_EQ(storage[i], (max - i) % 4) << "Comparison failed on position " << i;
 }

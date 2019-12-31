@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,13 @@
 
 #pragma once
 
-#include <limits>
-#include <sys/types.h>
+#include "model.h"
 
-namespace Puzzles::Numbers {
+#include <vector>
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
-}
-
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
-}
-
-inline unsigned long long factorial(unsigned int value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
-}
+namespace Shurikens {
+class Logger {
+public:
+  void log(const std::vector<Move> &) const;
+};
 }

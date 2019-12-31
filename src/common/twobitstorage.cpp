@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,39 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "twobitstorage.h"
 
-#include <limits>
-#include <sys/types.h>
+#include <cassert>
 
-namespace Puzzles::Numbers {
+using Puzzles::TwoBitStorage;
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
+using std::vector;
+
+TwoBitStorage::TwoBitStorage() : internal(0), _size(0) {}
+
+void TwoBitStorage::push(u_int8_t value) {
+  assert(value <= 3);
+  assert(_size < MAX_SIZE);
+
+  _size++;
+  auto shift = (MAX_SIZE - _size) * 2;
+  internal += static_cast<u_int64_t>(value) << shift;
 }
 
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
+u_int8_t TwoBitStorage::operator[](size_t i) const {
+  assert(i < _size);
+  auto shift = (MAX_SIZE - 1 - i) * 2;
+  return (internal & (static_cast<u_int64_t>(3) << shift)) >> shift;
 }
 
-inline unsigned long long factorial(unsigned int value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
-}
+TwoBitStorage::operator std::vector<u_int8_t>() const {
+  vector<u_int8_t> result;
+  result.reserve(_size);
+
+  for (auto i = 0; i < _size; ++i) {
+    u_int8_t value = (*this)[i];
+    result.push_back(value);
+  }
+
+  return result;
 }

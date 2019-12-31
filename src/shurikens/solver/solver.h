@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2019 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,22 @@
 
 #pragma once
 
-#include <limits>
+#include "shurikens/model.h"
+
+#include <string>
 #include <sys/types.h>
+#include <utility>
+#include <vector>
 
-namespace Puzzles::Numbers {
+namespace Shurikens {
+class Solver {
+public:
+  Solver(std::string name, u_int8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
+  virtual ~Solver() = default;
 
-inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
-}
+  const std::string name;
+  const u_int8_t quickSolveLimit;
 
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
-}
-
-inline unsigned long long factorial(unsigned int value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
-}
+  virtual std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const = 0;
+};
 }
