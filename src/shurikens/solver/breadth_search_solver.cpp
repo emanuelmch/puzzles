@@ -22,8 +22,8 @@
 
 #include "breadth_search_solver.h"
 
+#include "common/arbitrary_container.h"
 #include "common/numbers.h"
-#include "common/twobitstorage.h"
 
 #include <cmath>
 #include <queue>
@@ -33,20 +33,20 @@
 using namespace Puzzles;
 using namespace Shurikens;
 
-using Puzzles::TwoBitStorage;
-
 using std::move;
 using std::queue;
 using std::unordered_set;
 using std::vector;
 
+typedef Puzzles::ArbitraryContainer<allMoves.size(), Solver::MAX_MOVES> MoveStorage;
+
 namespace {
 struct Node {
   const Shuriken shuriken;
-  const TwoBitStorage moves;
+  const MoveStorage moves;
 
   explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, const TwoBitStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
+  Node(Shuriken shuriken, const MoveStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
 };
 }
 
@@ -72,7 +72,7 @@ vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUp
     for (auto &move : allMoves) {
       auto newShuriken = next.shuriken.apply(move);
       if (cache.insert(newShuriken).second) {
-        TwoBitStorage newMoves(next.moves);
+        MoveStorage newMoves(next.moves);
         newMoves.push(move);
 
         nodes.emplace(newShuriken, newMoves);

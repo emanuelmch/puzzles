@@ -20,20 +20,20 @@
  * SOFTWARE.
  */
 
-#include "common/twobitstorage.h"
+#include "common/arbitrary_container.h"
 
 #include <gtest/gtest.h>
 
-using Puzzles::TwoBitStorage;
+using Puzzles::ArbitraryContainer;
 
-TEST(TwoBitStorage, ShouldStartAtZero) {
-  TwoBitStorage storage;
+TEST(ArbitraryContainer_0b11_32, ShouldStartAtZero) {
+  ArbitraryContainer<0b11, 32> storage;
 
   EXPECT_EQ(storage.size(), 0);
 }
 
-TEST(TwoBitStorage, PushToEmpty) {
-  TwoBitStorage storage;
+TEST(ArbitraryContainer_0b11_32, PushToEmpty) {
+  ArbitraryContainer<0b11, 32> storage;
 
   storage.push(3);
 
@@ -41,14 +41,29 @@ TEST(TwoBitStorage, PushToEmpty) {
   EXPECT_EQ(storage[0], 3);
 }
 
-TEST(TwoBitStorage, PushMultiple) {
-  const auto max = TwoBitStorage::MAX_SIZE;
-  TwoBitStorage storage;
+TEST(ArbitraryContainer_0b11_32, PushMultiple) {
+  const auto maxSize = 32;
+  ArbitraryContainer<0b11, maxSize> storage;
 
-  for (size_t i = 0; i < max; ++i)
-    storage.push((max - i) % 4);
+  for (size_t i = 0; i < maxSize; ++i) {
+    storage.push((maxSize - i) % 0b100);
+  }
 
-  EXPECT_EQ(storage.size(), max);
-  for (size_t i = 0; i < max; ++i)
-    EXPECT_EQ(storage[i], (max - i) % 4) << "Comparison failed on position " << i;
+  EXPECT_EQ(storage.size(), maxSize);
+  for (size_t i = 0; i < maxSize; ++i)
+    EXPECT_EQ(storage[i], (maxSize - i) % 0b100) << "Comparison failed on position " << i;
+}
+
+TEST(ArbitraryContainer_0b1_12, PushMultiple) {
+  const auto maxSize = 12;
+  ArbitraryContainer<0b1, maxSize> storage;
+
+  for (size_t i = 0; i < maxSize; ++i) {
+    storage.push((maxSize - 1) % 0b10);
+  }
+
+  EXPECT_EQ(storage.size(), maxSize);
+  for (size_t i = 0; i < maxSize; ++i) {
+    EXPECT_EQ(storage[i], (maxSize - 1) % 0b10) << "Comparison failed on position " << i;
+  }
 }
