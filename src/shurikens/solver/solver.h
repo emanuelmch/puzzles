@@ -30,6 +30,8 @@
 
 namespace Shurikens {
 struct Solver {
+  const static uint8_t MAX_MOVES = 31;
+
   Solver(std::string name, uint8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
   virtual ~Solver() = default;
 

@@ -20,39 +20,50 @@
  * SOFTWARE.
  */
 
-#include "twobitstorage.h"
+#include "common/arbitrary_container.h"
 
-#include <cassert>
+#include <gtest/gtest.h>
 
-using Puzzles::TwoBitStorage;
+using Puzzles::ArbitraryContainer;
 
-using std::vector;
+TEST(ArbitraryContainer_0b11_32, ShouldStartAtZero) {
+  ArbitraryContainer<0b11, 32> storage;
 
-TwoBitStorage::TwoBitStorage() : internal(0), _size(0) {}
-
-void TwoBitStorage::push(uint8_t value) {
-  assert(value <= 3);
-  assert(_size < MAX_SIZE);
-
-  _size++;
-  auto shift = (MAX_SIZE - _size) * 2;
-  internal += static_cast<uint64_t>(value) << shift;
+  EXPECT_EQ(storage.size(), 0);
 }
 
-uint8_t TwoBitStorage::operator[](size_t i) const {
-  assert(i < _size);
-  auto shift = (MAX_SIZE - 1 - i) * 2;
-  return (internal & (static_cast<uint64_t>(3) << shift)) >> shift;
+TEST(ArbitraryContainer_0b11_32, PushToEmpty) {
+  ArbitraryContainer<0b11, 32> storage;
+
+  storage.push(3);
+
+  EXPECT_EQ(storage.size(), 1);
+  EXPECT_EQ(storage[0], 3);
 }
 
-TwoBitStorage::operator std::vector<uint8_t>() const {
-  vector<uint8_t> result;
-  result.reserve(_size);
+TEST(ArbitraryContainer_0b11_32, PushMultiple) {
+  const auto maxSize = 32;
+  ArbitraryContainer<0b11, maxSize> storage;
 
-  for (auto i = 0; i < _size; ++i) {
-    uint8_t value = (*this)[i];
-    result.push_back(value);
+  for (size_t i = 0; i < maxSize; ++i) {
+    storage.push((maxSize - i) % 0b100);
   }
 
-  return result;
+  EXPECT_EQ(storage.size(), maxSize);
+  for (size_t i = 0; i < maxSize; ++i)
+    EXPECT_EQ(storage[i], (maxSize - i) % 0b100) << "Comparison failed on position " << i;
+}
+
+TEST(ArbitraryContainer_0b1_12, PushMultiple) {
+  const auto maxSize = 12;
+  ArbitraryContainer<0b1, maxSize> storage;
+
+  for (size_t i = 0; i < maxSize; ++i) {
+    storage.push((maxSize - 1) % 0b10);
+  }
+
+  EXPECT_EQ(storage.size(), maxSize);
+  for (size_t i = 0; i < maxSize; ++i) {
+    EXPECT_EQ(storage[i], (maxSize - 1) % 0b10) << "Comparison failed on position " << i;
+  }
 }

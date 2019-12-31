@@ -22,25 +22,56 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <vector>
 
 namespace Puzzles {
 
-struct TwoBitStorage {
-  static const size_t MAX_SIZE = 32;
+typedef size_t value_t;
 
-  TwoBitStorage();
+template <value_t MAX_VALUE, size_t MAX_SIZE> struct ArbitraryContainer {
 
+  ArbitraryContainer() : internal(0), _size(0) {
+    static_assert(MAX_VALUE <= 0b11);
+    static_assert(MAX_SIZE <= 32);
+  }
+
+  inline void push(value_t value) {
+    assert(value <= MAX_VALUE);
+    assert(_size < MAX_SIZE);
+
+    _size++;
+    // FIXME: This only works when MAX_VALUE <= 0b11
+    auto shift = (MAX_SIZE - _size) * 2;
+    internal += static_cast<uint64_t>(value) << shift;
+  }
+
+  inline value_t at(size_t i) const {
+    assert(i < _size);
+    // FIXME: This only works when MAX_VALUE <= 0b11
+    auto shift = (MAX_SIZE - 1 - i) * 2;
+    return (internal & (static_cast<uint64_t>(0b11) << shift)) >> shift;
+  }
+  inline value_t operator[](size_t i) const { return at(i); }
   inline size_t size() const { return _size; }
 
-  void push(uint8_t);
-  uint8_t operator[](size_t i) const;
-  explicit operator std::vector<uint8_t>() const;
+  // TODO: Replace this with real iterators
+  explicit inline operator std::vector<uint8_t>() const {
+    std::vector<uint8_t> result;
+    result.reserve(_size);
+
+    for (size_t i = 0; i < _size; ++i) {
+      uint8_t value = (*this)[i];
+      result.push_back(value);
+    }
+
+    return result;
+  }
 
 private:
   uint64_t internal;
-  uint8_t _size;
+  size_t _size;
 };
 }

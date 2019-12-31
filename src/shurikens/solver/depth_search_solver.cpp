@@ -22,7 +22,7 @@
 
 #include "depth_search_solver.h"
 
-#include "common/twobitstorage.h"
+#include "common/arbitrary_container.h"
 
 #include <stack>
 #include <unordered_map>
@@ -30,20 +30,20 @@
 
 using namespace Shurikens;
 
-using Puzzles::TwoBitStorage;
-
 using std::move;
 using std::stack;
 using std::unordered_map;
 using std::vector;
 
+typedef Puzzles::ArbitraryContainer<allMoves.size(), Solver::MAX_MOVES> MoveStorage;
+
 namespace {
 struct Node {
   const Shuriken shuriken;
-  const TwoBitStorage moves;
+  const MoveStorage moves;
 
   explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, const TwoBitStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
+  Node(Shuriken shuriken, MoveStorage moves) : shuriken(move(shuriken)), moves(move(moves)) {}
 };
 }
 
@@ -55,7 +55,7 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
   nodes.emplace(shuriken);
 
   // TODO Find a better way of starting with knownUpperBound items
-  TwoBitStorage bestSolution;
+  MoveStorage bestSolution;
   for (size_t i = 0; i <= knownUpperBound; ++i) {
     bestSolution.push(0);
   }
@@ -78,7 +78,7 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
       auto it = cache.find(newShuriken);
 
       if (it == cache.end() || it->second > (next.moves.size() + 1)) {
-        TwoBitStorage newMoves(next.moves);
+        MoveStorage newMoves(next.moves);
         newMoves.push(move);
         cache[newShuriken] = newMoves.size();
 
