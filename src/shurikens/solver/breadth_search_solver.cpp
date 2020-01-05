@@ -74,6 +74,7 @@ vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUp
       if (cache.insert(newShuriken).second) {
         MoveStorage newMoves(next.moves);
         newMoves.push(move);
+        newMoves.shrink_to_fit();
 
         nodes.emplace(newShuriken, newMoves);
       }

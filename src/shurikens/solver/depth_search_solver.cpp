@@ -56,6 +56,7 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
 
   // TODO Find a better way of starting with knownUpperBound items
   MoveStorage bestSolution;
+  bestSolution.reserve(knownUpperBound + 1);
   for (size_t i = 0; i <= knownUpperBound; ++i) {
     bestSolution.push(0);
   }
@@ -80,6 +81,7 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
       if (it == cache.end() || it->second > (next.moves.size() + 1)) {
         MoveStorage newMoves(next.moves);
         newMoves.push(move);
+        newMoves.shrink_to_fit();
         cache[newShuriken] = newMoves.size();
 
         nodes.emplace(newShuriken, newMoves);

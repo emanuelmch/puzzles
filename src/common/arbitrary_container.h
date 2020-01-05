@@ -58,6 +58,9 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
   ArbitraryContainer() = default;
   ArbitraryContainer(const ArbitraryContainer<MAX_VALUE>&) = default;
 
+  inline void reserve(size_t new_cap) { internal.reserve(new_cap * valueBitLength); }
+  inline void shrink_to_fit() { internal.shrink_to_fit(); }
+
   inline void push(value_t value) {
     assert(value <= MAX_VALUE);
 
