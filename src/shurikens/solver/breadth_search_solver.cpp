@@ -38,7 +38,7 @@ using std::queue;
 using std::unordered_set;
 using std::vector;
 
-typedef Puzzles::ArbitraryContainer<allMoves.size(), Solver::MAX_MOVES> MoveStorage;
+typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveStorage;
 
 namespace {
 struct Node {
@@ -46,13 +46,13 @@ struct Node {
   const MoveStorage moves;
 
   explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, const MoveStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
+  Node(Shuriken shuriken, MoveStorage moves) : shuriken(move(shuriken)), moves(move(moves)) {}
 };
 }
 
 vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
-  auto maxNodes = std::pow(allMoves.size(), knownUpperBound) + 1;
-  auto maxShurikens = static_cast<double>(Numbers::factorial(12)) / 2;
+  auto maxNodes = static_cast<size_t>(std::pow(allMoves.size(), knownUpperBound) + 1);
+  auto maxShurikens = static_cast<size_t>(std::ceil(Numbers::factorial(12) / 2));
 
   unordered_set<Shuriken> cache;
   cache.reserve(std::min(maxNodes, maxShurikens));
