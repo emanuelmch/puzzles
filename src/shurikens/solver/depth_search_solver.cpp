@@ -36,7 +36,7 @@ using std::stack;
 using std::unordered_map;
 using std::vector;
 
-typedef Puzzles::ArbitraryContainer<allMoves.size(), Solver::MAX_MOVES> MoveStorage;
+typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveStorage;
 
 namespace {
 struct Node {

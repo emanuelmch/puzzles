@@ -23,6 +23,7 @@
 #pragma once
 
 #include <cassert>
+#include <cmath>
 #include <sys/types.h>
 #include <vector>
 
@@ -30,28 +31,65 @@ namespace Puzzles {
 
 typedef size_t value_t;
 
-template <value_t MAX_VALUE, size_t MAX_SIZE> struct ArbitraryContainer {
+static constexpr inline size_t calculateValueBitLength(size_t value) {
+  assert(value > 0);
+  assert(value <= 0b11111111); // No real reason to stop there, I just haven't tested any further
 
-  ArbitraryContainer() : internal(0), _size(0) {
-    static_assert(MAX_VALUE <= 0b11);
-    static_assert(MAX_SIZE <= 32);
+  auto digits = 0;
+  size_t next = 1;
+  while (value > 0) {
+    digits++;
+
+    if (next >= value) break;
+
+    value = value - next;
+    next = next * 2;
   }
+
+  return digits;
+}
+
+template <value_t MAX_VALUE> struct ArbitraryContainer {
+
+  const size_t valueBitLength = calculateValueBitLength(MAX_VALUE);
+
+  // Constructors
+  ArbitraryContainer() = default;
+  ArbitraryContainer(const ArbitraryContainer<MAX_VALUE>&) = default;
 
   inline void push(value_t value) {
     assert(value <= MAX_VALUE);
-    assert(_size < MAX_SIZE);
+
+    std::vector<bool> results;
+    while (value > 0) {
+      results.push_back(value % 2);
+      value = value / 2;
+    }
+
+    for (size_t i = 0; i < (valueBitLength - results.size()); ++i) {
+      internal.push_back(0);
+    }
+
+    for (auto it = results.rbegin(); it != results.rend(); ++it) {
+      internal.push_back(*it);
+    }
 
     _size++;
-    // FIXME: This only works when MAX_VALUE <= 0b11
-    auto shift = (MAX_SIZE - _size) * 2;
-    internal += static_cast<u_int64_t>(value) << shift;
   }
 
-  inline value_t at(size_t i) const {
-    assert(i < _size);
-    // FIXME: This only works when MAX_VALUE <= 0b11
-    auto shift = (MAX_SIZE - 1 - i) * 2;
-    return (internal & (static_cast<u_int64_t>(0b11) << shift)) >> shift;
+  inline value_t at(size_t index) const {
+    assert(index < _size);
+
+    value_t result = 0;
+    auto start = index * valueBitLength;
+
+    for (size_t i = 0; i < valueBitLength; ++i) {
+      if (internal[start + i]) {
+        result += std::pow(2, valueBitLength - 1 - i);
+      }
+    }
+
+    return result;
   }
   inline value_t operator[](size_t i) const { return at(i); }
   inline size_t size() const { return _size; }
@@ -69,8 +107,15 @@ template <value_t MAX_VALUE, size_t MAX_SIZE> struct ArbitraryContainer {
     return result;
   }
 
+  // Operators
+  inline ArbitraryContainer<MAX_VALUE> &operator=(const ArbitraryContainer<MAX_VALUE> &other) {
+    internal = other.internal;
+    _size = other._size;
+    return *this;
+  }
+
 private:
-  u_int64_t internal;
-  size_t _size;
+  std::vector<bool> internal;
+  size_t _size = 0;
 };
 }
