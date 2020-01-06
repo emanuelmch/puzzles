@@ -26,7 +26,6 @@
 
 #include <string>
 #include <utility>
-#include <vector>
 
 namespace Shurikens {
 struct Solver {
@@ -36,6 +35,6 @@ struct Solver {
   const std::string name;
   const uint8_t quickSolveLimit;
 
-  virtual std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const = 0;
+  virtual MoveContainer solve(const Shuriken &, size_t knownUpperBound) const = 0;
 };
 }

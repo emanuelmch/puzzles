@@ -45,13 +45,22 @@ TEST(ArbitraryContainer, ValueBitLength) {
   EXPECT_EQ(calculateValueBitLength(0b11111111), 8);
 }
 
-TEST(ArbitraryContainer_0b11, ShouldStartAtZero) {
+TEST(ArbitraryContainer, ShouldStartAtZero) {
   ArbitraryContainer<0b11> storage;
 
   EXPECT_EQ(storage.size(), 0);
 }
 
-TEST(ArbitraryContainer_0b11, PushToEmpty) {
+TEST(ArbitraryContainer, ConstructingWithInitialValues) {
+  ArbitraryContainer<0b11> storage({0, 1, 2});
+
+  EXPECT_EQ(storage.size(), 3);
+  EXPECT_EQ(storage[0], 0);
+  EXPECT_EQ(storage[1], 1);
+  EXPECT_EQ(storage[2], 2);
+}
+
+TEST(ArbitraryContainer, PushToEmpty) {
   ArbitraryContainer<0b11> storage;
 
   storage.push(3);
@@ -60,21 +69,7 @@ TEST(ArbitraryContainer_0b11, PushToEmpty) {
   EXPECT_EQ(storage[0], 3);
 }
 
-TEST(ArbitraryContainer_0b11, PushMultiple) {
-  const auto maxSize = 256;
-  const auto maxValue = 0b11;
-  ArbitraryContainer<maxValue> storage;
-
-  for (size_t i = 0; i < maxSize; ++i) {
-    storage.push((maxSize - i) % (maxValue + 1));
-  }
-
-  EXPECT_EQ(storage.size(), maxSize);
-  for (size_t i = 0; i < maxSize; ++i)
-    EXPECT_EQ(storage[i], (maxSize - i) % (maxValue + 1)) << "Comparison failed on position " << i;
-}
-
-TEST(ArbitraryContainer_0b1, PushMultiple) {
+TEST(ArbitraryContainer, PushMultiple_0b1) {
   const auto maxSize = 256;
   const auto maxValue = 0b1;
   ArbitraryContainer<maxValue> storage;
@@ -89,7 +84,21 @@ TEST(ArbitraryContainer_0b1, PushMultiple) {
   }
 }
 
-TEST(ArbitraryContainer_0b11111111, PushMultiple) {
+TEST(ArbitraryContainer, PushMultiple_0b11) {
+  const auto maxSize = 256;
+  const auto maxValue = 0b11;
+  ArbitraryContainer<maxValue> storage;
+
+  for (size_t i = 0; i < maxSize; ++i) {
+    storage.push((maxSize - i) % (maxValue + 1));
+  }
+
+  EXPECT_EQ(storage.size(), maxSize);
+  for (size_t i = 0; i < maxSize; ++i)
+    EXPECT_EQ(storage[i], (maxSize - i) % (maxValue + 1)) << "Comparison failed on position " << i;
+}
+
+TEST(ArbitraryContainer, PushMultiple0b11111111) {
   const auto maxSize = 256;
   const auto maxValue = 0b11111111;
   ArbitraryContainer<maxValue> storage;
@@ -102,4 +111,28 @@ TEST(ArbitraryContainer_0b11111111, PushMultiple) {
   for (size_t i = 0; i < maxSize; ++i) {
     EXPECT_EQ(storage[i], (maxSize - 1) % (maxValue + 1)) << "Comparison failed on position " << i;
   }
+}
+
+TEST(ArbitraryContainer, LessThan_SameObjects) {
+  const ArbitraryContainer<0b11> storage0({0, 1});
+  const ArbitraryContainer<0b11> storage1({0, 1});
+
+  EXPECT_FALSE(storage0 < storage1);
+  EXPECT_FALSE(storage1 < storage0);
+}
+
+TEST(ArbitraryContainer, LessThan_DifferentSizes) {
+  const ArbitraryContainer<0b11> storage0({0, 1});
+  const ArbitraryContainer<0b11> storage1({0, 1, 2});
+
+  EXPECT_TRUE(storage0 < storage1);
+  EXPECT_FALSE(storage1 < storage0);
+}
+
+TEST(ArbitraryContainer, LessThan_DifferentValues) {
+  const ArbitraryContainer<0b11> storage0({0, 1, 1});
+  const ArbitraryContainer<0b11> storage1({0, 1, 2});
+
+  EXPECT_TRUE(storage0 < storage1);
+  EXPECT_FALSE(storage1 < storage0);
 }

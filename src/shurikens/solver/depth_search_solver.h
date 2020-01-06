@@ -29,6 +29,6 @@ class DepthSearchSolver : public Solver {
 public:
   DepthSearchSolver() : Solver("  Depth", 10) {}
 
-  std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const override;
+  MoveContainer solve(const Shuriken &, size_t knownUpperBound) const override;
 };
 }

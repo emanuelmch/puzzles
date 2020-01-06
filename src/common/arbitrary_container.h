@@ -57,10 +57,18 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
   // Constructors
   ArbitraryContainer() = default;
   ArbitraryContainer(const ArbitraryContainer<MAX_VALUE>&) = default;
+  ArbitraryContainer(std::initializer_list<value_t> values) {
+    reserve(values.size());
+    for (auto value : values) {
+      push(value);
+    }
+  }
 
+  // Capacity
   inline void reserve(size_t new_cap) { internal.reserve(new_cap * valueBitLength); }
   inline void shrink_to_fit() { internal.shrink_to_fit(); }
 
+  // Insertion
   inline void push(value_t value) {
     assert(value <= MAX_VALUE);
 
@@ -79,6 +87,7 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
     }
   }
 
+  // Retrieval
   inline value_t at(size_t index) const {
     assert(index < size());
 
@@ -96,23 +105,52 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
   inline value_t operator[](size_t i) const { return at(i); }
   inline size_t size() const { return internal.size() / valueBitLength; }
 
-  // TODO: Replace this with real iterators
-  explicit inline operator std::vector<uint8_t>() const {
-    std::vector<uint8_t> result;
-    result.reserve(size());
+  // Iterators
+  struct const_iterator {
 
-    for (size_t i = 0; i < size(); ++i) {
-      uint8_t value = (*this)[i];
-      result.push_back(value);
+    const_iterator(const ArbitraryContainer<MAX_VALUE> *container, size_t position)
+        : container(container), position(position) {}
+
+    inline bool operator!=(const const_iterator &o) const { return container != o.container || position != o.position; }
+
+    inline const_iterator *operator++() {
+      position++;
+      return this;
     }
 
-    return result;
-  }
+    inline value_t operator*() const {
+      assert(position < container->size());
+      return container->at(position);
+    }
+
+  private:
+    const ArbitraryContainer<MAX_VALUE> *container;
+    size_t position;
+  };
+
+  inline const_iterator begin() const { return const_iterator(this, 0); }
+  inline const_iterator end() const { return const_iterator(this, size()); }
 
   // Operators
   inline ArbitraryContainer<MAX_VALUE> &operator=(const ArbitraryContainer<MAX_VALUE> &other) {
     internal = other.internal;
     return *this;
+  }
+
+  inline bool operator<(const ArbitraryContainer<MAX_VALUE> &o) const {
+    auto size = internal.size();
+    auto otherSize = o.internal.size();
+
+    if (size != otherSize) {
+      return size < otherSize;
+    }
+
+    for (size_t i = 0; i < size; ++i) {
+      if (internal[i] != o.internal[i]) {
+        return internal[i] < o.internal[i];
+      }
+    }
+    return false;
   }
 
 private:
