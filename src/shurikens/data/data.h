@@ -28,29 +28,28 @@
 #include <set>
 #include <string>
 #include <utility>
-#include <vector>
 
 namespace Shurikens {
 
 struct ShurikenData {
 
-  ShurikenData(std::string name, Shuriken shuriken, const std::vector<Move> &solution)
+  ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution)
       : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution}) {}
 
-  ShurikenData(std::string name, Shuriken shuriken, const std::vector<Move> &solution0,
-               const std::vector<Move> &solution1)
+  ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution0,
+               const Shurikens::MoveContainer &solution1)
       : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution0, solution1}) {
     assert(solution0.size() == solution1.size());
   }
 
   inline size_t solutionSize() const { return solutions.cbegin()->size(); }
-  inline bool isSolution(const std::vector<Move> &solution) const {
+  inline bool isSolution(const Shurikens::MoveContainer &solution) const {
     return solutions.find(solution) != solutions.end();
   }
 
   const std::string name;
   const Shuriken shuriken;
-  const std::set<std::vector<Move>> solutions;
+  const std::set<Shurikens::MoveContainer> solutions;
 };
 
 std::vector<ShurikenData> createTrivialShurikens();

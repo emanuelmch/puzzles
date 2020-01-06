@@ -22,7 +22,6 @@
 
 #include "breadth_search_solver.h"
 
-#include "common/arbitrary_container.h"
 #include "common/numbers.h"
 
 #include <cmath>
@@ -38,19 +37,17 @@ using std::queue;
 using std::unordered_set;
 using std::vector;
 
-typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveStorage;
-
 namespace {
 struct Node {
   const Shuriken shuriken;
-  const MoveStorage moves;
+  const MoveContainer moves;
 
   explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, MoveStorage moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
 };
 }
 
-vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
+MoveContainer BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
   auto maxNodes = static_cast<size_t>(std::pow(allMoves.size(), knownUpperBound) + 1);
   auto maxShurikens = static_cast<size_t>(std::ceil(Numbers::factorial(12) / 2));
 
@@ -64,7 +61,7 @@ vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUp
   do {
     auto next = nodes.front();
     if (next.shuriken.isSolved()) {
-      return static_cast<vector<Move>>(next.moves);
+      return next.moves;
     }
 
     nodes.pop();
@@ -72,7 +69,7 @@ vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUp
     for (auto &move : allMoves) {
       auto newShuriken = next.shuriken.apply(move);
       if (cache.insert(newShuriken).second) {
-        MoveStorage newMoves(next.moves);
+        MoveContainer newMoves(next.moves);
         newMoves.push(move);
         newMoves.shrink_to_fit();
 

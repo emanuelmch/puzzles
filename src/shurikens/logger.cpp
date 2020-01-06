@@ -29,7 +29,7 @@ using namespace Shurikens;
 using std::cout;
 using std::vector;
 
-void Logger::log(const vector<Move> &moves) const {
+void Logger::log(const MoveContainer &moves) const {
   for (const auto &move : moves) {
     switch (move) {
     case swap_top:

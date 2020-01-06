@@ -22,8 +22,6 @@
 
 #include "depth_search_solver.h"
 
-#include "common/arbitrary_container.h"
-
 #include <stack>
 #include <sys/types.h>
 #include <unordered_map>
@@ -36,19 +34,17 @@ using std::stack;
 using std::unordered_map;
 using std::vector;
 
-typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveStorage;
-
 namespace {
 struct Node {
   const Shuriken shuriken;
-  const MoveStorage moves;
+  const MoveContainer moves;
 
   explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, MoveStorage moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
 };
 }
 
-vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
+MoveContainer DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
   unordered_map<Shuriken, u_int8_t> cache;
   cache[shuriken] = 0;
 
@@ -56,7 +52,7 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
   nodes.emplace(shuriken);
 
   // TODO Find a better way of starting with knownUpperBound items
-  MoveStorage bestSolution;
+  MoveContainer bestSolution;
   bestSolution.reserve(knownUpperBound + 1);
   for (size_t i = 0; i <= knownUpperBound; ++i) {
     bestSolution.push(0);
@@ -80,7 +76,7 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
       auto it = cache.find(newShuriken);
 
       if (it == cache.end() || it->second > (next.moves.size() + 1)) {
-        MoveStorage newMoves(next.moves);
+        MoveContainer newMoves(next.moves);
         newMoves.push(move);
         newMoves.shrink_to_fit();
         cache[newShuriken] = newMoves.size();
@@ -90,5 +86,5 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
     }
   } while (nodes.empty() == false);
 
-  return static_cast<vector<Move>>(bestSolution);
+  return bestSolution;
 }

@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "common/arbitrary_container.h"
+
 #include <array>
 #include <sys/types.h>
 
@@ -48,6 +50,7 @@ const Cell K = 10;
 const Cell L = 11;
 
 const std::array<Move, 3> allMoves = {swap_top, turn_a, turn_b};
+typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveContainer;
 
 class Shuriken {
 public:
