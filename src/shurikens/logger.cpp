@@ -35,11 +35,20 @@ void Logger::log(const MoveContainer &moves) const {
     case swap_top:
       cout << "s";
       break;
+    case swap_bottom:
+      cout << "S";
+      break;
     case turn_a:
       cout << "a";
       break;
     case turn_b:
       cout << "b";
+      break;
+    case reverse_a:
+      cout << "A";
+      break;
+    case reverse_b:
+      cout << "B";
       break;
     }
   }

@@ -30,10 +30,10 @@
 
 namespace Shurikens {
 
-enum Move : uint8_t { swap_top, turn_a, turn_b };
+enum Move : uint8_t { swap_top, swap_bottom, turn_a, turn_b, reverse_a, reverse_b };
 enum Cell : uint8_t { A, B, C, D, E, F, G, H, I, J, K, L };
 
-const std::array<Move, 3> allMoves = {swap_top, turn_a, turn_b};
+const std::array<Move, 6> allMoves = {swap_top, swap_bottom, turn_a, turn_b, reverse_a, reverse_b};
 typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveContainer;
 
 class Shuriken {

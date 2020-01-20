@@ -28,11 +28,19 @@ using namespace Shurikens;
 
 using std::array;
 
-TEST(Shuriken, Swap) {
+TEST(Shuriken, SwapTop) {
   auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
   auto swapped = shuriken.apply(swap_top);
 
   array<Cell, 12> cells = {G, H, I, D, E, F, A, B, C, J, K, L};
+  EXPECT_EQ(swapped.cells, cells);
+}
+
+TEST(Shuriken, SwapBottom) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto swapped = shuriken.apply(swap_bottom);
+
+  array<Cell, 12> cells = {A, B, C, J, K, L, G, H, I, D, E, F};
   EXPECT_EQ(swapped.cells, cells);
 }
 
@@ -49,6 +57,22 @@ TEST(Shuriken, TurnSideB) {
   auto swapped = shuriken.apply(turn_b);
 
   array<Cell, 12> cells = {A, B, C, D, E, F, L, G, H, I, J, K};
+  EXPECT_EQ(swapped.cells, cells);
+}
+
+TEST(Shuriken, ReverseSideA) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto swapped = shuriken.apply(reverse_a);
+
+  array<Cell, 12> cells = {B, C, D, E, F, A, G, H, I, J, K, L};
+  EXPECT_EQ(swapped.cells, cells);
+}
+
+TEST(Shuriken, ReverseSideB) {
+  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
+  auto swapped = shuriken.apply(reverse_b);
+
+  array<Cell, 12> cells = {A, B, C, D, E, F, H, I, J, K, L, G};
   EXPECT_EQ(swapped.cells, cells);
 }
 
