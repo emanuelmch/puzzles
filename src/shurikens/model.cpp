@@ -37,6 +37,14 @@ static inline array<Cell, 12> doSwapTop(array<Cell, 12> cells) {
   return cells;
 }
 
+static inline array<Cell, 12> doSwapBottom(array<Cell, 12> cells) {
+  swap(cells[3], cells[9]);
+  swap(cells[4], cells[10]);
+  swap(cells[5], cells[11]);
+
+  return cells;
+}
+
 static inline array<Cell, 12> doInvert(array<Cell, 12> cells) {
   swap(cells[0], cells[6]);
   swap(cells[1], cells[7]);
@@ -70,14 +78,38 @@ static inline array<Cell, 12> doTurnB(const array<Cell, 12> &cells) {
   return turned;
 }
 
+static inline array<Cell, 12> doReverseA(const array<Cell, 12> &cells) {
+  //TODO: Improve this method
+  auto first = doTurnA(cells);
+  auto second = doTurnA(first);
+  auto third = doTurnA(second);
+  auto fourth = doTurnA(third);
+  return doTurnA(fourth);
+}
+
+static inline array<Cell, 12> doReverseB(const array<Cell, 12> &cells) {
+  //TODO: Improve this method
+  auto first = doTurnB(cells);
+  auto second = doTurnB(first);
+  auto third = doTurnB(second);
+  auto fourth = doTurnB(third);
+  return doTurnB(fourth);
+}
+
 Shuriken Shuriken::apply(Shurikens::Move move) const {
   switch (move) {
+  case swap_top:
+    return Shuriken(doSwapTop(this->cells));
+  case swap_bottom:
+    return Shuriken(doSwapBottom(this->cells));
   case turn_a:
     return Shuriken(doTurnA(this->cells));
   case turn_b:
     return Shuriken(doTurnB(this->cells));
-  case swap_top:
-    return Shuriken(doSwapTop(this->cells));
+  case reverse_a:
+    return Shuriken(doReverseA(this->cells));
+  case reverse_b:
+    return Shuriken(doReverseB(this->cells));
   default:
     assert(!"Tried to apply an invalid move!");
     return *this;
