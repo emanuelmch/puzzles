@@ -50,17 +50,6 @@ static inline array<Cell, 12> doSwapBottom(const array<Cell, 12> &cells) {
   return turned;
 }
 
-static inline array<Cell, 12> doInvert(const array<Cell, 12> &cells) {
-  array<Cell, 12> turned = {};
-
-  auto cellsBegin = cells.begin();
-  auto turnedBegin = turned.begin();
-  std::copy(cellsBegin, cellsBegin + 6, turnedBegin + 6);
-  std::copy(cellsBegin + 6, cellsBegin + 12, turnedBegin);
-
-  return turned;
-}
-
 static inline array<Cell, 12> doTurnA(const array<Cell, 12> &cells) {
   array<Cell, 12> turned = cells;
 
@@ -122,9 +111,17 @@ Shuriken Shuriken::apply(Shurikens::Move move) const {
 }
 
 bool Shuriken::operator==(const Shuriken &other) const {
-  // TODO There must be a better way of doing this check...
   if (cells == other.cells) return true;
-  if (cells == doInvert(other.cells)) return true;
 
-  return false;
+  auto us = cells.begin();
+  auto them = other.cells.begin();
+
+  for (auto i = 0; i < 6; ++i) {
+    if (*us != *(them + 6)) return false;
+    if (*(us + 6) != *them) return false;
+
+    ++us, ++them;
+  }
+
+  return true;
 }
