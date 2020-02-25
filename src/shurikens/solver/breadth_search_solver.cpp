@@ -48,6 +48,8 @@ struct Node {
 }
 
 MoveContainer BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
+  if (shuriken.isSolved()) return {};
+
   auto maxNodes = static_cast<size_t>(std::pow(allMoves.size(), knownUpperBound) + 1);
   auto maxShurikens = static_cast<size_t>(std::ceil(Numbers::factorial(12) / 2));
 
@@ -60,18 +62,19 @@ MoveContainer BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownU
 
   do {
     auto next = nodes.front();
-    if (next.shuriken.isSolved()) {
-      return next.moves;
-    }
-
     nodes.pop();
 
     for (auto &move : allMoves) {
       auto newShuriken = next.shuriken.apply(move);
+
       if (cache.insert(newShuriken).second) {
         MoveContainer newMoves(next.moves);
         newMoves.push(move);
         newMoves.shrink_to_fit();
+
+        if (newShuriken.isSolved()) {
+          return newMoves;
+        }
 
         nodes.emplace(newShuriken, newMoves);
       }
