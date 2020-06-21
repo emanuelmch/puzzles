@@ -73,12 +73,10 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
     for (auto it = results.rbegin(); it != results.rend(); ++it) {
       internal.push_back(*it);
     }
-
-    _size++;
   }
 
   inline value_t at(size_t index) const {
-    assert(index < _size);
+    assert(index < size());
 
     value_t result = 0;
     auto start = index * valueBitLength;
@@ -92,14 +90,14 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
     return result;
   }
   inline value_t operator[](size_t i) const { return at(i); }
-  inline size_t size() const { return _size; }
+  inline size_t size() const { return internal.size() / valueBitLength; }
 
   // TODO: Replace this with real iterators
   explicit inline operator std::vector<u_int8_t>() const {
     std::vector<u_int8_t> result;
-    result.reserve(_size);
+    result.reserve(size());
 
-    for (size_t i = 0; i < _size; ++i) {
+    for (size_t i = 0; i < size(); ++i) {
       u_int8_t value = (*this)[i];
       result.push_back(value);
     }
@@ -110,12 +108,10 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
   // Operators
   inline ArbitraryContainer<MAX_VALUE> &operator=(const ArbitraryContainer<MAX_VALUE> &other) {
     internal = other.internal;
-    _size = other._size;
     return *this;
   }
 
 private:
   std::vector<bool> internal;
-  size_t _size = 0;
 };
 }
