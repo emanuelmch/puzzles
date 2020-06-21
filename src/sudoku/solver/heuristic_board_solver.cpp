@@ -22,7 +22,6 @@
 
 #include "heuristic_board_solver.h"
 
-#include <cassert>
 #include <vector>
 
 using namespace Sudoku;

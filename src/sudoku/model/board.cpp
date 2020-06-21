@@ -23,13 +23,9 @@
 #include "board.h"
 
 #include <cassert>
-#include <iostream>
 #include <limits>
 
 using namespace Sudoku;
-
-using std::cout;
-using std::endl;
 
 static const int SIZE = 9;
 

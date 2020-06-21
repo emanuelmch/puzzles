@@ -22,11 +22,7 @@
 
 #include "heuristic_board_solver.h"
 
-#include <vector>
-
 using namespace CPic;
-
-using std::vector;
 
 // Strategies
 inline void lookForOneColorLeftColumns(const Board *, BoardState *);
