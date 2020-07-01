@@ -49,12 +49,7 @@ MoveContainer DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpp
   stack<Node> nodes;
   nodes.emplace(shuriken);
 
-  // TODO Find a better way of starting with knownUpperBound items
-  MoveContainer bestSolution;
-  bestSolution.reserve(knownUpperBound + 1);
-  for (size_t i = 0; i <= knownUpperBound; ++i) {
-    bestSolution.push(0);
-  }
+  MoveContainer bestSolution(knownUpperBound + 1);
 
   do {
     auto next = nodes.top();

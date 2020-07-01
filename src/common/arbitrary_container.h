@@ -57,6 +57,8 @@ template <value_t MAX_VALUE> struct ArbitraryContainer {
   // Constructors
   ArbitraryContainer() = default;
   ArbitraryContainer(const ArbitraryContainer<MAX_VALUE>&) = default;
+  explicit ArbitraryContainer(size_t count) : internal(count * valueBitLength, 0) { }
+
   ArbitraryContainer(std::initializer_list<value_t> values) {
     reserve(values.size());
     for (auto value : values) {
