@@ -37,6 +37,7 @@ endif ()
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
+        src/common/file_reader.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
@@ -45,6 +46,7 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/brute_force_board_solver.cpp
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
+        src/hangman/word_repository.cpp
         src/shurikens/data/easy.cpp
         src/shurikens/data/real.cpp
         src/shurikens/data/trivial.cpp
@@ -59,6 +61,9 @@ add_library(puzzles_lib OBJECT
         src/sudoku/solver/heuristic_board_solver.cpp
         src/sudoku/view/board_logger.cpp
         )
+
+# Assets
+file(COPY assets DESTINATION .)
 
 # Executable
 add_executable(puzzles src/main.cpp $<TARGET_OBJECTS:puzzles_lib>)
