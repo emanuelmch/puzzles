@@ -24,7 +24,9 @@
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
-#include "hangman/word_repository.h"
+#include "hangman/game.h"
+#include "hangman/player/alpha_order_player.h"
+#include "hangman/player/random_player.h"
 #include "shurikens/data/data.h"
 #include "shurikens/logger.h"
 #include "shurikens/solver/breadth_search_solver.h"
@@ -104,9 +106,17 @@ bool solveCPic(bool fullRun) {
 }
 
 bool solveHangman() {
-  Hangman::WordRepository wordRepository;
-  auto words = wordRepository.words();
-  std::cout << "Hangman: We've got " << words.size() << " words\n";
+
+  Hangman::AlphaOrderPlayer alphaOrderPlayer;
+  Hangman::RandomPlayer randomPlayer;
+
+  Hangman::Player *players[] = {&alphaOrderPlayer, &randomPlayer};
+  Hangman::Game game;
+
+  for (auto player: players) {
+    auto alphaOrderResults = game.play(player);
+    std::cout << "Hangman: " << player->name << " had " << alphaOrderResults.averageMistakes << " mistakes on average\n";
+  }
 
   return true;
 }
