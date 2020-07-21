@@ -26,6 +26,7 @@
 #include "cpic/view/board_logger.h"
 #include "hangman/game.h"
 #include "hangman/player/alpha_order_player.h"
+#include "hangman/player/frequency_aware_player.h"
 #include "hangman/player/random_player.h"
 #include "shurikens/data/data.h"
 #include "shurikens/logger.h"
@@ -106,11 +107,11 @@ bool solveCPic(bool fullRun) {
 }
 
 bool solveHangman() {
-
   Hangman::AlphaOrderPlayer alphaOrderPlayer;
+  Hangman::FrequencyAwarePlayer frequencyAwarePlayer;
   Hangman::RandomPlayer randomPlayer;
 
-  Hangman::Player *players[] = {&alphaOrderPlayer, &randomPlayer};
+  Hangman::Player *players[] = {&alphaOrderPlayer, &frequencyAwarePlayer, &randomPlayer};
   Hangman::Game game;
 
   for (auto player: players) {

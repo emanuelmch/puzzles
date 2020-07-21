@@ -48,6 +48,7 @@ add_library(puzzles_lib OBJECT
         src/cpic/view/board_logger.cpp
         src/hangman/game.cpp
         src/hangman/player/alpha_order_player.cpp
+        src/hangman/player/frequency_aware_player.cpp
         src/hangman/player/random_player.cpp
         src/hangman/word_repository.cpp
         src/shurikens/data/easy.cpp
