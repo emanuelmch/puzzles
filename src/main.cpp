@@ -24,6 +24,10 @@
 #include "cpic/solver/brute_force_board_solver.h"
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
+#include "hangman/game.h"
+#include "hangman/player/alpha_order_player.h"
+#include "hangman/player/frequency_aware_player.h"
+#include "hangman/player/random_player.h"
 #include "shurikens/data/data.h"
 #include "shurikens/logger.h"
 #include "shurikens/solver/breadth_search_solver.h"
@@ -43,9 +47,10 @@ using std::chrono::duration_cast;
 using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
-inline bool solveCPic();
+inline bool solveCPic(bool fullRun);
+inline bool solveHangman();
 inline bool solveShurikens(bool fullRun);
-inline bool solveSudoku();
+inline bool solveSudoku(bool fullRun);
 
 int main(int argc, char *argv[]) {
   // TODO Maybe creating a parsing unit?
@@ -53,12 +58,13 @@ int main(int argc, char *argv[]) {
   auto fullRun = arg == "full";
 
   auto start = steady_clock::now();
-  if (!solveCPic() || !solveShurikens(fullRun) || !solveSudoku()) return 1;
+  if (!solveCPic(fullRun) || !solveHangman() || !solveShurikens(fullRun) || !solveSudoku(fullRun)) return 1;
   auto end = steady_clock::now();
   cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
 }
 
-bool solveCPic() {
+bool solveCPic(bool fullRun) {
+  if (!fullRun) return true;
   CPic::BruteForceBoardSolver bruteSolver;
   CPic::HeuristicBoardSolver heuristicSolver;
   CPic::BoardLogger logger;
@@ -100,7 +106,25 @@ bool solveCPic() {
   return true;
 }
 
+bool solveHangman() {
+  Hangman::AlphaOrderPlayer alphaOrderPlayer;
+  Hangman::FrequencyAwarePlayer frequencyAwarePlayer;
+  Hangman::RandomPlayer randomPlayer;
+
+  Hangman::Player *players[] = {&alphaOrderPlayer, &frequencyAwarePlayer, &randomPlayer};
+  Hangman::Game game;
+
+  for (auto player: players) {
+    auto alphaOrderResults = game.play(player);
+    std::cout << "Hangman: " << player->name << " had " << alphaOrderResults.averageMistakes << " mistakes on average\n";
+  }
+
+  return true;
+}
+
 bool solveShurikens(bool fullRun) {
+  if (!fullRun) return true;
+
   Shurikens::BreadthSearchSolver breadthSearchSolver;
   Shurikens::DepthSearchSolver depthSearchSolver;
 
@@ -140,7 +164,9 @@ bool solveShurikens(bool fullRun) {
   return true;
 }
 
-bool solveSudoku() {
+bool solveSudoku(bool fullRun) {
+  if (!fullRun) return true;
+
   Sudoku::BruteForceSolver bruteSolver;
   Sudoku::HeuristicBoardSolver heuristicSolver;
   Sudoku::BoardLogger logger;
