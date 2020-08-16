@@ -37,7 +37,7 @@ const vector<Board> getNext(const Board *board) {
   auto nextCell = board->firstEmptyCell();
   assert(nextCell < 81);
 
-  for (ushort i = 1; i <= 9; ++i) {
+  for (uint8_t i = 1; i <= 9; ++i) {
     Board copy(*board);
     copy.setCell(nextCell, i);
     next.emplace_back(copy);

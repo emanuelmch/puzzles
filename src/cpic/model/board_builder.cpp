@@ -29,7 +29,7 @@ using namespace CPic;
 using std::map;
 using std::vector;
 
-BoardBuilder::BoardBuilder(ushort colorCount) {
+BoardBuilder::BoardBuilder(uint8_t colorCount) {
   assert(colorCount > 0 && colorCount <= 4);
 
   if (colorCount >= 1) colors.push_back(C0);
@@ -38,10 +38,10 @@ BoardBuilder::BoardBuilder(ushort colorCount) {
   if (colorCount >= 4) colors.push_back(C3);
 }
 
-BoardBuilder *BoardBuilder::column(vector<ushort> column, vector<bool> contiguity) {
+BoardBuilder *BoardBuilder::column(vector<uint8_t> column, vector<bool> contiguity) {
   vector<Clue> newColumn;
 
-  for (ushort i = 0; i < colors.size(); ++i) {
+  for (uint8_t i = 0; i < colors.size(); ++i) {
     bool isContiguous;
     if (contiguity.size() > i) {
       isContiguous = contiguity[i];
@@ -62,10 +62,10 @@ BoardBuilder *BoardBuilder::column(vector<ushort> column, vector<bool> contiguit
   return this;
 }
 
-BoardBuilder *BoardBuilder::row(vector<ushort> row, vector<bool> contiguity) {
+BoardBuilder *BoardBuilder::row(vector<uint8_t> row, vector<bool> contiguity) {
   vector<Clue> newRow;
 
-  for (ushort i = 0; i < colors.size(); ++i) {
+  for (uint8_t i = 0; i < colors.size(); ++i) {
     bool isContiguous;
     if (contiguity.size() > i) {
       isContiguous = contiguity[i];

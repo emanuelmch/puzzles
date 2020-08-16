@@ -33,11 +33,11 @@ const int SIZE = 9;
 const int CELL_COUNT = SIZE * SIZE;
 
 const vector<vector<bool>> findCandidates(const Board *board);
-void removeCandidatesFromColumn(int index, ushort value, vector<vector<bool>> *candidates);
-void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *candidates);
-void removeCandidatesFromSquare(int index, ushort value, vector<vector<bool>> *candidates);
+void removeCandidatesFromColumn(int index, uint8_t value, vector<vector<bool>> *candidates);
+void removeCandidatesFromRow(int index, uint8_t value, vector<vector<bool>> *candidates);
+void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *candidates);
 bool applyCandidates(Board *board, const vector<vector<bool>> candidates);
-ushort getSingleCandidate(const vector<bool> candidates);
+uint8_t getSingleCandidate(const vector<bool> candidates);
 
 const Board HeuristicBoardSolver::solve(const Sudoku::Board *original) const {
   auto board = *original;
@@ -69,7 +69,7 @@ const vector<vector<bool>> findCandidates(const Board *board) {
   return candidates;
 }
 
-void removeCandidatesFromColumn(int index, ushort value, vector<vector<bool>> *candidates) {
+void removeCandidatesFromColumn(int index, uint8_t value, vector<vector<bool>> *candidates) {
   short upwards = index - SIZE;
   while (upwards >= 0) {
     (*candidates)[upwards][value - 1] = false;
@@ -83,7 +83,7 @@ void removeCandidatesFromColumn(int index, ushort value, vector<vector<bool>> *c
   }
 }
 
-void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *candidates) {
+void removeCandidatesFromRow(int index, uint8_t value, vector<vector<bool>> *candidates) {
   auto rem = index % SIZE;
   for (auto i = 1; i <= rem; ++i) {
     (*candidates)[index - i][value - 1] = false;
@@ -94,8 +94,8 @@ void removeCandidatesFromRow(int index, ushort value, vector<vector<bool>> *cand
   }
 }
 
-void removeCandidatesFromSquare(int index, ushort value, vector<vector<bool>> *candidates) {
-  ushort rows[3] = {
+void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *candidates) {
+  uint8_t rows[3] = {
       0,
   };
   switch ((index / 9) % 3) {
@@ -115,7 +115,7 @@ void removeCandidatesFromSquare(int index, ushort value, vector<vector<bool>> *c
     rows[2] = (index / 9);
   }
 
-  ushort columns[3] = {
+  uint8_t columns[3] = {
       0,
   };
   switch (index % SIZE % 3) {
@@ -159,7 +159,7 @@ bool applyCandidates(Board *board, vector<vector<bool>> candidates) {
   return changedAny;
 }
 
-ushort getSingleCandidate(const vector<bool> candidates) {
+uint8_t getSingleCandidate(const vector<bool> candidates) {
   auto value = 0;
 
   for (auto i = 0; i < SIZE; ++i) {

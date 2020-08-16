@@ -22,26 +22,26 @@
 
 #pragma once
 
-#include <sys/types.h>
+#include <cstdint>
 #include <vector>
 
 namespace Sudoku {
 
 class Board {
 public:
-  explicit Board(std::vector<std::vector<ushort>> values);
+  explicit Board(std::vector<std::vector<uint8_t>> values);
 
-  ushort firstEmptyCell() const;
+  uint8_t firstEmptyCell() const;
   bool isValid() const;
   bool isFull() const;
 
-  ushort getCell(ushort index) const;
-  void setCell(ushort index, ushort value);
+  uint8_t getCell(uint8_t index) const;
+  void setCell(uint8_t index, uint8_t value);
 
   bool operator==(const Board &other) const;
   bool operator!=(const Board &other) const;
 
 private:
-  std::vector<ushort> values;
+  std::vector<uint8_t> values;
 };
 }

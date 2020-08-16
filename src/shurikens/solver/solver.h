@@ -25,18 +25,17 @@
 #include "shurikens/model.h"
 
 #include <string>
-#include <sys/types.h>
 #include <utility>
 #include <vector>
 
 namespace Shurikens {
 class Solver {
 public:
-  Solver(std::string name, u_int8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
+  Solver(std::string name, uint8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
   virtual ~Solver() = default;
 
   const std::string name;
-  const u_int8_t quickSolveLimit;
+  const uint8_t quickSolveLimit;
 
   virtual std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const = 0;
 };

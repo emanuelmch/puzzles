@@ -30,27 +30,27 @@ using std::vector;
 
 TwoBitStorage::TwoBitStorage() : internal(0), _size(0) {}
 
-void TwoBitStorage::push(u_int8_t value) {
+void TwoBitStorage::push(uint8_t value) {
   assert(value <= 3);
   assert(_size < MAX_SIZE);
 
   _size++;
   auto shift = (MAX_SIZE - _size) * 2;
-  internal += static_cast<u_int64_t>(value) << shift;
+  internal += static_cast<uint64_t>(value) << shift;
 }
 
-u_int8_t TwoBitStorage::operator[](size_t i) const {
+uint8_t TwoBitStorage::operator[](size_t i) const {
   assert(i < _size);
   auto shift = (MAX_SIZE - 1 - i) * 2;
-  return (internal & (static_cast<u_int64_t>(3) << shift)) >> shift;
+  return (internal & (static_cast<uint64_t>(3) << shift)) >> shift;
 }
 
-TwoBitStorage::operator std::vector<u_int8_t>() const {
-  vector<u_int8_t> result;
+TwoBitStorage::operator std::vector<uint8_t>() const {
+  vector<uint8_t> result;
   result.reserve(_size);
 
   for (auto i = 0; i < _size; ++i) {
-    u_int8_t value = (*this)[i];
+    uint8_t value = (*this)[i];
     result.push_back(value);
   }
 

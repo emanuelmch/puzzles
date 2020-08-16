@@ -23,7 +23,8 @@
 #pragma once
 
 #include <array>
-#include <sys/types.h>
+#include <cstdint>
+#include <functional>
 
 namespace Shurikens {
 

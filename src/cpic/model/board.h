@@ -36,15 +36,15 @@ public:
 
   const std::vector<Color> colors;
 
-  const ushort colorCount;
-  const ushort columnCount;
-  const ushort rowCount;
+  const uint8_t colorCount;
+  const uint8_t columnCount;
+  const uint8_t rowCount;
 
-  const Clue clueForColumn(ushort, Color) const;
-  const Clue clueForRow(ushort, Color) const;
+  const Clue clueForColumn(uint8_t, Color) const;
+  const Clue clueForRow(uint8_t, Color) const;
 
-  ushort countPossibilitiesForRow(ushort, Color) const;
-  bool isPossibility(ushort col, ushort row, Color) const;
+  uint8_t countPossibilitiesForRow(uint8_t, Color) const;
+  bool isPossibility(uint8_t col, uint8_t row, Color) const;
 
 private:
   std::vector<std::vector<Clue>> columns;
