@@ -48,6 +48,7 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/brute_force_board_solver.cpp
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
+        src/maths/expressions.cpp
         src/maths/runner.cpp
         src/shurikens/data/easy.cpp
         src/shurikens/data/real.cpp

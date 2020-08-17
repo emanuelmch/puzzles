@@ -20,12 +20,56 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "expressions.h"
 
-#include <string>
+#include <cassert>
+#include <stack>
 
-namespace Maths {
+using namespace Maths;
 
-// TODO: Currently we're limited to whatever size `int` is
-int evaluateExpression(const std::string &);
+using std::stack;
+
+void reduce(stack<int> *numbers, stack<char> *operators);
+
+int Maths::evaluateExpression(const std::string &expression) {
+  stack<int> numbers;
+  stack<char> operators;
+
+  for (auto token : expression) {
+    if (token == ' ') continue;
+
+    if (token >= '0' && token <= '9') {
+      numbers.push(token - '0');
+    } else if (token == '+' || token == '-') {
+      reduce(&numbers, &operators);
+      operators.push(token);
+    } else
+      assert(!"Unknown token");
+  }
+  reduce(&numbers, &operators);
+
+  assert(numbers.size() == 1);
+
+  return numbers.top();
+}
+
+void reduce(stack<int> *numbers, stack<char> *operators) {
+  while (!operators->empty()) {
+    auto next = operators->top();
+    operators->pop();
+
+    assert(next == '+' || next == '-');
+
+    assert(numbers->size() >= 2);
+    auto right = numbers->top();
+    numbers->pop();
+    auto left = numbers->top();
+    numbers->pop();
+
+    if (next == '+') {
+      numbers->push(left + right);
+    } else if (next == '-') {
+      numbers->push(left - right);
+    }
+  }
 }
