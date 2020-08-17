@@ -22,14 +22,17 @@
 
 #include "runner.h"
 
+#include "expressions.h"
 #include "primes.h"
 
 #include <chrono>
 #include <iostream>
+#include <string>
 
 using namespace Maths;
 
 using std::cout;
+using std::string;
 using std::chrono::duration_cast;
 using std::chrono::microseconds;
 using std::chrono::steady_clock;
@@ -51,6 +54,22 @@ bool runLargestPrimeFactor(long value, long expected) {
   }
 }
 
+bool runEvaluateExpression(const string &expression, long expected) {
+  auto start = steady_clock::now();
+  auto result = evaluateExpression(expression);
+  auto end = steady_clock::now();
+
+  if (result == expected) {
+    auto duration = duration_cast<microseconds>(end - start).count();
+    cout << "Maths: Success! Found the result of " << expression << ", it took " << duration << " microseconds!\n";
+    return true;
+  } else {
+    cout << "Maths: Failure! Calculated the result of " << expression << " to be " << result << ", but it's actually "
+         << expected << "\n";
+    return false;
+  }
+}
+
 bool Maths::run() {
-  return runLargestPrimeFactor(13195, 29);
+  return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("1 + 1", 2);
 }
