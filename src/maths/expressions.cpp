@@ -23,13 +23,23 @@
 #include "expressions.h"
 
 #include <cassert>
+#include <cstdint>
 #include <stack>
 
 using namespace Maths;
 
 using std::stack;
 
-void reduce(stack<int> *numbers, stack<char> *operators);
+const uint_fast8_t UINT_FAST8_MIN = 0;
+
+void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence);
+
+inline uint_fast8_t getPrecedence(char operation) {
+  if (operation == '+' || operation == '-') return 1;
+
+  assert(!"Unknown token");
+  return 0;
+}
 
 int Maths::evaluateExpression(const std::string &expression) {
   stack<int> numbers;
@@ -41,21 +51,22 @@ int Maths::evaluateExpression(const std::string &expression) {
     if (token >= '0' && token <= '9') {
       numbers.push(token - '0');
     } else if (token == '+' || token == '-') {
-      reduce(&numbers, &operators);
+      reduce(&numbers, &operators, getPrecedence(token));
       operators.push(token);
     } else
       assert(!"Unknown token");
   }
-  reduce(&numbers, &operators);
+  reduce(&numbers, &operators, UINT_FAST8_MIN);
 
   assert(numbers.size() == 1);
 
   return numbers.top();
 }
 
-void reduce(stack<int> *numbers, stack<char> *operators) {
+void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence) {
   while (!operators->empty()) {
     auto next = operators->top();
+    if (getPrecedence(next) < precedence) return;
     operators->pop();
 
     assert(next == '+' || next == '-');
