@@ -36,9 +36,14 @@ void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence
 
 inline uint_fast8_t getPrecedence(char operation) {
   if (operation == '+' || operation == '-') return 1;
+  if (operation == '*') return 2;
 
   assert(!"Unknown token");
   return 0;
+}
+
+inline bool isOperator(char token) {
+  return token == '+' || token == '-' || token == '*';
 }
 
 int Maths::evaluateExpression(const std::string &expression) {
@@ -50,7 +55,7 @@ int Maths::evaluateExpression(const std::string &expression) {
 
     if (token >= '0' && token <= '9') {
       numbers.push(token - '0');
-    } else if (token == '+' || token == '-') {
+    } else if (isOperator(token)) {
       reduce(&numbers, &operators, getPrecedence(token));
       operators.push(token);
     } else
@@ -69,7 +74,7 @@ void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence
     if (getPrecedence(next) < precedence) return;
     operators->pop();
 
-    assert(next == '+' || next == '-');
+    assert(next == '+' || next == '-' || next == '*');
 
     assert(numbers->size() >= 2);
     auto right = numbers->top();
@@ -81,6 +86,8 @@ void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence
       numbers->push(left + right);
     } else if (next == '-') {
       numbers->push(left - right);
+    } else if (next == '*') {
+      numbers->push(left * right);
     }
   }
 }
