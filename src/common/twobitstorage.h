@@ -22,7 +22,8 @@
 
 #pragma once
 
-#include <sys/types.h>
+#include <cstddef>
+#include <cstdint>
 #include <vector>
 
 namespace Puzzles {
@@ -34,12 +35,12 @@ struct TwoBitStorage {
 
   inline size_t size() const { return _size; }
 
-  void push(u_int8_t);
-  u_int8_t operator[](size_t i) const;
-  explicit operator std::vector<u_int8_t>() const;
+  void push(uint8_t);
+  uint8_t operator[](size_t i) const;
+  explicit operator std::vector<uint8_t>() const;
 
 private:
-  u_int64_t internal;
-  u_int8_t _size;
+  uint64_t internal;
+  uint8_t _size;
 };
 }

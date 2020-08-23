@@ -23,17 +23,13 @@
 #include "board.h"
 
 #include <cassert>
-#include <iostream>
 #include <limits>
 
 using namespace Sudoku;
 
-using std::cout;
-using std::endl;
-
 static const int SIZE = 9;
 
-Board::Board(std::vector<std::vector<ushort>> _values) {
+Board::Board(std::vector<std::vector<uint8_t>> _values) {
   assert(_values.size() == SIZE);
   for (const auto &row : _values) {
     assert(row.size() == SIZE);
@@ -52,15 +48,15 @@ bool Board::operator!=(const Sudoku::Board &other) const {
   return values != other.values;
 }
 
-ushort Board::firstEmptyCell() const {
-  for (ushort i = 0; i < values.size(); ++i) {
+uint8_t Board::firstEmptyCell() const {
+  for (uint8_t i = 0; i < values.size(); ++i) {
     auto value = values[i];
     if (value == 0) {
       return i;
     }
   }
 
-  return std::numeric_limits<ushort>::max();
+  return std::numeric_limits<uint8_t>::max();
 }
 
 bool Board::isValid() const {
@@ -124,10 +120,10 @@ bool Board::isFull() const {
   return true;
 }
 
-ushort Board::getCell(ushort index) const {
+uint8_t Board::getCell(uint8_t index) const {
   return values[index];
 }
 
-void Board::setCell(ushort index, ushort value) {
+void Board::setCell(uint8_t index, uint8_t value) {
   values[index] = value;
 }

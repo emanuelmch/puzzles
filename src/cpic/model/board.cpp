@@ -35,7 +35,7 @@ Board::Board(vector<Color> colors, vector<vector<Clue>> columns, vector<vector<C
 
 Board::~Board() = default;
 
-const Clue Board::clueForColumn(ushort column, Color color) const {
+const Clue Board::clueForColumn(uint8_t column, Color color) const {
   for (auto clue : columns[column]) {
     if (clue.color == color) {
       return clue;
@@ -46,7 +46,7 @@ const Clue Board::clueForColumn(ushort column, Color color) const {
   return Clue(Blank, 0, false);
 }
 
-const Clue Board::clueForRow(ushort row, Color color) const {
+const Clue Board::clueForRow(uint8_t row, Color color) const {
   for (auto clue : rows[row]) {
     if (clue.color == color) {
       return clue;
@@ -57,9 +57,9 @@ const Clue Board::clueForRow(ushort row, Color color) const {
   return Clue(Blank, 0, false);
 }
 
-ushort Board::countPossibilitiesForRow(ushort row, Color color) const {
+uint8_t Board::countPossibilitiesForRow(uint8_t row, Color color) const {
   // TODO: Implement this in a more efficient manner
-  ushort count = 0;
+  uint8_t count = 0;
 
   for (auto col = 0; col < this->columnCount; ++col) {
     if (isPossibility(col, row, color)) {
@@ -70,7 +70,7 @@ ushort Board::countPossibilitiesForRow(ushort row, Color color) const {
   return count;
 }
 
-bool Board::isPossibility(ushort col, ushort row, Color color) const {
+bool Board::isPossibility(uint8_t col, uint8_t row, Color color) const {
   auto colClue = clueForColumn(col, color);
   if (colClue.amount == 0) return false;
 

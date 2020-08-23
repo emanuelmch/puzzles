@@ -7,14 +7,12 @@ clean:
 check: build/debug/Makefile
 	cmake --build build/debug --target check -- --no-print-directory
 
+# Debug targets
 debug: build/debug/Makefile
 	cmake --build build/debug --target puzzles -- --no-print-directory
 
 debug_all: build/debug/Makefile
 	cmake --build build/debug -- --no-print-directory
-
-release: build/release/Makefile
-	cmake --build build/release --target puzzles -- --no-print-directory
 
 run: debug
 	./build/debug/puzzles
@@ -23,7 +21,14 @@ run: debug
 run_full: debug
 	./build/debug/puzzles full
 
-.PHONY: all clean check debug debug_all release run
+# Release targets
+release: build/release/Makefile
+	cmake --build build/release --target puzzles -- --no-print-directory
+
+run_release: release
+	./build/release/puzzles
+
+.PHONY: all clean check debug debug_all release run run_release
 
 # Specific file targets
 build/debug/Makefile: CMakeLists.txt

@@ -22,17 +22,18 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <limits>
-#include <sys/types.h>
 
 namespace Puzzles::Numbers {
 
 inline bool fitsUShort(short value) {
-  return value >= std::numeric_limits<ushort>::min();
+  return value >= std::numeric_limits<uint8_t>::min();
 }
 
 inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<ushort>::max();
+  return value <= std::numeric_limits<uint8_t>::max();
 }
 
 inline unsigned long long factorial(unsigned int value) {

@@ -25,7 +25,6 @@
 #include "common/twobitstorage.h"
 
 #include <stack>
-#include <sys/types.h>
 #include <unordered_map>
 #include <utility>
 
@@ -49,7 +48,7 @@ struct Node {
 }
 
 vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
-  unordered_map<Shuriken, u_int8_t> cache;
+  unordered_map<Shuriken, uint8_t> cache;
   cache[shuriken] = 0;
 
   stack<Node> nodes;
@@ -88,5 +87,5 @@ vector<Move> DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUppe
     }
   } while (nodes.empty() == false);
 
-  return static_cast<vector<u_int8_t>>(bestSolution);
+  return static_cast<vector<uint8_t>>(bestSolution);
 }

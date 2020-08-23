@@ -24,7 +24,6 @@
 
 #include <cassert>
 #include <stack>
-#include <utility>
 #include <vector>
 
 using namespace CPic;
