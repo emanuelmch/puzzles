@@ -36,4 +36,9 @@ TEST(Maths, Expressions) {
   EXPECT_EQ(evaluateExpression("1 * 2 + 3"), 5);
   EXPECT_EQ(evaluateExpression("1 + 2 * 3"), 7);
   EXPECT_EQ(evaluateExpression("1+2*3/2+4/2-1*3"), 3);
+  EXPECT_EQ(evaluateExpression("(1)"), 1);
+  EXPECT_EQ(evaluateExpression("(1+1)"), 2);
+  EXPECT_EQ(evaluateExpression("1*(2+1)"), 3);
+  EXPECT_EQ(evaluateExpression("1+(3+1)/2"), 3);
+  EXPECT_EQ(evaluateExpression("2*(3*(1+2)+2)"), 22);
 }

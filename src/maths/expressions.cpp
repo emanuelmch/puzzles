@@ -31,6 +31,7 @@ using namespace Maths;
 using std::stack;
 
 inline uint_fast8_t getPrecedence(char operation) {
+  if (operation == '(') return 0;
   if (operation == '+' || operation == '-') return 1;
   if (operation == '*' || operation == '/') return 2;
 
@@ -65,6 +66,15 @@ void reduceOnce(stack<int> *numbers, stack<char> *operators) {
   }
 }
 
+inline void reduceToParenthesis(stack<int> *numbers, stack<char> *operators) {
+  assert(!operators->empty());
+  while (operators->top() != '(') {
+    reduceOnce(numbers, operators);
+    assert(!operators->empty());
+  }
+  operators->pop();
+}
+
 inline void reduceToPrecedence(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence) {
   while (!operators->empty() && getPrecedence(operators->top()) >= precedence) {
     reduceOnce(numbers, operators);
@@ -74,12 +84,20 @@ inline void reduceToPrecedence(stack<int> *numbers, stack<char> *operators, uint
 int Maths::evaluateExpression(const std::string &expression) {
   stack<int> numbers;
   stack<char> operators;
+  int parenthesisCount = 0;
 
   for (auto token : expression) {
     if (token == ' ') continue;
 
     if (token >= '0' && token <= '9') {
       numbers.push(token - '0');
+    } else if (token == '(') {
+      operators.push(token);
+      parenthesisCount++;
+    } else if (token == ')') {
+      assert(parenthesisCount > 0);
+      parenthesisCount--;
+      reduceToParenthesis(&numbers, &operators);
     } else if (isOperator(token)) {
       reduceToPrecedence(&numbers, &operators, getPrecedence(token));
       operators.push(token);
