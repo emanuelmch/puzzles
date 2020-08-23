@@ -30,10 +30,6 @@ using namespace Maths;
 
 using std::stack;
 
-const uint_fast8_t UINT_FAST8_MIN = 0;
-
-void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence);
-
 inline uint_fast8_t getPrecedence(char operation) {
   if (operation == '+' || operation == '-') return 1;
   if (operation == '*' || operation == '/') return 2;
@@ -46,6 +42,35 @@ inline bool isOperator(char token) {
   return token == '+' || token == '-' || token == '*' || token == '/';
 }
 
+void reduceOnce(stack<int> *numbers, stack<char> *operators) {
+  auto next = operators->top();
+  operators->pop();
+
+  assert(next == '+' || next == '-' || next == '*' || next == '/');
+
+  assert(numbers->size() >= 2);
+  auto right = numbers->top();
+  numbers->pop();
+  auto left = numbers->top();
+  numbers->pop();
+
+  if (next == '+') {
+    numbers->push(left + right);
+  } else if (next == '-') {
+    numbers->push(left - right);
+  } else if (next == '*') {
+    numbers->push(left * right);
+  } else if (next == '/') {
+    numbers->push(left / right);
+  }
+}
+
+inline void reduceToPrecedence(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence) {
+  while (!operators->empty() && getPrecedence(operators->top()) >= precedence) {
+    reduceOnce(numbers, operators);
+  }
+}
+
 int Maths::evaluateExpression(const std::string &expression) {
   stack<int> numbers;
   stack<char> operators;
@@ -56,40 +81,16 @@ int Maths::evaluateExpression(const std::string &expression) {
     if (token >= '0' && token <= '9') {
       numbers.push(token - '0');
     } else if (isOperator(token)) {
-      reduce(&numbers, &operators, getPrecedence(token));
+      reduceToPrecedence(&numbers, &operators, getPrecedence(token));
       operators.push(token);
     } else
       assert(!"Unknown token");
   }
-  reduce(&numbers, &operators, UINT_FAST8_MIN);
+
+  while (!operators.empty()) {
+    reduceOnce(&numbers, &operators);
+  }
 
   assert(numbers.size() == 1);
-
   return numbers.top();
-}
-
-void reduce(stack<int> *numbers, stack<char> *operators, uint_fast8_t precedence) {
-  while (!operators->empty()) {
-    auto next = operators->top();
-    if (getPrecedence(next) < precedence) return;
-    operators->pop();
-
-    assert(next == '+' || next == '-' || next == '*' || next == '/');
-
-    assert(numbers->size() >= 2);
-    auto right = numbers->top();
-    numbers->pop();
-    auto left = numbers->top();
-    numbers->pop();
-
-    if (next == '+') {
-      numbers->push(left + right);
-    } else if (next == '-') {
-      numbers->push(left - right);
-    } else if (next == '*') {
-      numbers->push(left * right);
-    } else if (next == '/') {
-      numbers->push(left / right);
-    }
-  }
 }
