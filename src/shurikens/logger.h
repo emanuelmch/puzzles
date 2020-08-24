@@ -24,11 +24,9 @@
 
 #include "model.h"
 
-#include <vector>
-
 namespace Shurikens {
 class Logger {
 public:
-  void log(const std::vector<Move> &) const;
+  void log(const MoveContainer &) const;
 };
 }

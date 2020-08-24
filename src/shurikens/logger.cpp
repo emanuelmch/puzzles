@@ -29,17 +29,26 @@ using namespace Shurikens;
 using std::cout;
 using std::vector;
 
-void Logger::log(const vector<Move> &moves) const {
+void Logger::log(const MoveContainer &moves) const {
   for (const auto &move : moves) {
     switch (move) {
     case swap_top:
       cout << "s";
+      break;
+    case swap_bottom:
+      cout << "S";
       break;
     case turn_a:
       cout << "a";
       break;
     case turn_b:
       cout << "b";
+      break;
+    case reverse_a:
+      cout << "A";
+      break;
+    case reverse_b:
+      cout << "B";
       break;
     }
   }

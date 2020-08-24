@@ -26,17 +26,15 @@
 
 #include <string>
 #include <utility>
-#include <vector>
 
 namespace Shurikens {
-class Solver {
-public:
+struct Solver {
   Solver(std::string name, uint8_t quickSolveLimit) : name(std::move(name)), quickSolveLimit(quickSolveLimit) {}
   virtual ~Solver() = default;
 
   const std::string name;
   const uint8_t quickSolveLimit;
 
-  virtual std::vector<Move> solve(const Shuriken &, size_t knownUpperBound) const = 0;
+  virtual MoveContainer solve(const Shuriken &, size_t knownUpperBound) const = 0;
 };
 }

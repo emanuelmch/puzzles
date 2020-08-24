@@ -22,33 +22,19 @@
 
 #pragma once
 
+#include "common/arbitrary_container.h"
+
 #include <array>
 #include <cstdint>
 #include <functional>
 
 namespace Shurikens {
 
-// Move and Cell should've been enums, but unfortunately this is more space-efficient
-typedef uint8_t Move;
-const Move swap_top = 0;
-const Move turn_a = 1;
-const Move turn_b = 2;
+enum Move : uint8_t { swap_top, swap_bottom, turn_a, turn_b, reverse_a, reverse_b };
+enum Cell : uint8_t { A, B, C, D, E, F, G, H, I, J, K, L };
 
-typedef uint8_t Cell;
-const Cell A = 0;
-const Cell B = 1;
-const Cell C = 2;
-const Cell D = 3;
-const Cell E = 4;
-const Cell F = 5;
-const Cell G = 6;
-const Cell H = 7;
-const Cell I = 8;
-const Cell J = 9;
-const Cell K = 10;
-const Cell L = 11;
-
-const std::array<Move, 3> allMoves = {swap_top, turn_a, turn_b};
+const std::array<Move, 6> allMoves = {swap_top, swap_bottom, turn_a, turn_b, reverse_a, reverse_b};
+typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveContainer;
 
 class Shuriken {
 public:

@@ -27,57 +27,83 @@
 using namespace Shurikens;
 
 using std::array;
-using std::swap;
 
-static inline array<Cell, 12> doSwapTop(array<Cell, 12> cells) {
-  swap(cells[0], cells[6]);
-  swap(cells[1], cells[7]);
-  swap(cells[2], cells[8]);
+static inline array<Cell, 12> doSwapTop(const array<Cell, 12> &cells) {
+  array<Cell, 12> turned = cells;
 
-  return cells;
+  auto cellsBegin = cells.begin();
+  auto turnedBegin = turned.begin();
+  std::copy(cellsBegin, cellsBegin + 3, turnedBegin + 6);
+  std::copy(cellsBegin + 6, cellsBegin + 9, turnedBegin);
+
+  return turned;
 }
 
-static inline array<Cell, 12> doInvert(array<Cell, 12> cells) {
-  swap(cells[0], cells[6]);
-  swap(cells[1], cells[7]);
-  swap(cells[2], cells[8]);
-  swap(cells[3], cells[9]);
-  swap(cells[4], cells[10]);
-  swap(cells[5], cells[11]);
+static inline array<Cell, 12> doSwapBottom(const array<Cell, 12> &cells) {
+  array<Cell, 12> turned = cells;
 
-  return cells;
+  auto cellsBegin = cells.begin();
+  auto turnedBegin = turned.begin();
+  std::copy(cellsBegin + 3, cellsBegin + 6, turnedBegin + 9);
+  std::copy(cellsBegin + 9, cellsBegin + 12, turnedBegin + 3);
+
+  return turned;
 }
 
 static inline array<Cell, 12> doTurnA(const array<Cell, 12> &cells) {
-  array<Cell, 12> turned = {};
+  array<Cell, 12> turned = cells;
 
-  for (int i = 0; i < 6; ++i) {
-    turned[(i + 1) % 6] = cells[i];
-    turned[i + 6] = cells[i + 6];
-  }
+  auto cellsBegin = cells.begin();
+  std::copy(cellsBegin, cellsBegin + 5, turned.begin() + 1);
+  turned[0] = cells[5];
 
   return turned;
 }
 
 static inline array<Cell, 12> doTurnB(const array<Cell, 12> &cells) {
-  array<Cell, 12> turned = {};
+  array<Cell, 12> turned = cells;
 
-  for (int i = 0; i < 6; ++i) {
-    turned[i] = cells[i];
-    turned[((i + 1) % 6) + 6] = cells[i + 6];
-  }
+  auto cellsBegin = cells.begin();
+  std::copy(cellsBegin + 6, cellsBegin + 11, turned.begin() + 7);
+  turned[6] = cells[11];
+
+  return turned;
+}
+
+static inline array<Cell, 12> doReverseA(const array<Cell, 12> &cells) {
+  array<Cell, 12> turned = cells;
+
+  auto cellsBegin = cells.begin();
+  std::copy(cellsBegin + 1, cellsBegin + 6, turned.begin());
+  turned[5] = cells[0];
+
+  return turned;
+}
+
+static inline array<Cell, 12> doReverseB(const array<Cell, 12> &cells) {
+  array<Cell, 12> turned = cells;
+
+  auto cellsBegin = cells.begin();
+  std::copy(cellsBegin + 7, cellsBegin + 12, turned.begin() + 6);
+  turned[11] = cells[6];
 
   return turned;
 }
 
 Shuriken Shuriken::apply(Shurikens::Move move) const {
   switch (move) {
+  case swap_top:
+    return Shuriken(doSwapTop(this->cells));
+  case swap_bottom:
+    return Shuriken(doSwapBottom(this->cells));
   case turn_a:
     return Shuriken(doTurnA(this->cells));
   case turn_b:
     return Shuriken(doTurnB(this->cells));
-  case swap_top:
-    return Shuriken(doSwapTop(this->cells));
+  case reverse_a:
+    return Shuriken(doReverseA(this->cells));
+  case reverse_b:
+    return Shuriken(doReverseB(this->cells));
   default:
     assert(!"Tried to apply an invalid move!");
     return *this;
@@ -85,9 +111,17 @@ Shuriken Shuriken::apply(Shurikens::Move move) const {
 }
 
 bool Shuriken::operator==(const Shuriken &other) const {
-  // TODO There must be a better way of doing this check...
   if (cells == other.cells) return true;
-  if (cells == doInvert(other.cells)) return true;
 
-  return false;
+  auto us = cells.begin();
+  auto them = other.cells.begin();
+
+  for (auto i = 0; i < 6; ++i) {
+    if (*us != *(them + 6)) return false;
+    if (*(us + 6) != *them) return false;
+
+    ++us, ++them;
+  }
+
+  return true;
 }

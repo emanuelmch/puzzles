@@ -23,7 +23,6 @@
 #include "breadth_search_solver.h"
 
 #include "common/numbers.h"
-#include "common/twobitstorage.h"
 
 #include <cmath>
 #include <queue>
@@ -33,8 +32,6 @@
 using namespace Puzzles;
 using namespace Shurikens;
 
-using Puzzles::TwoBitStorage;
-
 using std::move;
 using std::queue;
 using std::unordered_set;
@@ -43,16 +40,18 @@ using std::vector;
 namespace {
 struct Node {
   const Shuriken shuriken;
-  const TwoBitStorage moves;
+  const MoveContainer moves;
 
   explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, const TwoBitStorage &moves) : shuriken(move(shuriken)), moves(moves) {}
+  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
 };
 }
 
-vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
-  auto maxNodes = std::pow(allMoves.size(), knownUpperBound) + 1;
-  auto maxShurikens = static_cast<double>(Numbers::factorial(12)) / 2;
+MoveContainer BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
+  if (shuriken.isSolved()) return {};
+
+  auto maxNodes = static_cast<size_t>(std::pow(allMoves.size(), knownUpperBound) + 1);
+  auto maxShurikens = static_cast<size_t>(std::ceil(Numbers::factorial(12) / 2));
 
   unordered_set<Shuriken> cache;
   cache.reserve(std::min(maxNodes, maxShurikens));
@@ -63,17 +62,19 @@ vector<Move> BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownUp
 
   do {
     auto next = nodes.front();
-    if (next.shuriken.isSolved()) {
-      return static_cast<vector<Move>>(next.moves);
-    }
-
     nodes.pop();
 
     for (auto &move : allMoves) {
       auto newShuriken = next.shuriken.apply(move);
+
       if (cache.insert(newShuriken).second) {
-        TwoBitStorage newMoves(next.moves);
+        MoveContainer newMoves(next.moves);
         newMoves.push(move);
+        newMoves.shrink_to_fit();
+
+        if (newShuriken.isSolved()) {
+          return newMoves;
+        }
 
         nodes.emplace(newShuriken, newMoves);
       }
