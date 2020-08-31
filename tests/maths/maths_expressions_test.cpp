@@ -49,4 +49,5 @@ TEST(Expressions, Evaluator) {
 TEST(Expressions, Tokenizer) {
   EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, '+', 2}));
   EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, '/', 123}));
+  EXPECT_EQ(tokenizeExpression("0"), vector<Token>({Token(0)}));
 }

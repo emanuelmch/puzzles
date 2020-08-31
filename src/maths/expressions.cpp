@@ -35,10 +35,12 @@ using std::vector;
 vector<Token> Maths::tokenizeExpression(const string &expression) {
   vector<Token> tokens;
 
+  bool isReadingNumber = false;
   int currentNumber = 0;
 
   for (auto token : expression) {
     if (token >= '0' && token <= '9') {
+      isReadingNumber = true;
       currentNumber *= 10;
       currentNumber += token - '0';
       continue;
@@ -46,6 +48,7 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
 
     if (currentNumber != 0) {
       tokens.emplace_back(currentNumber);
+      isReadingNumber = false;
       currentNumber = 0;
     }
 
@@ -54,7 +57,7 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
     }
   }
 
-  if (currentNumber != 0) {
+  if (isReadingNumber) {
     tokens.emplace_back(currentNumber);
   }
 
