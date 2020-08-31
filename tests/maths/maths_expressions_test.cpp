@@ -43,8 +43,10 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("1*(2+1)"), 3);
   EXPECT_EQ(evaluateExpression("1+(3+1)/2"), 3);
   EXPECT_EQ(evaluateExpression("2*(3*(1+2)+2)"), 22);
+  EXPECT_EQ(evaluateExpression("123*456"), 56088);
 }
 
 TEST(Expressions, Tokenizer) {
   EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, '+', 2}));
+  EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, '/', 123}));
 }
