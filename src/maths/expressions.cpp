@@ -57,10 +57,6 @@ inline uint_fast8_t getPrecedence(char operation) {
   return 0;
 }
 
-inline bool isOperator(char token) {
-  return token == '+' || token == '-' || token == '*' || token == '/';
-}
-
 void reduceOnce(stack<int> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
@@ -104,23 +100,22 @@ int Maths::evaluateExpression(const std::string &expression) {
   stack<char> operators;
   int parenthesisCount = 0;
 
-  for (auto token : expression) {
+  for (auto token : tokenizeExpression(expression)) {
     if (token == ' ') continue;
 
-    if (token >= '0' && token <= '9') {
-      numbers.push(token - '0');
+    if (token.isNumber) {
+      numbers.push(token.value.asNumber);
     } else if (token == '(') {
-      operators.push(token);
+      operators.push('(');
       parenthesisCount++;
     } else if (token == ')') {
       assert(parenthesisCount > 0);
       parenthesisCount--;
       reduceToParenthesis(&numbers, &operators);
-    } else if (isOperator(token)) {
-      reduceToPrecedence(&numbers, &operators, getPrecedence(token));
-      operators.push(token);
-    } else
-      assert(!"Unknown token");
+    } else {
+      reduceToPrecedence(&numbers, &operators, getPrecedence(token.value.asOperator));
+      operators.push(token.value.asOperator);
+    }
   }
 
   while (!operators.empty()) {

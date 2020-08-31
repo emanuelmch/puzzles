@@ -38,6 +38,8 @@ struct Token {
   Token(int number) : isNumber(true) { value.asNumber = number; }
   Token(char anOperator) : isNumber(false) { value.asOperator = anOperator; }
 
+  inline bool operator==(const char &anOperator) const { return !isNumber && value.asOperator == anOperator; }
+
   inline bool operator==(const Token &o) const {
     if (isNumber != o.isNumber) return false;
     if (isNumber) {
