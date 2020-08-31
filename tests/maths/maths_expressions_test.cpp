@@ -44,6 +44,7 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("1+(3+1)/2"), 3);
   EXPECT_EQ(evaluateExpression("2*(3*(1+2)+2)"), 22);
   EXPECT_EQ(evaluateExpression("123*456"), 56088);
+  EXPECT_EQ(evaluateExpression("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3 - 1 / 8192"), 3);
 }
 
 TEST(Expressions, Tokenizer) {

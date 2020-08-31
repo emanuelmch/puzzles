@@ -23,6 +23,7 @@
 #include "expressions.h"
 
 #include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <stack>
 
@@ -68,6 +69,7 @@ inline uint_fast8_t getPrecedence(char operation) {
   if (operation == '(') return 0;
   if (operation == '+' || operation == '-') return 1;
   if (operation == '*' || operation == '/') return 2;
+  if (operation == '^') return 3;
 
   assert(!"Unknown token");
   return 0;
@@ -77,7 +79,7 @@ void reduceOnce(stack<int> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
 
-  assert(next == '+' || next == '-' || next == '*' || next == '/');
+  assert(next == '+' || next == '-' || next == '*' || next == '/' || next == '^');
 
   assert(numbers->size() >= 2);
   auto right = numbers->top();
@@ -93,6 +95,8 @@ void reduceOnce(stack<int> *numbers, stack<char> *operators) {
     numbers->push(left * right);
   } else if (next == '/') {
     numbers->push(left / right);
+  } else if (next == '^') {
+    numbers->push(std::pow(left, right));
   }
 }
 

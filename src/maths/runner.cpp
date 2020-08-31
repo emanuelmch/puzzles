@@ -71,5 +71,5 @@ bool runEvaluateExpression(const string &expression, long expected) {
 }
 
 bool Maths::run() {
-  return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("1 + 1", 2);
+  return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3 - 1 / 8192", 3);
 }
