@@ -26,7 +26,9 @@
 
 using namespace Maths;
 
-TEST(Maths, Expressions) {
+using std::vector;
+
+TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("1 + 1"), 2);
   EXPECT_EQ(evaluateExpression("2 + 3"), 5);
   EXPECT_EQ(evaluateExpression("2+3 "), 5);
@@ -41,4 +43,8 @@ TEST(Maths, Expressions) {
   EXPECT_EQ(evaluateExpression("1*(2+1)"), 3);
   EXPECT_EQ(evaluateExpression("1+(3+1)/2"), 3);
   EXPECT_EQ(evaluateExpression("2*(3*(1+2)+2)"), 22);
+}
+
+TEST(Expressions, Tokenizer) {
+  EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, '+', 2}));
 }

@@ -23,9 +23,32 @@
 #pragma once
 
 #include <string>
-
-namespace Maths {
+#include <vector>
 
 // TODO: Currently we're limited to whatever size `int` is
+namespace Maths {
+
+struct Token {
+  bool isNumber;
+  union {
+    char asOperator;
+    int asNumber;
+  } value{};
+
+  Token(int number) : isNumber(true) { value.asNumber = number; }
+  Token(char anOperator) : isNumber(false) { value.asOperator = anOperator; }
+
+  inline bool operator==(const Token &o) const {
+    if (isNumber != o.isNumber) return false;
+    if (isNumber) {
+      return value.asNumber == o.value.asNumber;
+    } else {
+      return value.asOperator == o.value.asOperator;
+    }
+  }
+};
+
+std::vector<Token> tokenizeExpression(const std::string &);
+
 int evaluateExpression(const std::string &);
 }

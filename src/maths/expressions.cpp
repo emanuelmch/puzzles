@@ -29,6 +29,24 @@
 using namespace Maths;
 
 using std::stack;
+using std::string;
+using std::vector;
+
+vector<Token> Maths::tokenizeExpression(const string &expression) {
+  vector<Token> tokens;
+
+  for (auto token : expression) {
+    if (token == ' ') {
+      continue;
+    } else if (token >= '0' && token <= '9') {
+      tokens.emplace_back(static_cast<int>(token) - '0');
+    } else {
+      tokens.emplace_back(token);
+    }
+  }
+
+  return tokens;
+}
 
 inline uint_fast8_t getPrecedence(char operation) {
   if (operation == '(') return 0;
