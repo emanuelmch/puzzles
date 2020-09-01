@@ -25,11 +25,15 @@
 #include "expressions.h"
 #include "primes.h"
 
+#include "common/runners.h"
+
 #include <chrono>
 #include <iostream>
 #include <string>
 
 using namespace Maths;
+
+using Puzzles::runningTime;
 
 using std::cout;
 using std::string;
@@ -38,12 +42,9 @@ using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
 bool runLargestPrimeFactor(long value, long expected) {
-  auto start = steady_clock::now();
-  auto result = largestPrimeFactor(value);
-  auto end = steady_clock::now();
+  auto [result, duration] = runningTime([value] { return largestPrimeFactor(value); });
 
   if (result == expected) {
-    auto duration = duration_cast<microseconds>(end - start).count();
     cout << "Maths: Success! Found the Largest Prime Factor of " << value << ", it took " << duration
          << " microseconds!\n";
     return true;
@@ -55,12 +56,9 @@ bool runLargestPrimeFactor(long value, long expected) {
 }
 
 bool runEvaluateExpression(const string &expression, long expected) {
-  auto start = steady_clock::now();
-  auto result = evaluateExpression(expression);
-  auto end = steady_clock::now();
+  auto [result, duration] = runningTime([&expression] { return evaluateExpression(expression); });
 
   if (result == expected) {
-    auto duration = duration_cast<microseconds>(end - start).count();
     cout << "Maths: Success! Found the result of " << expression << ", it took " << duration << " microseconds!\n";
     return true;
   } else {
