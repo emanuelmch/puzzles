@@ -29,6 +29,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces")
 
 # Pre-requisites
+try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)
+IF (NOT supportsCTAD)
+        MESSAGE(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
+ENDIF()
+
 try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
 if (supportsSetContains)
     message(STATUS "Compiler supports std::set::contains")
