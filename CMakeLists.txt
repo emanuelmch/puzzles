@@ -40,6 +40,7 @@ endif ()
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
+        src/cpic/runner.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp

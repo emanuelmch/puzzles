@@ -20,10 +20,7 @@
  * SOFTWARE.
  */
 
-#include "cpic/data/board_data.h"
-#include "cpic/solver/brute_force_board_solver.h"
-#include "cpic/solver/heuristic_board_solver.h"
-#include "cpic/view/board_logger.h"
+#include "cpic/runner.h"
 #include "maths/runner.h"
 #include "shurikens/data/data.h"
 #include "shurikens/logger.h"
@@ -44,7 +41,6 @@ using std::chrono::duration_cast;
 using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
-inline bool solveCPic();
 inline bool solveShurikens(bool fullRun);
 inline bool solveSudoku();
 
@@ -54,51 +50,9 @@ int main(int argc, char *argv[]) {
   auto fullRun = arg == "full";
 
   auto start = steady_clock::now();
-  if (!solveCPic() || !Maths::run() || !solveShurikens(fullRun) || !solveSudoku()) return 1;
+  if (!CPic::run() || !Maths::run() || !solveShurikens(fullRun) || !solveSudoku()) return 1;
   auto end = steady_clock::now();
   cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
-}
-
-bool solveCPic() {
-  CPic::BruteForceBoardSolver bruteSolver;
-  CPic::HeuristicBoardSolver heuristicSolver;
-  CPic::BoardLogger logger;
-
-  auto boards = CPic::createAllBoards();
-
-  for (auto data : boards) {
-    auto bruteStart = steady_clock::now();
-    auto bruteResults = bruteSolver.solve(&data.board);
-    auto bruteEnd = steady_clock::now();
-
-    if (bruteResults == data.solution) {
-      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
-      cout << "CPic: Brute force solved board " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this:\n";
-      logger.log(&data.solution);
-      cout << "CPic: But got this:\n";
-      logger.log(&bruteResults);
-      return false;
-    }
-
-    auto heuristicStart = steady_clock::now();
-    auto heuristicResults = heuristicSolver.solve(&data.board);
-    auto heuristicEnd = steady_clock::now();
-
-    if (heuristicResults == data.solution) {
-      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
-      cout << "CPic: Heuristics solved board " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
-      logger.log(&data.solution);
-      cout << "CPic: But got this:\n";
-      logger.log(&heuristicResults);
-      return false;
-    }
-  }
-
-  return true;
 }
 
 bool solveShurikens(bool fullRun) {
