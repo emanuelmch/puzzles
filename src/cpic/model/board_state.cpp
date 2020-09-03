@@ -22,10 +22,10 @@
 
 #include "board_state.h"
 
+#include "common/numbers.h"
+
 #include <algorithm>
 #include <cassert>
-
-#include "../../common/numbers.h"
 
 using std::count_if;
 using std::vector;
