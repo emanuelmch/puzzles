@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,9 @@
  * SOFTWARE.
  */
 
-#include "cpic/runner.h"
-#include "maths/runner.h"
-#include "shurikens/runner.h"
-#include "sudoku/runner.h"
+#pragma once
 
-#include <chrono>
-#include <iostream>
-#include <string>
+namespace Sudoku {
 
-using std::cout;
-using std::string;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
-using std::chrono::steady_clock;
-
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
-
-  auto start = steady_clock::now();
-  if (!CPic::run() || !Maths::run() || !Shurikens::run(fullRun) || !Sudoku::run()) return 1;
-  auto end = steady_clock::now();
-  cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
+bool run();
 }
