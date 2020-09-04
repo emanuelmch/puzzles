@@ -51,11 +51,12 @@ add_library(puzzles_lib OBJECT
         src/cpic/view/board_logger.cpp
         src/maths/expressions.cpp
         src/maths/runner.cpp
+        src/shurikens/logger.cpp
+        src/shurikens/model.cpp
+        src/shurikens/runner.cpp
         src/shurikens/data/easy.cpp
         src/shurikens/data/real.cpp
         src/shurikens/data/trivial.cpp
-        src/shurikens/logger.cpp
-        src/shurikens/model.cpp
         src/shurikens/solver/breadth_search_solver.cpp
         src/shurikens/solver/depth_search_solver.cpp
         src/sudoku/data/easy.cpp
