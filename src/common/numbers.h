@@ -28,7 +28,7 @@
 
 namespace Puzzles::Numbers {
 
-inline bool fitsUShort(short value) {
+inline bool fitsUnsignedInt8(int8_t value) {
   return value >= std::numeric_limits<uint8_t>::min();
 }
 

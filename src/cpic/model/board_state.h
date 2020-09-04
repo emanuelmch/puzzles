@@ -36,11 +36,11 @@ class BoardRow {
 public:
   BoardRow(const std::vector<Color> &values);
 
-  inline void setColorAt(ushort column, Color color) { internal[column] = color; }
+  inline void setColorAt(uint8_t column, Color color) { internal[column] = color; }
 
-  inline ushort columnCount() const { return internal.size(); }
+  inline uint8_t columnCount() const { return internal.size(); }
 
-  inline Color column(ushort column) const { return internal[column]; }
+  inline Color column(uint8_t column) const { return internal[column]; }
 
   bool operator==(const BoardRow &other) const { return internal == other.internal; }
 
@@ -51,22 +51,22 @@ private:
 class BoardState {
 public:
   BoardState() = default;
-  BoardState(ushort columnCount, ushort rowCount);
+  BoardState(uint8_t columnCount, uint8_t rowCount);
   explicit BoardState(const std::vector<std::vector<Color>> &rows);
 
   bool isValid(const Board *) const;
-  ushort countColorInColumn(ushort, Color) const;
-  ushort countColorInRow(ushort, Color) const;
-  short findFirstInRow(ushort, Color) const;
-  short findLastInRow(ushort, Color) const;
+  uint8_t countColorInColumn(uint8_t, Color) const;
+  uint8_t countColorInRow(uint8_t, Color) const;
+  int8_t findFirstInRow(uint8_t, Color) const;
+  int8_t findLastInRow(uint8_t, Color) const;
 
-  inline void setColorAt(ushort column, ushort row, Color color) { rows.at(row).setColorAt(column, color); }
+  inline void setColorAt(uint8_t column, uint8_t row, Color color) { rows.at(row).setColorAt(column, color); }
 
-  inline ushort rowCount() const { return rows.size(); }
+  inline uint8_t rowCount() const { return rows.size(); }
 
-  inline ushort columnCount() const { return rows[0].columnCount(); }
+  inline uint8_t columnCount() const { return rows[0].columnCount(); }
 
-  inline Color colorAt(ushort column, ushort row) const { return rows.at(row).column(column); }
+  inline Color colorAt(uint8_t column, uint8_t row) const { return rows.at(row).column(column); }
   bool operator==(const BoardState &other) const { return rows == other.rows; }
 
   bool operator!=(const BoardState &other) const { return rows != other.rows; }

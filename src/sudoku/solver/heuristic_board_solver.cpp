@@ -22,6 +22,7 @@
 
 #include "heuristic_board_solver.h"
 
+#include <cstdint>
 #include <vector>
 
 using namespace Sudoku;
@@ -69,13 +70,13 @@ const vector<vector<bool>> findCandidates(const Board *board) {
 }
 
 void removeCandidatesFromColumn(int index, uint8_t value, vector<vector<bool>> *candidates) {
-  short upwards = index - SIZE;
+  auto upwards = index - SIZE;
   while (upwards >= 0) {
     (*candidates)[upwards][value - 1] = false;
     upwards -= SIZE;
   }
 
-  short downwards = index + SIZE;
+  auto downwards = index + SIZE;
   while (downwards < CELL_COUNT) {
     (*candidates)[downwards][value - 1] = false;
     downwards += SIZE;

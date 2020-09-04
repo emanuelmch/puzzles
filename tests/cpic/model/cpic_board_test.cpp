@@ -367,6 +367,6 @@ TEST(Board, ShouldBeInvalidWhenContiguousRectangularBoardIsPartiallyFilledInInva
   ASSERT_EQ(state.isValid(&board), false);
 }
 
-// TODO: Tests for  ushort clueFor{Column,Row}
-// TODO: Tests for ushort countPossibilitiesForRow
+// TODO: Tests for Clue clueFor{Column,Row}
+// TODO: Tests for uint8_t countPossibilitiesForRow
 // TODO: Tests for bool isPossibility

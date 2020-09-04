@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstdint>
 
 using std::count_if;
 using std::vector;
@@ -38,10 +39,10 @@ BoardRow::BoardRow(const vector<Color> &values) : internal(values) {
   assert(Numbers::fitsUShort(values.size()));
 }
 
-short findFirstColorInColumn(const BoardState *state, ushort column, Color color);
-short findLastColorInColumn(const BoardState *state, ushort column, Color color);
+int8_t findFirstColorInColumn(const BoardState *state, uint_fast8_t column, Color color);
+int8_t findLastColorInColumn(const BoardState *state, uint_fast8_t column, Color color);
 
-BoardState::BoardState(ushort columnCount, ushort rowCount) {
+BoardState::BoardState(uint8_t columnCount, uint8_t rowCount) {
   vector<Color> column(columnCount, Blank);
 
   for (auto i = 0; i < rowCount; ++i) {
@@ -60,7 +61,7 @@ BoardState::BoardState(const vector<vector<Color>> &rows) {
 
 bool BoardState::isValid(const CPic::Board *board) const {
   // Has too many of a color in a column?
-  for (ushort i = 0; i < board->columnCount; ++i) {
+  for (auto i = 0; i < board->columnCount; ++i) {
     for (auto color : board->colors) {
       auto count = countColorInColumn(i, color);
       if (count > board->clueForColumn(i, color).amount) {
@@ -70,7 +71,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
   }
 
   // Has too many of a color in a row?
-  for (ushort i = 0; i < board->rowCount; ++i) {
+  for (auto i = 0; i < board->rowCount; ++i) {
     for (auto color : board->colors) {
       auto count = countColorInRow(i, color);
       if (count > board->clueForRow(i, color).amount) {
@@ -80,7 +81,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
   }
 
   // Breaks the contiguity clue in a column?
-  for (ushort i = 0; i < board->columnCount; ++i) {
+  for (auto i = 0; i < board->columnCount; ++i) {
     for (auto color : board->colors) {
       auto clue = board->clueForColumn(i, color);
       if (clue.amount == 1) continue;
@@ -88,15 +89,15 @@ bool BoardState::isValid(const CPic::Board *board) const {
       auto _first = findFirstColorInColumn(this, i, color);
       if (_first < 0) continue;
 
-      assert(Numbers::fitsUShort(_first));
-      auto first = static_cast<ushort>(_first);
+      assert(Numbers::fitsUnsignedInt8(_first));
+      auto first = static_cast<uint8_t>(_first);
       auto last = findLastColorInColumn(this, i, color);
 
       if (clue.contiguous) {
         if ((last - first) >= clue.amount) {
           return false;
         } else {
-          for (ushort j = first + 1; j < last; ++j) {
+          for (uint8_t j = first + 1; j < last; ++j) {
             auto result = colorAt(i, j);
             if (result != clue.color && result != Blank) {
               return false;
@@ -114,7 +115,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
   }
 
   // Breaks the contiguity clue in a row?
-  for (ushort i = 0; i < board->rowCount; ++i) {
+  for (auto i = 0; i < board->rowCount; ++i) {
     for (auto color : board->colors) {
       auto clue = board->clueForRow(i, color);
       if (clue.amount == 1) continue;
@@ -127,7 +128,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
         if ((last - first) >= clue.amount) {
           return false;
         } else {
-          for (auto j = static_cast<ushort>(first + 1); j < last; ++j) {
+          for (auto j = static_cast<uint8_t>(first + 1); j < last; ++j) {
             auto result = colorAt(j, i);
             if (result != clue.color && result != Blank) {
               return false;
@@ -147,9 +148,9 @@ bool BoardState::isValid(const CPic::Board *board) const {
   return true;
 }
 
-short findFirstColorInColumn(const BoardState *state, ushort column, Color color) {
-  auto size = static_cast<ushort>(state->rowCount());
-  for (ushort i = 0; i < size; ++i) {
+int8_t findFirstColorInColumn(const BoardState *state, uint8_t column, Color color) {
+  auto size = static_cast<uint8_t>(state->rowCount());
+  for (auto i = 0; i < size; ++i) {
     if (state->colorAt(column, i) == color) {
       return i;
     }
@@ -157,10 +158,10 @@ short findFirstColorInColumn(const BoardState *state, ushort column, Color color
   return -1;
 }
 
-short findLastColorInColumn(const BoardState *state, ushort column, Color color) {
-  auto size = static_cast<short>(state->rowCount());
-  short index = -1;
-  for (ushort i = 0; i < size; ++i) {
+int8_t findLastColorInColumn(const BoardState *state, uint8_t column, Color color) {
+  auto size = static_cast<int8_t>(state->rowCount());
+  auto index = -1;
+  for (auto i = 0; i < size; ++i) {
     if (state->colorAt(column, i) == color) {
       index = i;
     }
@@ -168,21 +169,21 @@ short findLastColorInColumn(const BoardState *state, ushort column, Color color)
   return index;
 }
 
-ushort BoardState::countColorInColumn(ushort column, Color color) const {
+uint8_t BoardState::countColorInColumn(uint8_t column, Color color) const {
   auto begin = rows.begin();
   auto end = rows.end();
   return count_if(begin, end, [column, color](auto it) { return it.column(column) == color; });
 }
 
-ushort BoardState::countColorInRow(ushort index, Color color) const {
+uint8_t BoardState::countColorInRow(uint8_t index, Color color) const {
   auto row = this->rows.at(index);
   auto begin = row.internal.begin();
   auto end = row.internal.end();
 
-  return static_cast<ushort>(count_if(begin, end, [color](auto it) { return it == color; }));
+  return static_cast<uint8_t>(count_if(begin, end, [color](auto it) { return it == color; }));
 }
 
-short BoardState::findFirstInRow(ushort index, Color color) const {
+int8_t BoardState::findFirstInRow(uint8_t index, Color color) const {
   assert(rows.size() > index);
 
   auto row = rows[index];
@@ -194,7 +195,7 @@ short BoardState::findFirstInRow(ushort index, Color color) const {
   }
 }
 
-short BoardState::findLastInRow(ushort index, Color color) const {
+int8_t BoardState::findLastInRow(uint8_t index, Color color) const {
   assert(rows.size() > index);
 
   auto row = rows[index];

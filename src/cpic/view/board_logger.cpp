@@ -38,8 +38,8 @@ void BoardLogger::log(const BoardState *board) const {
   assert(board->columnCount() > 0);
   assert(board->rowCount() > 0);
 
-  for (ushort y = 0; y < board->rowCount(); ++y) {
-    for (ushort x = 0; x < board->columnCount(); ++x) {
+  for (auto y = 0; y < board->rowCount(); ++y) {
+    for (auto x = 0; x < board->columnCount(); ++x) {
       std::cout << board->colorAt(x, y) << " ";
     }
     std::cout << std::endl;
