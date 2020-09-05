@@ -41,37 +41,26 @@ bool CPic::run() {
   BruteForceBoardSolver bruteSolver;
   HeuristicBoardSolver heuristicSolver;
 
+  BoardSolver *solvers[] = {&bruteSolver, &heuristicSolver};
   auto boards = CPic::createAllBoards();
 
   for (const auto &data : boards) {
-    auto bruteStart = steady_clock::now();
-    auto bruteResults = bruteSolver.solve(&data.board);
-    auto bruteEnd = steady_clock::now();
+    for (const auto solver : solvers) {
+      auto start = steady_clock::now();
+      auto results = solver->solve(&data.board);
+      auto end = steady_clock::now();
 
-    if (bruteResults == data.solution) {
-      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
-      cout << "CPic: Brute force solved board " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this:\n";
-      CPic::BoardLogger::log(data.solution);
-      cout << "CPic: But got this:\n";
-      CPic::BoardLogger::log(bruteResults);
-      return false;
-    }
-
-    auto heuristicStart = steady_clock::now();
-    auto heuristicResults = heuristicSolver.solve(&data.board);
-    auto heuristicEnd = steady_clock::now();
-
-    if (heuristicResults == data.solution) {
-      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
-      cout << "CPic: Heuristics solved board " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
-      CPic::BoardLogger::log(data.solution);
-      cout << "CPic: But got this:\n";
-      CPic::BoardLogger::log(heuristicResults);
-      return false;
+      if (results == data.solution) {
+        auto duration = duration_cast<microseconds>(end - start).count();
+        cout << "CPic: " << solver->name << " solved board " << data.name << ", it took about " << duration
+             << " microseconds!\n";
+      } else {
+        cout << "CPic: " << solver->name << " failed to solve board " << data.name << ", was expecting this:\n";
+        CPic::BoardLogger::log(data.solution);
+        cout << "CPic: But got this:\n";
+        CPic::BoardLogger::log(results);
+        return false;
+      }
     }
   }
 

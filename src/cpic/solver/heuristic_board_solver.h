@@ -28,6 +28,8 @@ namespace CPic {
 
 class HeuristicBoardSolver : public BoardSolver {
 public:
+  HeuristicBoardSolver() : BoardSolver("Heuristic") {}
+
   BoardState solve(const Board *) const override;
 };
 

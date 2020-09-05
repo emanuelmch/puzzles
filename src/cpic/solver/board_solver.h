@@ -25,11 +25,18 @@
 #include "../model/board.h"
 #include "../model/board_state.h"
 
+#include <string>
+#include <utility>
+
 namespace CPic {
 
 class BoardSolver {
 public:
+  explicit BoardSolver(std::string name) : name(std::move(name)) {}
   virtual ~BoardSolver() = default;
+
   virtual BoardState solve(const Board *) const = 0;
+
+  const std::string name;
 };
 }
