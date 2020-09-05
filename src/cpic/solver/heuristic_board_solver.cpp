@@ -22,6 +22,8 @@
 
 #include "heuristic_board_solver.h"
 
+#include <cstdint>
+
 using namespace CPic;
 
 // Strategies
@@ -31,9 +33,9 @@ inline void completeContiguousRows(const Board *, BoardState *);
 inline void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *, BoardState *);
 
 // Tools
-inline void paintBlanksOnColumn(BoardState *, ushort column, Color);
-inline void paintBlanksOnRow(BoardState *, ushort row, Color);
-inline void paintRangeOnRow(BoardState *, Color, ushort row, ushort first, ushort last);
+inline void paintBlanksOnColumn(BoardState *, uint8_t column, Color);
+inline void paintBlanksOnRow(BoardState *, uint8_t row, Color);
+inline void paintRangeOnRow(BoardState *, Color, uint8_t row, uint8_t first, uint8_t last);
 
 BoardState HeuristicBoardSolver::solve(const Board *board) const {
   BoardState oldResults;
@@ -54,7 +56,7 @@ BoardState HeuristicBoardSolver::solve(const Board *board) const {
 
 // Strategies
 void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
-  for (ushort column = 0; column < board->columnCount; ++column) {
+  for (auto column = 0; column < board->columnCount; ++column) {
     auto blanks = state->countColorInColumn(column, Blank);
 
     for (auto color : board->colors) {
@@ -70,7 +72,7 @@ void lookForOneColorLeftColumns(const Board *board, BoardState *state) {
 }
 
 void lookForOneColorLeftRows(const Board *board, BoardState *state) {
-  for (ushort row = 0; row < board->rowCount; ++row) {
+  for (auto row = 0; row < board->rowCount; ++row) {
     auto blanks = state->countColorInRow(row, Blank);
 
     for (auto color : board->colors) {
@@ -86,17 +88,17 @@ void lookForOneColorLeftRows(const Board *board, BoardState *state) {
 }
 
 void completeContiguousRows(const Board *board, BoardState *state) {
-  for (ushort row = 0; row < board->rowCount; ++row) {
+  for (auto row = 0; row < board->rowCount; ++row) {
     for (auto color : board->colors) {
       auto clue = board->clueForRow(row, color);
-      if (clue.contiguous == false) continue;
+      if (!clue.contiguous) continue;
 
       auto first = state->findFirstInRow(row, color);
       if (first < 0) continue;
       auto last = state->findLastInRow(row, color);
 
-      auto ufirst = static_cast<ushort>(first);
-      auto ulast = static_cast<ushort>(last);
+      auto ufirst = static_cast<uint8_t>(first);
+      auto ulast = static_cast<uint8_t>(last);
       paintRangeOnRow(state, color, row, ufirst, ulast);
     }
   }
@@ -104,7 +106,7 @@ void completeContiguousRows(const Board *board, BoardState *state) {
 
 // TODO: Find a better name, this one is too long
 void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board, BoardState *state) {
-  for (ushort row = 0; row < board->rowCount; ++row) {
+  for (auto row = 0; row < board->rowCount; ++row) {
     for (auto color : board->colors) {
       auto total = board->clueForRow(row, color).amount;
       if (total == 0) continue;
@@ -122,26 +124,26 @@ void lookForColorsWhereRowCountAndPossibilityCountAreTheSame(const Board *board,
 }
 
 // Tools
-void paintBlanksOnColumn(BoardState *state, ushort column, Color color) {
+void paintBlanksOnColumn(BoardState *state, uint8_t column, Color color) {
   auto rowCount = state->rowCount();
-  for (ushort row = 0; row < rowCount; ++row) {
+  for (auto row = 0; row < rowCount; ++row) {
     if (state->colorAt(column, row) == Blank) {
       state->setColorAt(column, row, color);
     }
   }
 }
 
-void paintBlanksOnRow(BoardState *state, ushort row, Color color) {
+void paintBlanksOnRow(BoardState *state, uint8_t row, Color color) {
   auto columnCount = state->columnCount();
-  for (ushort column = 0; column < columnCount; ++column) {
+  for (auto column = 0; column < columnCount; ++column) {
     if (state->colorAt(column, row) == Blank) {
       state->setColorAt(column, row, color);
     }
   }
 }
 
-void paintRangeOnRow(BoardState *state, Color color, ushort row, ushort first, ushort last) {
-  for (ushort col = first; col <= last; ++col) {
+void paintRangeOnRow(BoardState *state, Color color, uint8_t row, uint8_t first, uint8_t last) {
+  for (auto col = first; col <= last; ++col) {
     state->setColorAt(col, row, color);
   }
 }

@@ -72,7 +72,7 @@ public:
   BoardState state;
 
 private:
-  ushort nextRow, nextCol;
+  uint8_t nextRow, nextCol;
 };
 }
 

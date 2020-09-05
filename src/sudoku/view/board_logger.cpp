@@ -22,6 +22,7 @@
 
 #include "board_logger.h"
 
+#include <cstdint>
 #include <iostream>
 
 using namespace Sudoku;
@@ -34,7 +35,7 @@ const int COLUMN_COUNT = 9;
 void BoardLogger::log(const Sudoku::Board *board) const {
   for (auto i = 0; i < COLUMN_COUNT; ++i) {
     for (auto j = 0; j < COLUMN_COUNT; ++j) {
-      auto index = static_cast<ushort>((i * COLUMN_COUNT) + j);
+      auto index = static_cast<uint8_t>((i * COLUMN_COUNT) + j);
       cout << board->getCell(index) << " ";
     }
     cout << endl;
