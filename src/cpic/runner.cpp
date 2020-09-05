@@ -27,15 +27,15 @@
 #include "cpic/solver/heuristic_board_solver.h"
 #include "cpic/view/board_logger.h"
 
-#include <chrono>
+#include "common/runners.h"
+
 #include <iostream>
 
 using namespace CPic;
 
+using Puzzles::runningTime;
+
 using std::cout;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
-using std::chrono::steady_clock;
 
 bool CPic::run() {
   BruteForceBoardSolver bruteSolver;
@@ -46,12 +46,9 @@ bool CPic::run() {
 
   for (const auto &data : boards) {
     for (const auto solver : solvers) {
-      auto start = steady_clock::now();
-      auto results = solver->solve(&data.board);
-      auto end = steady_clock::now();
+      auto [results, duration] = runningTime([solver, &data] { return solver->solve(&data.board); });
 
       if (results == data.solution) {
-        auto duration = duration_cast<microseconds>(end - start).count();
         cout << "CPic: " << solver->name << " solved board " << data.name << ", it took about " << duration
              << " microseconds!\n";
       } else {
