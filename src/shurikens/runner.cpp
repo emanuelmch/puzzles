@@ -27,15 +27,15 @@
 #include "shurikens/solver/breadth_search_solver.h"
 #include "shurikens/solver/depth_search_solver.h"
 
-#include <chrono>
+#include "common/runners.h"
+
 #include <iostream>
 
 using namespace Shurikens;
 
+using Puzzles::runningTime;
+
 using std::cout;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
-using std::chrono::steady_clock;
 
 bool Shurikens::run(bool fullRun) {
   BreadthSearchSolver breadthSearchSolver;
@@ -53,12 +53,10 @@ bool Shurikens::run(bool fullRun) {
         continue;
       }
 
-      auto start = steady_clock::now();
-      auto solution = solver->solve(data.shuriken, data.solutionSize());
-      auto end = steady_clock::now();
+      auto [solution, duration] =
+          runningTime([solver, &data] { return solver->solve(data.shuriken, data.solutionSize()); });
 
       if (data.isSolution(solution)) {
-        auto duration = duration_cast<microseconds>(end - start).count();
         cout << "Shuriken: " << solver->name << " solved " << data.name << ", it took about " << duration
              << " microseconds!\n";
       } else {
