@@ -32,11 +32,11 @@ using std::endl;
 
 const int COLUMN_COUNT = 9;
 
-void BoardLogger::log(const Sudoku::Board *board) const {
+void BoardLogger::log(const Sudoku::Board &board) {
   for (auto i = 0; i < COLUMN_COUNT; ++i) {
     for (auto j = 0; j < COLUMN_COUNT; ++j) {
       auto index = static_cast<uint8_t>((i * COLUMN_COUNT) + j);
-      cout << board->getCell(index) << " ";
+      cout << board.getCell(index) << " ";
     }
     cout << endl;
   }

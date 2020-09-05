@@ -40,7 +40,6 @@ using std::chrono::steady_clock;
 bool Sudoku::run() {
   BruteForceSolver bruteSolver;
   HeuristicBoardSolver heuristicSolver;
-  BoardLogger logger;
 
   auto boards = Sudoku::createAllBoards();
 
@@ -54,9 +53,9 @@ bool Sudoku::run() {
       cout << "Sudoku: Brute force solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this:\n";
-      logger.log(&data.solution);
+      BoardLogger::log(data.solution);
       cout << "Sudoku: But got this:\n";
-      logger.log(&bruteResults);
+      BoardLogger::log(bruteResults);
       return false;
     }
 
@@ -69,9 +68,9 @@ bool Sudoku::run() {
       cout << "Sudoku: Heuristics solved " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
-      logger.log(&data.solution);
+      BoardLogger::log(data.solution);
       cout << "Sudoku: But got this:\n";
-      logger.log(&heuristicResults);
+      BoardLogger::log(heuristicResults);
       return false;
     }
   }
