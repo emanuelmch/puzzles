@@ -24,10 +24,7 @@
 
 #include "../model/board_state.h"
 
-namespace CPic {
+namespace CPic::BoardLogger {
 
-class BoardLogger {
-public:
-  void log(const BoardState *) const;
-};
+void log(const BoardState &);
 }

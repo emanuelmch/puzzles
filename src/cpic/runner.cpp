@@ -40,7 +40,6 @@ using std::chrono::steady_clock;
 bool CPic::run() {
   BruteForceBoardSolver bruteSolver;
   HeuristicBoardSolver heuristicSolver;
-  BoardLogger logger;
 
   auto boards = CPic::createAllBoards();
 
@@ -54,9 +53,9 @@ bool CPic::run() {
       cout << "CPic: Brute force solved board " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "CPic: Brute force failed to solve board " << data.name << ", was expecting this:\n";
-      logger.log(&data.solution);
+      CPic::BoardLogger::log(data.solution);
       cout << "CPic: But got this:\n";
-      logger.log(&bruteResults);
+      CPic::BoardLogger::log(bruteResults);
       return false;
     }
 
@@ -69,9 +68,9 @@ bool CPic::run() {
       cout << "CPic: Heuristics solved board " << data.name << ", it took about " << duration << " microseconds!\n";
     } else {
       cout << "CPic: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
-      logger.log(&data.solution);
+      CPic::BoardLogger::log(data.solution);
       cout << "CPic: But got this:\n";
-      logger.log(&heuristicResults);
+      CPic::BoardLogger::log(heuristicResults);
       return false;
     }
   }
