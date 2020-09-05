@@ -32,24 +32,24 @@ using std::vector;
 const int SIZE = 9;
 const int CELL_COUNT = SIZE * SIZE;
 
-const vector<vector<bool>> findCandidates(const Board *board);
+const vector<vector<bool>> findCandidates(const Board &board);
 void removeCandidatesFromColumn(int index, uint8_t value, vector<vector<bool>> *candidates);
 void removeCandidatesFromRow(int index, uint8_t value, vector<vector<bool>> *candidates);
 void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *candidates);
-bool applyCandidates(Board *board, const vector<vector<bool>> candidates);
-uint8_t getSingleCandidate(const vector<bool> candidates);
+bool applyCandidates(Board *board, const vector<vector<bool>> &candidates);
+uint8_t getSingleCandidate(const vector<bool> &candidates);
 
-const Board HeuristicBoardSolver::solve(const Sudoku::Board *original) const {
-  auto board = *original;
+const Board HeuristicBoardSolver::solve(const Sudoku::Board &original) const {
+  auto board = original;
   bool changedAny;
   do {
-    auto candidates = findCandidates(&board);
+    auto candidates = findCandidates(board);
     changedAny = applyCandidates(&board, candidates);
   } while (changedAny);
   return board;
 }
 
-const vector<vector<bool>> findCandidates(const Board *board) {
+const vector<vector<bool>> findCandidates(const Board &board) {
   vector<vector<bool>> candidates;
 
   candidates.reserve(CELL_COUNT);
@@ -58,7 +58,7 @@ const vector<vector<bool>> findCandidates(const Board *board) {
   }
 
   for (int i = 0; i < CELL_COUNT; ++i) {
-    auto cell = board->getCell(i);
+    auto cell = board.getCell(i);
     if (cell != 0) {
       removeCandidatesFromColumn(i, cell, &candidates);
       removeCandidatesFromRow(i, cell, &candidates);
@@ -142,7 +142,7 @@ void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *
   }
 }
 
-bool applyCandidates(Board *board, vector<vector<bool>> candidates) {
+bool applyCandidates(Board *board, const vector<vector<bool>> &candidates) {
   auto changedAny = false;
 
   for (int i = 0; i < CELL_COUNT; ++i) {
@@ -159,7 +159,7 @@ bool applyCandidates(Board *board, vector<vector<bool>> candidates) {
   return changedAny;
 }
 
-uint8_t getSingleCandidate(const vector<bool> candidates) {
+uint8_t getSingleCandidate(const vector<bool> &candidates) {
   auto value = 0;
 
   for (auto i = 0; i < SIZE; ++i) {

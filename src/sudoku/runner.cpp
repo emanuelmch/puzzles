@@ -41,37 +41,26 @@ bool Sudoku::run() {
   BruteForceSolver bruteSolver;
   HeuristicBoardSolver heuristicSolver;
 
+  Solver *solvers[] = {&bruteSolver, &heuristicSolver};
   auto boards = Sudoku::createAllBoards();
 
   for (const auto &data : boards) {
-    auto bruteStart = steady_clock::now();
-    auto bruteResults = bruteSolver.solve(&data.board);
-    auto bruteEnd = steady_clock::now();
+    for (const auto solver : solvers) {
+      auto start = steady_clock::now();
+      auto results = solver->solve(data.board);
+      auto end = steady_clock::now();
 
-    if (bruteResults == data.solution) {
-      auto duration = duration_cast<microseconds>(bruteEnd - bruteStart).count();
-      cout << "Sudoku: Brute force solved " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "Sudoku: Brute force failed to solve board " << data.name << ", was expecting this:\n";
-      BoardLogger::log(data.solution);
-      cout << "Sudoku: But got this:\n";
-      BoardLogger::log(bruteResults);
-      return false;
-    }
-
-    auto heuristicStart = steady_clock::now();
-    auto heuristicResults = heuristicSolver.solve(&data.board);
-    auto heuristicEnd = steady_clock::now();
-
-    if (heuristicResults == data.solution) {
-      auto duration = duration_cast<microseconds>(heuristicEnd - heuristicStart).count();
-      cout << "Sudoku: Heuristics solved " << data.name << ", it took about " << duration << " microseconds!\n";
-    } else {
-      cout << "Sudoku: Heuristics failed to solve board " << data.name << ", was expecting this:\n";
-      BoardLogger::log(data.solution);
-      cout << "Sudoku: But got this:\n";
-      BoardLogger::log(heuristicResults);
-      return false;
+      if (results == data.solution) {
+        auto duration = duration_cast<microseconds>(end - start).count();
+        cout << "Sudoku: " << solver->name << " solved " << data.name << ", it took about " << duration
+             << " microseconds!\n";
+      } else {
+        cout << "Sudoku: " << solver->name << " failed to solve board " << data.name << ", was expecting this:\n";
+        BoardLogger::log(data.solution);
+        cout << "Sudoku: But got this:\n";
+        BoardLogger::log(results);
+        return false;
+      }
     }
   }
 

@@ -1,18 +1,10 @@
 language: cpp
 jobs:
   include:
-    - name: Linux GCC 6.5
+    - name: Linux GCC 7.5
       os: linux
       dist: bionic
       compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-6
-            - g++-6
-      env: MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
     - name: Linux GCC 10.0
       os: linux
@@ -37,9 +29,9 @@ jobs:
       dist: focal
       compiler: clang
 
-    - name: OSX GCC 6
+    - name: OSX GCC 7
       os: osx
-      env: MATRIX_EVAL="brew install gcc@6 && CC=gcc-6 && CXX=g++-6"
+      env: MATRIX_EVAL="brew install gcc@7 && CC=gcc-7 && CXX=g++-7"
 
     - name: OSX GCC 10
       os: osx
