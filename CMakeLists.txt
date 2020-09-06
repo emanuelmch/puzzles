@@ -28,6 +28,15 @@ project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces")
 
+# Pre-requisites
+try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
+if (supportsSetContains)
+    message(STATUS "Compiler supports std::set::contains")
+    add_compile_definitions(HAS_STD_SET_CONTAINS)
+else ()
+    message(STATUS "Compiler does NOT support std::set::contains")
+endif ()
+
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT

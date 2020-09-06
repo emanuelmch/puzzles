@@ -20,31 +20,15 @@
  * SOFTWARE.
  */
 
-#include "maths/primes.h"
+#include <set>
 
-#include "common/set.h"
+// Check if our compiler supports std::set::contains, included in C++20
+int main() {
+  std::set<int> set = {1, 2, 3, 4, 5};
 
-#include <gtest/gtest.h>
+  // Before C++20
+  auto containsOne = set.find(1) != set.end();
 
-using namespace Maths;
-
-TEST(Maths, IsPrime) {
-  Puzzles::set<uint_fast8_t> primes = {2,  3,  5,  7,  11, 13, 17, 19, 23, 29, 31, 37, 41,
-                                       43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
-  for (auto i = 1; i <= 100; ++i) {
-    if (primes.contains(i)) {
-      EXPECT_TRUE(isPrime(i)) << "Prime number " << i << " was reported as NOT being prime";
-    } else {
-      EXPECT_FALSE(isPrime(i)) << "NON prime number " << i << " was reported as being prime";
-    }
-  }
-}
-
-TEST(Maths, LargestPrimeFactor) {
-  EXPECT_EQ(largestPrimeFactor(2), 2);
-  EXPECT_EQ(largestPrimeFactor(3), 3);
-  EXPECT_EQ(largestPrimeFactor(4), 2);
-  EXPECT_EQ(largestPrimeFactor(5), 5);
-  EXPECT_EQ(largestPrimeFactor(6), 3);
-  EXPECT_EQ(largestPrimeFactor(13195), 29);
+  // Since C++20
+  auto containsTwo = set.contains(2);
 }
