@@ -28,7 +28,7 @@ release: build/release/Makefile
 run_release: release
 	./build/release/puzzles
 
-.PHONY: all clean check debug debug_all release run run_release
+.PHONY: all clean check debug debug_all run run_full release run_release
 
 # Specific file targets
 build/debug/Makefile: CMakeLists.txt
