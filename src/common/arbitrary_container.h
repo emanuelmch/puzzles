@@ -50,14 +50,15 @@ static constexpr inline size_t calculateValueBitLength(size_t value) {
   return digits;
 }
 
-template <value_t MAX_VALUE> struct ArbitraryContainer {
+template <value_t MAX_VALUE>
+struct ArbitraryContainer {
 
   const size_t valueBitLength = calculateValueBitLength(MAX_VALUE);
 
   // Constructors
   ArbitraryContainer() = default;
-  ArbitraryContainer(const ArbitraryContainer<MAX_VALUE>&) = default;
-  explicit ArbitraryContainer(size_t count) : internal(count * valueBitLength, 0) { }
+  ArbitraryContainer(const ArbitraryContainer<MAX_VALUE> &) = default;
+  explicit ArbitraryContainer(size_t count) : internal(count * valueBitLength, 0) {}
 
   ArbitraryContainer(std::initializer_list<value_t> values) {
     reserve(values.size());

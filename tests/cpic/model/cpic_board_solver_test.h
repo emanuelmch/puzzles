@@ -28,18 +28,22 @@
 using namespace CPic;
 
 // First, the factory functions
-template <class T> BoardSolver *CreateBoardSolver();
+template <class T>
+BoardSolver *CreateBoardSolver();
 
-template <> BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
+template <>
+BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
   return new BruteForceBoardSolver;
 }
 
-template <> BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
+template <>
+BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
   return new HeuristicBoardSolver;
 }
 
 // Now, the Test template
-template <typename T> class BoardSolverTest : public ::testing::Test {
+template <typename T>
+class BoardSolverTest : public ::testing::Test {
 public:
   BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
 
@@ -50,4 +54,4 @@ public:
 
 // And last, create the Typed Test Case
 using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
-TYPED_TEST_SUITE(BoardSolverTest, BoardSolverTypes,);
+TYPED_TEST_SUITE(BoardSolverTest, BoardSolverTypes, );

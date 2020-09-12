@@ -51,7 +51,8 @@ public:
 }
 
 namespace std {
-template <> struct hash<Shurikens::Shuriken> {
+template <>
+struct hash<Shurikens::Shuriken> {
   std::size_t operator()(const Shurikens::Shuriken &shuriken) const {
     auto first = 0;
     auto second = 0;
