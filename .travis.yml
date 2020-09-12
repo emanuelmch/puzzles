@@ -5,7 +5,7 @@ os:
 compiler:
   - clang
   - gcc
-script: make -j && make check run
+script: make -j run_release fullcheck
 install:
   - if [[ "$TRAVIS_OS_NAME" = "linux" ]] && [[ "$CXX" = "g++" ]] ; then export CXX="g++-6" CC="gcc-6" ; fi
   - if [[ "$TRAVIS_OS_NAME" = "osx" ]] && [[ "$CXX" = "g++" ]] ; then brew install gcc@6 && export CXX="g++-6" CC="gcc-6" ; fi
