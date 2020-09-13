@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,38 +20,24 @@
  * SOFTWARE.
  */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#include "cpic/solver/brute_force_board_solver.h"
-#include "cpic/solver/heuristic_board_solver.h"
+#include <set>
 
-using namespace CPic;
+namespace Puzzles {
 
-// First, the factory functions
-template <class T>
-BoardSolver *CreateBoardSolver();
+#ifdef HAS_STD_SET_CONTAINS
+// We have all we need from std::set
+template <typename Key, typename Compare = std::less<Key>, typename Alloc = std::allocator<Key>>
+using set = std::set<Key, Compare, Alloc>;
+#else
+// std::set is incomplete, we need more (in this case, just std::set::contains)
+template <typename Key, typename Compare = std::less<Key>, typename Alloc = std::allocator<Key>>
+struct set : public std::set<Key, Compare, Alloc> {
+  set(std::initializer_list<Key> init) : std::set<Key, Compare, Alloc>(init) {}
 
-template <>
-BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
-  return new BruteForceBoardSolver;
-}
-
-template <>
-BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
-  return new HeuristicBoardSolver;
-}
-
-// Now, the Test template
-template <typename T>
-class BoardSolverTest : public ::testing::Test {
-public:
-  BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
-
-  ~BoardSolverTest() override { delete solver; }
-
-  BoardSolver *solver;
+  inline bool contains(Key item) { return this->find(item) != this->end(); }
 };
+#endif
 
-// And last, create the Typed Test Case
-using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
-TYPED_TEST_SUITE(BoardSolverTest, BoardSolverTypes, );
+};

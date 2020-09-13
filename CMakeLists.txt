@@ -25,8 +25,17 @@ cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces")
+
+# Pre-requisites
+try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
+if (supportsSetContains)
+    message(STATUS "Compiler supports std::set::contains")
+    add_compile_definitions(HAS_STD_SET_CONTAINS)
+else ()
+    message(STATUS "Compiler does NOT support std::set::contains")
+endif ()
 
 # Source Files
 include_directories(src)
@@ -39,6 +48,8 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/brute_force_board_solver.cpp
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
+        src/maths/expressions.cpp
+        src/maths/runner.cpp
         src/shurikens/data/easy.cpp
         src/shurikens/data/real.cpp
         src/shurikens/data/trivial.cpp
@@ -75,6 +86,8 @@ set(test_sources
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp
         tests/cpic/model/cpic_board_test.cpp
+        tests/maths/maths_expressions_test.cpp
+        tests/maths/maths_primes_test.cpp
         tests/shurikens/shurikens_model_test.cpp
         tests/sudoku/model/sudoku_board_test.cpp
         tests/sudoku/model/sudoku_board_validity_test.cpp

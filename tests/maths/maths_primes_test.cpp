@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,38 +20,31 @@
  * SOFTWARE.
  */
 
+#include "maths/primes.h"
+
+#include "common/set.h"
+
 #include <gtest/gtest.h>
 
-#include "cpic/solver/brute_force_board_solver.h"
-#include "cpic/solver/heuristic_board_solver.h"
+using namespace Maths;
 
-using namespace CPic;
-
-// First, the factory functions
-template <class T>
-BoardSolver *CreateBoardSolver();
-
-template <>
-BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
-  return new BruteForceBoardSolver;
+TEST(Maths, IsPrime) {
+  Puzzles::set<uint_fast8_t> primes = {2,  3,  5,  7,  11, 13, 17, 19, 23, 29, 31, 37, 41,
+                                       43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+  for (auto i = 1; i <= 100; ++i) {
+    if (primes.contains(i)) {
+      EXPECT_TRUE(isPrime(i)) << "Prime number " << i << " was reported as NOT being prime";
+    } else {
+      EXPECT_FALSE(isPrime(i)) << "NON prime number " << i << " was reported as being prime";
+    }
+  }
 }
 
-template <>
-BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
-  return new HeuristicBoardSolver;
+TEST(Maths, LargestPrimeFactor) {
+  EXPECT_EQ(largestPrimeFactor(2), 2);
+  EXPECT_EQ(largestPrimeFactor(3), 3);
+  EXPECT_EQ(largestPrimeFactor(4), 2);
+  EXPECT_EQ(largestPrimeFactor(5), 5);
+  EXPECT_EQ(largestPrimeFactor(6), 3);
+  EXPECT_EQ(largestPrimeFactor(13195), 29);
 }
-
-// Now, the Test template
-template <typename T>
-class BoardSolverTest : public ::testing::Test {
-public:
-  BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
-
-  ~BoardSolverTest() override { delete solver; }
-
-  BoardSolver *solver;
-};
-
-// And last, create the Typed Test Case
-using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
-TYPED_TEST_SUITE(BoardSolverTest, BoardSolverTypes, );

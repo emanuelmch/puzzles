@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,38 +20,32 @@
  * SOFTWARE.
  */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#include "cpic/solver/brute_force_board_solver.h"
-#include "cpic/solver/heuristic_board_solver.h"
+namespace Maths {
 
-using namespace CPic;
+static bool isPrime(long n) {
+  if (n == 1) return false;
+  if (n == 2) return true;
 
-// First, the factory functions
-template <class T>
-BoardSolver *CreateBoardSolver();
+  if (n % 2 == 0) return false;
 
-template <>
-BoardSolver *CreateBoardSolver<BruteForceBoardSolver>() {
-  return new BruteForceBoardSolver;
+  for (long i = 3; i < (n / 2); i += 2) {
+    if (n % i == 0) return false;
+  }
+
+  return true;
 }
 
-template <>
-BoardSolver *CreateBoardSolver<HeuristicBoardSolver>() {
-  return new HeuristicBoardSolver;
+static long largestPrimeFactor(long n) {
+  long largest = (n % 2 == 0) ? 2 : 1;
+
+  for (long i = 3; i <= n; i += 2) {
+    if (n % i == 0 && isPrime(i)) {
+      largest = i;
+    }
+  }
+
+  return largest;
 }
-
-// Now, the Test template
-template <typename T>
-class BoardSolverTest : public ::testing::Test {
-public:
-  BoardSolverTest() : solver(CreateBoardSolver<T>()) {}
-
-  ~BoardSolverTest() override { delete solver; }
-
-  BoardSolver *solver;
-};
-
-// And last, create the Typed Test Case
-using BoardSolverTypes = ::testing::Types<BruteForceBoardSolver, HeuristicBoardSolver>;
-TYPED_TEST_SUITE(BoardSolverTest, BoardSolverTypes, );
+}
