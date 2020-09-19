@@ -45,10 +45,23 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("2*(3*(1+2)+2)"), 22);
   EXPECT_EQ(evaluateExpression("123*456"), 56088);
   EXPECT_EQ(evaluateExpression("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3 - 1 / 8192"), 3);
+  EXPECT_EQ(evaluateExpression("3 + 4 * (2 ^ 2) ^ 3 / ( 1 - 5 ) ^ 2"), 19);
+  EXPECT_EQ(evaluateExpression("3 + 4 * 2 ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 67);
+  EXPECT_EQ(evaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 1048579);
+  EXPECT_EQ(evaluateExpression(" 3 + (4 * 2) ^ 2 ^ 3 ^ 1 ^ 1 / ( 1 - 5 ) ^ 2 ^ 3"), 259);
 }
 
 TEST(Expressions, Tokenizer) {
-  EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, '+', 2}));
-  EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, '/', 123}));
-  EXPECT_EQ(tokenizeExpression("0"), vector<Token>({Token(0)}));
+  Token zero = Token::number(0);
+  Token one = Token::number(1);
+  Token two = Token::number(2);
+  Token hundredTwentyThree = Token::number(123);
+  Token thousand = Token::number(1000);
+
+  Token plus = Token::operation('+');
+  Token division = Token::operation('/');
+
+  EXPECT_EQ(tokenizeExpression("1 +2"), vector({one, plus, two}));
+  EXPECT_EQ(tokenizeExpression("1000/123"), vector({thousand, division, hundredTwentyThree}));
+  EXPECT_EQ(tokenizeExpression("0"), vector({zero}));
 }
