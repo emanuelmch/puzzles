@@ -48,18 +48,18 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
     }
 
     if (currentNumber != 0) {
-      tokens.push_back(Token::number(currentNumber));
+      tokens.emplace_back(currentNumber);
       isReadingNumber = false;
       currentNumber = 0;
     }
 
     if (token != ' ') {
-      tokens.push_back(Token::operation(token));
+      tokens.push_back(Token::fromChar(token));
     }
   }
 
   if (isReadingNumber) {
-    tokens.push_back(Token::number(currentNumber));
+    tokens.emplace_back(currentNumber);
   }
 
   return tokens;

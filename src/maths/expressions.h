@@ -35,10 +35,9 @@ struct Token {
   char asOperator;
   floatmax_t asNumber;
 
-  // TODO: Find a better API than these factory functions
-  static inline Token number(floatmax_t number) { return Token(true, 0, number); }
+  Token(floatmax_t number) : isNumber(true), asOperator(0), asNumber(number) {} // NOLINT(google-explicit-constructor)
 
-  static inline Token operation(char anOperator) { return Token(false, anOperator, 0); }
+  static inline Token fromChar(char anOperator) { return Token(false, anOperator, 0); }
 
   inline bool operator==(const char &anOperator) const { return !isNumber && asOperator == anOperator; }
 

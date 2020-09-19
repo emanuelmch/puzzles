@@ -52,16 +52,10 @@ TEST(Expressions, Evaluator) {
 }
 
 TEST(Expressions, Tokenizer) {
-  Token zero = Token::number(0);
-  Token one = Token::number(1);
-  Token two = Token::number(2);
-  Token hundredTwentyThree = Token::number(123);
-  Token thousand = Token::number(1000);
+  auto plus = Token::fromChar('+');
+  auto divided = Token::fromChar('/');
 
-  Token plus = Token::operation('+');
-  Token division = Token::operation('/');
-
-  EXPECT_EQ(tokenizeExpression("1 +2"), vector({one, plus, two}));
-  EXPECT_EQ(tokenizeExpression("1000/123"), vector({thousand, division, hundredTwentyThree}));
-  EXPECT_EQ(tokenizeExpression("0"), vector({zero}));
+  EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, plus, 2}));
+  EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, divided, 123}));
+  EXPECT_EQ(tokenizeExpression("0"), vector({Token(0)}));
 }
