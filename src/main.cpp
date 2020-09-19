@@ -25,23 +25,24 @@
 #include "shurikens/runner.h"
 #include "sudoku/runner.h"
 
-#include <chrono>
+#include "common/runners.h"
+
 #include <iostream>
 #include <string>
 
 using std::cout;
 using std::string;
-using std::chrono::duration_cast;
-using std::chrono::microseconds;
-using std::chrono::steady_clock;
+
+using Puzzles::runningTime;
 
 int main(int argc, char *argv[]) {
   // TODO Maybe creating a parsing unit?
   string arg = argc >= 2 ? argv[1] : "";
   auto fullRun = arg == "full";
 
-  auto start = steady_clock::now();
-  if (!CPic::run() || !Maths::run() || !Shurikens::run(fullRun) || !Sudoku::run()) return 1;
-  auto end = steady_clock::now();
-  cout << "All good, we took roughly " << duration_cast<microseconds>(end - start).count() << " microseconds!\n";
+  auto [success, duration] =
+      runningTime([=] { return CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run(); });
+
+  if (!success) return 1;
+  cout << "All good, we took roughly " << duration << " microseconds!\n";
 }
