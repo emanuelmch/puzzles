@@ -4,11 +4,7 @@ all: debug_all release
 clean:
 	rm -rf build
 
-check: build/debug/Makefile
-	cmake --build build/debug --target check -- --no-print-directory
-
-fullcheck: build/debug/Makefile
-	${MAKE} -C build/debug check run --no-print-directory
+fullcheck: check_run run_release
 
 # Debug targets
 debug: build/debug/Makefile
@@ -17,8 +13,14 @@ debug: build/debug/Makefile
 debug_all: build/debug/Makefile
 	cmake --build build/debug -- --no-print-directory
 
+check: build/debug/Makefile
+	cmake --build build/debug --target check -- --no-print-directory
+
 run: debug
 	./build/debug/puzzles
+
+check_run: build/debug/Makefile
+	${MAKE} -C build/debug check run --no-print-directory
 
 # TODO Find a better name than "full"
 run_full: debug
@@ -29,9 +31,9 @@ release: build/release/Makefile
 	cmake --build build/release --target puzzles -- --no-print-directory
 
 run_release: build/release/Makefile
-	${MAKE} -C build/release check run --no-print-directory
+	${MAKE} -C build/release run --no-print-directory
 
-.PHONY: all clean check fullcheck debug debug_all run run_full release run_release
+.PHONY: all clean fullcheck debug debug_all check run check_run run_full release run_release
 
 # Specific file targets
 build/debug/Makefile: CMakeLists.txt
