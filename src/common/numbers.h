@@ -22,17 +22,60 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 #include <limits>
+#include <string>
 
 namespace Puzzles::Numbers {
+
+inline uint8_t ctoi(char c) {
+  assert(c >= '0' && c <= '9');
+  return c - '0';
+}
+
+inline char itoc(uint8_t i) {
+  assert(i < 10);
+  return i + '0';
+}
+
+inline uintmax_t factorial(uintmax_t value) {
+  return (value < 2) ? 1 : value * factorial(value - 1);
+}
 
 template <typename Target, typename Input>
 inline bool fits(Input value) {
   return value >= std::numeric_limits<Target>::min() && value <= std::numeric_limits<Target>::max();
 }
 
-inline uintmax_t factorial(uintmax_t value) {
-  return (value < 2) ? 1 : value * factorial(value - 1);
+struct Number {
+
+  explicit Number(std::string);
+  explicit Number(intmax_t);
+  Number(intmax_t, uintmax_t);
+
+  [[nodiscard]] Number operator+(const Number &) const;
+
+  [[nodiscard]] bool operator<(const Number &) const;
+  [[nodiscard]] bool operator==(const Number &) const;
+
+  [[nodiscard]] std::string toString() const;
+
+private:
+  std::string numerator;
+  std::string denominator;
+  bool positive;
+
+  Number(uintmax_t, uintmax_t, bool);
+
+  [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
+  void simplify();
+};
+}
+
+namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline string to_string(const Puzzles::Numbers::Number &number) {
+  return number.toString();
 }
 }
