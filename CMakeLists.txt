@@ -29,6 +29,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces")
 
 # Pre-requisites
+try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)
+IF (NOT supportsCTAD)
+        MESSAGE(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
+ENDIF()
+
 try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
 if (supportsSetContains)
     message(STATUS "Compiler supports std::set::contains")
@@ -40,6 +45,7 @@ endif ()
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
+        src/cpic/runner.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
@@ -50,13 +56,15 @@ add_library(puzzles_lib OBJECT
         src/cpic/view/board_logger.cpp
         src/maths/expressions.cpp
         src/maths/runner.cpp
+        src/shurikens/logger.cpp
+        src/shurikens/model.cpp
+        src/shurikens/runner.cpp
         src/shurikens/data/easy.cpp
         src/shurikens/data/real.cpp
         src/shurikens/data/trivial.cpp
-        src/shurikens/logger.cpp
-        src/shurikens/model.cpp
         src/shurikens/solver/breadth_search_solver.cpp
         src/shurikens/solver/depth_search_solver.cpp
+        src/sudoku/runner.cpp
         src/sudoku/data/easy.cpp
         src/sudoku/data/trivial.cpp
         src/sudoku/model/board.cpp
@@ -67,6 +75,8 @@ add_library(puzzles_lib OBJECT
 
 # Executable
 add_executable(puzzles src/main.cpp $<TARGET_OBJECTS:puzzles_lib>)
+add_custom_target(run "./puzzles" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_dependencies(run puzzles)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supportsIPO)

@@ -53,7 +53,7 @@ static constexpr inline size_t calculateValueBitLength(size_t value) {
 template <value_t MAX_VALUE>
 struct ArbitraryContainer {
 
-  const size_t valueBitLength = calculateValueBitLength(MAX_VALUE);
+  static constexpr size_t valueBitLength = calculateValueBitLength(MAX_VALUE);
 
   // Constructors
   ArbitraryContainer() = default;

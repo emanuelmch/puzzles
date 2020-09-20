@@ -22,12 +22,13 @@
 
 #pragma once
 
-#include "../model/board.h"
+#include "solver.h"
 
 namespace Sudoku {
 
-class BruteForceSolver {
-public:
-  const Board solve(const Board *) const;
+struct BruteForceSolver : public Solver {
+  BruteForceSolver() : Solver("Brute Force") {}
+
+  const Board solve(const Board &) const;
 };
 }

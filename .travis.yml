@@ -1,18 +1,52 @@
 language: cpp
-os:
-  - linux
-  - osx
-compiler:
-  - clang
-  - gcc
-script: make -j && make check run
-install:
-  - if [[ "$TRAVIS_OS_NAME" = "linux" ]] && [[ "$CXX" = "g++" ]] ; then export CXX="g++-6" CC="gcc-6" ; fi
-  - if [[ "$TRAVIS_OS_NAME" = "osx" ]] && [[ "$CXX" = "g++" ]] ; then brew install gcc@6 && export CXX="g++-6" CC="gcc-6" ; fi
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-6
-      - g++-6
+jobs:
+  include:
+    - name: Linux GCC 7.5
+      os: linux
+      dist: bionic
+      compiler: gcc
+
+    - name: Linux GCC 10.0
+      os: linux
+      dist: focal
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-tootchain-r-test
+          packages:
+            - gcc-10
+            - g++-10
+      env: MATRIX_EVAL="CC=gcc-10 && CXX=g++-10"
+
+    - name: Linux Clang 7.0
+      os: linux
+      dist: bionic
+      compiler: clang
+
+    - name: Linux Clang 10.0
+      os: linux
+      dist: focal
+      compiler: clang
+
+    - name: OSX GCC 7
+      os: osx
+      env: MATRIX_EVAL="brew install gcc@7 && CC=gcc-7 && CXX=g++-7"
+
+    - name: OSX GCC 10
+      os: osx
+      env: MATRIX_EVAL="brew upgrade gcc && CC=gcc-10 && CXX=g++-10"
+
+    - name: OSX Clang 8.1.0
+      os: osx
+      osx_image: xcode9.4
+      compiler: clang
+
+    - name: OSX Clang 11.0.3
+      os: osx
+      osx_image: xcode11.6
+      compiler: clang
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+script: make -j run_release fullcheck

@@ -28,6 +28,8 @@ namespace CPic {
 
 class BruteForceBoardSolver : public BoardSolver {
 public:
+  BruteForceBoardSolver() : BoardSolver("Brute force") {}
+
   BoardState solve(const Board *) const override;
 };
 }

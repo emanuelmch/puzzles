@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,7 @@
 
 #pragma once
 
-#include "board_solver.h"
+namespace Shurikens {
 
-namespace CPic {
-
-class HeuristicBoardSolver : public BoardSolver {
-public:
-  HeuristicBoardSolver() : BoardSolver("Heuristic") {}
-
-  BoardState solve(const Board *) const override;
-};
-
+bool run(bool fullRun);
 }

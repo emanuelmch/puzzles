@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,18 @@
 
 #pragma once
 
-#include "board_solver.h"
+#include "../model/board.h"
 
-namespace CPic {
+#include <string_view>
 
-class HeuristicBoardSolver : public BoardSolver {
-public:
-  HeuristicBoardSolver() : BoardSolver("Heuristic") {}
+namespace Sudoku {
 
-  BoardState solve(const Board *) const override;
+struct Solver {
+  explicit Solver(std::string_view name) : name(name) {}
+  virtual ~Solver() = default;
+
+  const std::string_view name;
+
+  virtual const Board solve(const Board &) const = 0;
 };
-
 }

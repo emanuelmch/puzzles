@@ -46,9 +46,9 @@ const vector<Board> getNext(const Board *board) {
   return next;
 }
 
-const Board BruteForceSolver::solve(const Board *board) const {
+const Board BruteForceSolver::solve(const Board &board) const {
   stack<Board> nodes;
-  nodes.push(*board);
+  nodes.push(board);
 
   do {
     auto top = nodes.top();
@@ -67,5 +67,5 @@ const Board BruteForceSolver::solve(const Board *board) const {
   } while (!nodes.empty());
 
   // Couldn't find anything!
-  return *board;
+  return board;
 }

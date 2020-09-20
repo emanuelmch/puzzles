@@ -34,13 +34,13 @@ ostream &operator<<(ostream &output, Clue const &clue) {
   return output << clue.amount << " blocks of color " << clue.color;
 }
 
-void BoardLogger::log(const BoardState *board) const {
-  assert(board->columnCount() > 0);
-  assert(board->rowCount() > 0);
+void BoardLogger::log(const BoardState &board) {
+  assert(board.columnCount() > 0);
+  assert(board.rowCount() > 0);
 
-  for (auto y = 0; y < board->rowCount(); ++y) {
-    for (auto x = 0; x < board->columnCount(); ++x) {
-      std::cout << board->colorAt(x, y) << " ";
+  for (auto y = 0; y < board.rowCount(); ++y) {
+    for (auto x = 0; x < board.columnCount(); ++x) {
+      std::cout << board.colorAt(x, y) << " ";
     }
     std::cout << std::endl;
   }

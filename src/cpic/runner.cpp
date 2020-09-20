@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2020 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,29 +20,46 @@
  * SOFTWARE.
  */
 
-#include "cpic/runner.h"
-#include "maths/runner.h"
-#include "shurikens/runner.h"
-#include "sudoku/runner.h"
+#include "runner.h"
+
+#include "cpic/data/board_data.h"
+#include "cpic/solver/brute_force_board_solver.h"
+#include "cpic/solver/heuristic_board_solver.h"
+#include "cpic/view/board_logger.h"
 
 #include "common/runners.h"
 
 #include <iostream>
-#include <string>
 
-using std::cout;
-using std::string;
+using namespace CPic;
 
 using Puzzles::runningTime;
 
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
+using std::cout;
 
-  auto [success, duration] =
-      runningTime([=] { return CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run(); });
+bool CPic::run() {
+  BruteForceBoardSolver bruteSolver;
+  HeuristicBoardSolver heuristicSolver;
 
-  if (!success) return 1;
-  cout << "All good, we took roughly " << duration << " microseconds!\n";
+  BoardSolver *solvers[] = {&bruteSolver, &heuristicSolver};
+  auto boards = CPic::createAllBoards();
+
+  for (const auto &data : boards) {
+    for (const auto solver : solvers) {
+      auto [results, duration] = runningTime([solver, &data] { return solver->solve(&data.board); });
+
+      if (results == data.solution) {
+        cout << "CPic: " << solver->name << " solved board " << data.name << ", it took about " << duration
+             << " microseconds!\n";
+      } else {
+        cout << "CPic: " << solver->name << " failed to solve board " << data.name << ", was expecting this:\n";
+        CPic::BoardLogger::log(data.solution);
+        cout << "CPic: But got this:\n";
+        CPic::BoardLogger::log(results);
+        return false;
+      }
+    }
+  }
+
+  return true;
 }

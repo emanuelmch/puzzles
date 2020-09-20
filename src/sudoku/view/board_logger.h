@@ -24,10 +24,7 @@
 
 #include <sudoku/model/board.h>
 
-namespace Sudoku {
+namespace Sudoku::BoardLogger {
 
-class BoardLogger {
-public:
-  void log(const Board *) const;
-};
+void log(const Board &);
 }
