@@ -36,7 +36,7 @@ using namespace Puzzles;
 
 BoardRow::BoardRow(const vector<Color> &values) : internal(values) {
   assert(values.empty() == false);
-  assert(Numbers::fitsUShort(values.size()));
+  assert(Numbers::fits<uint8_t>(values.size()));
 }
 
 int8_t findFirstColorInColumn(const BoardState *state, uint_fast8_t column, Color color);
@@ -52,7 +52,7 @@ BoardState::BoardState(uint8_t columnCount, uint8_t rowCount) {
 
 BoardState::BoardState(const vector<vector<Color>> &rows) {
   assert(rows.empty() == false);
-  assert(Numbers::fitsUShort(rows.size()));
+  assert(Numbers::fits<uint8_t>(rows.size()));
 
   for (const auto &row : rows) {
     this->rows.emplace_back(row);
@@ -89,7 +89,7 @@ bool BoardState::isValid(const CPic::Board *board) const {
       auto _first = findFirstColorInColumn(this, i, color);
       if (_first < 0) continue;
 
-      assert(Numbers::fitsUnsignedInt8(_first));
+      assert(Numbers::fits<uint8_t>(_first));
       auto first = static_cast<uint8_t>(_first);
       auto last = findLastColorInColumn(this, i, color);
 
