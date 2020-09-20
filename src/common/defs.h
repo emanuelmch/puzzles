@@ -22,40 +22,6 @@
 
 #pragma once
 
-#include "common/defs.h"
+#include <cstdint>
 
-#include <string>
-#include <vector>
-
-// TODO: Currently we're limited to whatever size `int` is
-namespace Maths {
-
-struct Token {
-  bool isNumber;
-  char asOperator;
-  floatmax_t asNumber;
-
-  Token(floatmax_t number) : isNumber(true), asOperator(0), asNumber(number) {} // NOLINT(google-explicit-constructor)
-
-  static inline Token fromChar(char anOperator) { return Token(false, anOperator, 0); }
-
-  inline bool operator==(const char &anOperator) const { return !isNumber && asOperator == anOperator; }
-
-  inline bool operator==(const Token &o) const {
-    if (isNumber != o.isNumber) return false;
-    if (isNumber) {
-      return asNumber == o.asNumber;
-    } else {
-      return asOperator == o.asOperator;
-    }
-  }
-
-private:
-  inline Token(bool isNumber, char asOperator, floatmax_t asNumber)
-      : isNumber(isNumber), asOperator(asOperator), asNumber(asNumber) {}
-};
-
-std::vector<Token> tokenizeExpression(const std::string &);
-
-floatmax_t evaluateExpression(const std::string &);
-}
+using floatmax_t = long double;

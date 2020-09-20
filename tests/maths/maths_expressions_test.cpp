@@ -45,10 +45,17 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("2*(3*(1+2)+2)"), 22);
   EXPECT_EQ(evaluateExpression("123*456"), 56088);
   EXPECT_EQ(evaluateExpression("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3 - 1 / 8192"), 3);
+  EXPECT_EQ(evaluateExpression("3 + 4 * (2 ^ 2) ^ 3 / ( 1 - 5 ) ^ 2"), 19);
+  EXPECT_EQ(evaluateExpression("3 + 4 * 2 ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 67);
+  EXPECT_EQ(evaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 1048579);
+  EXPECT_EQ(evaluateExpression(" 3 + (4 * 2) ^ 2 ^ 3 ^ 1 ^ 1 / ( 1 - 5 ) ^ 2 ^ 3"), 259);
 }
 
 TEST(Expressions, Tokenizer) {
-  EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, '+', 2}));
-  EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, '/', 123}));
-  EXPECT_EQ(tokenizeExpression("0"), vector<Token>({Token(0)}));
+  auto plus = Token::fromChar('+');
+  auto divided = Token::fromChar('/');
+
+  EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, plus, 2}));
+  EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, divided, 123}));
+  EXPECT_EQ(tokenizeExpression("0"), vector({Token(0)}));
 }
