@@ -159,6 +159,59 @@ TEST(Numbers_Number, Subtraction) {
   EXPECT_EQ(std::to_string(absurdNumberOne - absurdNumberTwo), "24591/8192");
 }
 
+TEST(Numbers_Number, Multiplication) {
+  Number negativeFour(-4);
+  Number negativeOne(-1);
+  Number zero(0);
+  Number one(1);
+  Number two(2);
+  Number four(4);
+  Number bigNumber("18446744073709551616");
+  Number absurdNumberOne(15630, 6), absurdNumberTwo(5361, 15);
+
+  EXPECT_EQ(std::to_string(zero * zero), "0");
+  EXPECT_EQ(std::to_string(zero * one), "0");
+  EXPECT_EQ(std::to_string(one * zero), "0");
+  EXPECT_EQ(std::to_string(one * one), "1");
+  EXPECT_EQ(std::to_string(one * two), "2");
+  EXPECT_EQ(std::to_string(two * one), "2");
+  EXPECT_EQ(std::to_string(two * four), "8");
+  EXPECT_EQ(std::to_string(four * two), "8");
+  EXPECT_EQ(std::to_string(bigNumber * zero), "0");
+  EXPECT_EQ(std::to_string(zero * bigNumber), "0");
+  EXPECT_EQ(std::to_string(bigNumber * one), "18446744073709551616");
+  EXPECT_EQ(std::to_string(one * bigNumber), "18446744073709551616");
+  EXPECT_EQ(std::to_string(two * bigNumber), "36893488147419103232");
+
+  EXPECT_EQ(std::to_string(negativeFour * negativeOne), "4");
+  EXPECT_EQ(std::to_string(negativeOne * negativeFour), "4");
+  EXPECT_EQ(std::to_string(negativeFour * one), "-4");
+  EXPECT_EQ(std::to_string(one * negativeFour), "-4");
+  EXPECT_EQ(std::to_string(negativeFour * two), "-8");
+  EXPECT_EQ(std::to_string(two * negativeFour), "-8");
+  EXPECT_EQ(std::to_string(negativeOne * one), "-1");
+  EXPECT_EQ(std::to_string(one * negativeOne), "-1");
+  EXPECT_EQ(std::to_string(negativeOne * two), "-2");
+  EXPECT_EQ(std::to_string(two * negativeOne), "-2");
+
+  EXPECT_EQ(std::to_string(absurdNumberOne * absurdNumberTwo), "931027");
+}
+
+TEST(Numbers_Number, Increment) {
+  Number value(0);
+  EXPECT_EQ(std::to_string(++value), "1");
+  EXPECT_EQ(std::to_string(++value), "2");
+  EXPECT_EQ(std::to_string(++value), "3");
+  EXPECT_EQ(std::to_string(++value), "4");
+  EXPECT_EQ(std::to_string(++value), "5");
+  EXPECT_EQ(std::to_string(++value), "6");
+  EXPECT_EQ(std::to_string(++value), "7");
+  EXPECT_EQ(std::to_string(++value), "8");
+  EXPECT_EQ(std::to_string(++value), "9");
+  EXPECT_EQ(std::to_string(++value), "10");
+  EXPECT_EQ(std::to_string(++value), "11");
+}
+
 TEST(Numbers_Number, Comparison_LessThan) {
   EXPECT_TRUE(Number(0) < Number(1));
   EXPECT_TRUE(Number(9) < Number(10));

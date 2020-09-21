@@ -27,6 +27,7 @@
 #include <cassert>
 #include <cinttypes>
 #include <cmath>
+#include <utility>
 
 using namespace Puzzles::Numbers;
 
@@ -108,6 +109,42 @@ Number Number::operator-(const Number &o) const {
   return *this + negatedOther;
 }
 
+inline Number multiply(const std::string &_min, const std::string &_max) {
+  const Number min(_min);
+  const Number max(_max);
+
+  Number result(0);
+  for (Number i(0); i < min; ++i) {
+    result += max;
+  }
+
+  return result;
+}
+
+Number Number::operator*(const Number &o) const {
+  auto finalSign = this->positive == o.positive;
+  auto [us, them] = normalizeDenominatorWith(o);
+  auto absUs = us.absolute();
+  auto absThem = them.absolute();
+  auto [min, max] = std::minmax(absUs, absThem);
+
+  if (min == 1) {
+    return Number(max.numerator, max.denominator, finalSign);
+  }
+
+  auto num = multiply(min.numerator, max.numerator).numerator;
+  auto den = multiply(min.denominator, max.denominator).numerator;
+
+  Number result(num, den, finalSign);
+  result.simplify();
+  return result;
+}
+
+Number &Number::operator++() {
+  copy(*this + Number(1));
+  return *this;
+}
+
 bool Number::operator<(const Number &o) const {
   if (this->positive != o.positive) {
     return o.positive;
@@ -134,6 +171,10 @@ bool Number::operator<(const Number &o) const {
 
 bool Number::operator==(const Number &o) const {
   return this->positive == o.positive && this->denominator == o.denominator && this->numerator == o.numerator;
+}
+
+bool Number::operator==(intmax_t o) const {
+  return this->numerator == std::to_string(std::abs(o)) && this->denominator == "1" && this->positive == (o >= 0);
 }
 
 std::string Number::toString() const {
@@ -184,21 +225,19 @@ void Number::simplify() {
   auto num = std::strtoumax(numerator.c_str(), nullptr, 10);
   auto den = std::strtoumax(denominator.c_str(), nullptr, 10);
 
-  if (std::remainder(num, den) == 0) {
-    this->numerator = std::to_string(num / den);
+  auto div = std::lldiv(num, den);
+  if (div.rem == 0) {
+    this->numerator = std::to_string(div.quot);
     this->denominator = "1";
     return;
   }
   // oh boy
-  auto factor = std::min(num, den) / 2;
+  auto factor = largestCommonFactor(num, den);
   while (factor > 1) {
-    if (std::remainder(num, factor) == 0 && std::remainder(den, factor) == 0) {
-      num = num / factor;
-      den = den / factor;
-      factor = std::min(factor, std::min(num, den) / 2);
-    } else {
-      factor--;
-    }
+    num = num / factor;
+    den = den / factor;
+
+    factor = largestCommonFactor(num, den);
   }
 
   this->numerator = std::to_string(num);

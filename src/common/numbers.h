@@ -22,7 +22,9 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <string>
@@ -48,6 +50,24 @@ inline bool fits(Input value) {
   return value >= std::numeric_limits<Target>::min() && value <= std::numeric_limits<Target>::max();
 }
 
+inline uintmax_t largestCommonFactor(const uintmax_t &lhs, const uintmax_t &rhs) {
+  auto [min, max] = std::minmax(lhs, rhs);
+
+  if (std::remainder(max, min) == 0) {
+    return min;
+  }
+
+  auto div = std::div(min, 2);
+  auto i = (div.rem == 0 ? div.quot : div.quot - 1) / 2;
+
+  for (; i > 1; --i) {
+    if (std::remainder(min, i) == 0 && std::remainder(max, i) == 0) {
+      return i;
+    }
+  }
+  return 1;
+}
+
 struct Number {
 
   explicit Number(std::string);
@@ -56,9 +76,14 @@ struct Number {
 
   [[nodiscard]] Number operator+(const Number &) const;
   [[nodiscard]] Number operator-(const Number &) const;
+  [[nodiscard]] Number operator*(const Number &) const;
+
+  void operator+=(const Number &o) { copy(*this + o); }
+  Number &operator++();
 
   [[nodiscard]] bool operator<(const Number &) const;
   [[nodiscard]] bool operator==(const Number &) const;
+  [[nodiscard]] bool operator==(intmax_t) const;
 
   [[nodiscard]] std::string toString() const;
 
@@ -70,8 +95,15 @@ private:
   Number(uintmax_t, uintmax_t, bool);
   Number(std::string, std::string, bool);
 
+  inline void copy(const Number &o) {
+    this->numerator = o.numerator;
+    this->denominator = o.denominator;
+    this->positive = o.positive;
+  }
+
   [[nodiscard]] inline Number absolute() const { return Number(numerator, denominator, true); }
   [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
+
   void simplify();
 };
 }
