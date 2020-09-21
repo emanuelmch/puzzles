@@ -81,9 +81,12 @@ TEST(Numbers_Number, CreateFromInt) {
 }
 
 TEST(Numbers_Number, Addition) {
+  Number negativeFive(-5);
+  Number negativeOne(-1);
   Number one(1);
   Number two(2);
   Number three(3);
+  Number four(4);
   Number five(5);
   Number nine(9);
   Number fifteen(15);
@@ -109,8 +112,51 @@ TEST(Numbers_Number, Addition) {
   EXPECT_EQ(std::to_string(nine + fifteen), "24");
   EXPECT_EQ(std::to_string(fifteen + nine), "24");
   EXPECT_EQ(std::to_string(absurdNumberOne + absurdNumberTwo), "1492060758891967656088063919776936");
+
   EXPECT_EQ(std::to_string(five + oneOverFiveHundredTwelve), "2561/512");
   EXPECT_EQ(std::to_string(half + half), "1");
+
+  EXPECT_EQ(std::to_string(one + negativeFive), "-4");
+  EXPECT_EQ(std::to_string(negativeFive + one), "-4");
+  EXPECT_EQ(std::to_string(four + negativeOne), "3");
+  EXPECT_EQ(std::to_string(negativeOne + four), "3");
+  EXPECT_EQ(std::to_string(two + negativeOne), "1");
+  EXPECT_EQ(std::to_string(negativeOne + two), "1");
+  EXPECT_EQ(std::to_string(negativeOne + negativeOne), "-2");
+  EXPECT_EQ(std::to_string(negativeOne + negativeFive), "-6");
+  EXPECT_EQ(std::to_string(negativeFive + negativeOne), "-6");
+}
+
+TEST(Numbers_Number, Subtraction) {
+  Number zero(0);
+  Number one(1);
+  Number two(2);
+  Number five(5);
+  Number ten(10);
+  Number hundred(100);
+
+  Number absurdNumberOne(1537, 512);
+  Number absurdNumberTwo(1, 8192);
+
+  Number oneOverTwo(1, 2);
+  Number threeOverTwo(3, 2);
+
+  EXPECT_EQ(std::to_string(zero - zero), "0");
+  EXPECT_EQ(std::to_string(one - zero), "1");
+  EXPECT_EQ(std::to_string(one - one), "0");
+  EXPECT_EQ(std::to_string(two - zero), "2");
+  EXPECT_EQ(std::to_string(two - one), "1");
+  EXPECT_EQ(std::to_string(two - two), "0");
+  EXPECT_EQ(std::to_string(ten - one), "9");
+  EXPECT_EQ(std::to_string(hundred - one), "99");
+  EXPECT_EQ(std::to_string(hundred - ten), "90");
+
+  EXPECT_EQ(std::to_string(zero - one), "-1");
+  EXPECT_EQ(std::to_string(zero - five), "-5");
+  EXPECT_EQ(std::to_string(one - five), "-4");
+
+  EXPECT_EQ(std::to_string(threeOverTwo - oneOverTwo), "1");
+  EXPECT_EQ(std::to_string(absurdNumberOne - absurdNumberTwo), "24591/8192");
 }
 
 TEST(Numbers_Number, Comparison_LessThan) {

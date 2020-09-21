@@ -22,8 +22,11 @@
 
 #include "numbers.h"
 
+#include "common/strings.h"
+
 #include <cassert>
 #include <cinttypes>
+#include <cmath>
 
 using namespace Puzzles::Numbers;
 
@@ -33,7 +36,10 @@ Number::Number(std::string value) : numerator(std::move(value)), denominator("1"
     numerator = numerator.substr(1);
     positive = false;
   }
-  assert(!denominator.empty());
+  numerator = trimLeadingView(numerator, '0');
+  if (numerator.empty()) {
+    numerator = "0";
+  }
 }
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
@@ -42,6 +48,9 @@ Number::Number(intmax_t _n, uintmax_t _d) : Number(_n >= 0 ? _n : _n * -1, _d, _
 
 Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
     : numerator(std::to_string(numerator)), denominator(std::to_string(denominator)), positive(positive) {}
+
+Number::Number(std::string numerator, std::string denominator, bool positive)
+    : numerator(std::move(numerator)), denominator(std::move(denominator)), positive(positive) {}
 
 template <typename iterator, typename iterator_end, typename T>
 inline T nextAndAdvance(iterator *it, const iterator_end &end, T defaultValue) {
@@ -55,8 +64,10 @@ inline T nextAndAdvance(iterator *it, const iterator_end &end, T defaultValue) {
 }
 
 Number Number::operator+(const Number &o) const {
-  assert(positive && o.positive); // Haven't implemented this yet
+  auto sameSign = this->positive == o.positive;
   auto [left, right] = normalizeDenominatorWith(o);
+
+  if (!sameSign && left.absolute() < right.absolute()) return right + left;
 
   auto lit = left.numerator.crbegin();
   auto rit = right.numerator.crbegin();
@@ -66,11 +77,14 @@ Number Number::operator+(const Number &o) const {
   while (lit != left.numerator.crend() || rit != right.numerator.crend()) {
     auto leftDigit = ctoi(nextAndAdvance(&lit, left.numerator.crend(), '0'));
     auto rightDigit = ctoi(nextAndAdvance(&rit, right.numerator.crend(), '0'));
-    auto digitSum = leftDigit + rightDigit + carryOver;
+    int_fast8_t digitSum = sameSign ? leftDigit + rightDigit + carryOver : leftDigit - rightDigit - carryOver;
 
     if (digitSum > 9) {
       carryOver = 1;
       digitSum -= 10;
+    } else if (digitSum < 0) {
+      carryOver = 1;
+      digitSum += 10;
     } else {
       carryOver = 0;
     }
@@ -87,6 +101,11 @@ Number Number::operator+(const Number &o) const {
   result.simplify();
 
   return result;
+}
+
+Number Number::operator-(const Number &o) const {
+  Number negatedOther(o.numerator, o.denominator, !o.positive);
+  return *this + negatedOther;
 }
 
 bool Number::operator<(const Number &o) const {
@@ -152,11 +171,36 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
 }
 
 void Number::simplify() {
+  if (numerator == "0") denominator = "1";
   if (denominator == "1") return;
 
-  // FIXME: Actually implement this function after we have other operators done
   if (numerator == denominator) {
     numerator = "1";
     denominator = "1";
+    return;
   }
+
+  // FIXME: Use numbers here instead of umax
+  auto num = std::strtoumax(numerator.c_str(), nullptr, 10);
+  auto den = std::strtoumax(denominator.c_str(), nullptr, 10);
+
+  if (std::remainder(num, den) == 0) {
+    this->numerator = std::to_string(num / den);
+    this->denominator = "1";
+    return;
+  }
+  // oh boy
+  auto factor = std::min(num, den) / 2;
+  while (factor > 1) {
+    if (std::remainder(num, factor) == 0 && std::remainder(den, factor) == 0) {
+      num = num / factor;
+      den = den / factor;
+      factor = std::min(factor, std::min(num, den) / 2);
+    } else {
+      factor--;
+    }
+  }
+
+  this->numerator = std::to_string(num);
+  this->denominator = std::to_string(den);
 }

@@ -93,6 +93,7 @@ add_subdirectory(libs/googletest)
 set(test_sources
         tests/common/arbitrary_container_test.cpp
         tests/common/numbers_test.cpp
+        tests/common/strings_test.cpp
         tests/cpic/model/cpic_board_builder_test.cpp
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp

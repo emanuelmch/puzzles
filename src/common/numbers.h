@@ -55,6 +55,7 @@ struct Number {
   Number(intmax_t, uintmax_t);
 
   [[nodiscard]] Number operator+(const Number &) const;
+  [[nodiscard]] Number operator-(const Number &) const;
 
   [[nodiscard]] bool operator<(const Number &) const;
   [[nodiscard]] bool operator==(const Number &) const;
@@ -67,7 +68,9 @@ private:
   bool positive;
 
   Number(uintmax_t, uintmax_t, bool);
+  Number(std::string, std::string, bool);
 
+  [[nodiscard]] inline Number absolute() const { return Number(numerator, denominator, true); }
   [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
   void simplify();
 };
