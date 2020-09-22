@@ -79,8 +79,11 @@ struct Number {
   [[nodiscard]] Number operator*(const Number &) const;
   [[nodiscard]] Number operator/(const Number &) const;
 
+  [[nodiscard]] Number power(const Number &exponent) const;
+
   void operator+=(const Number &o) { copy(*this + o); }
   void operator-=(const Number &o) { copy(*this - o); }
+  void operator*=(const Number &o) { copy(*this * o); }
   Number &operator++();
 
   [[nodiscard]] bool operator<(const Number &) const;
@@ -112,6 +115,10 @@ private:
 }
 
 namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline Puzzles::Numbers::Number pow(const Puzzles::Numbers::Number &base, const Puzzles::Numbers::Number &exponent) {
+  return base.power(exponent);
+}
 
 inline string to_string(const Puzzles::Numbers::Number &number) {
   return number.toString();

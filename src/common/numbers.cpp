@@ -177,6 +177,17 @@ Number Number::operator/(const Number &o) const {
   }
 }
 
+Number Number::power(const Number &exp) const {
+  assert(exp.positive); // Haven't implemented this yet;
+  Number result(1);
+
+  for (Number i(0); i < exp; ++i) {
+    result *= *this;
+  }
+
+  return result;
+}
+
 Number &Number::operator++() {
   copy(*this + Number(1));
   return *this;

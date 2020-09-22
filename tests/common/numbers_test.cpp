@@ -219,6 +219,27 @@ TEST(Numbers_Number, Division) {
   EXPECT_EQ(std::to_string(one / bigNumber), "1/8192");
 }
 
+TEST(Numbers_Number, Power) {
+  Number negativeFour(-4);
+  Number negativeOne(-1);
+  Number one(1);
+  Number two(2);
+  Number three(3);
+  Number eight(8);
+
+  EXPECT_EQ(std::to_string(std::pow(one, one)), "1");
+  EXPECT_EQ(std::to_string(std::pow(one, eight)), "1");
+  EXPECT_EQ(std::to_string(std::pow(two, one)), "2");
+  EXPECT_EQ(std::to_string(std::pow(two, two)), "4");
+  EXPECT_EQ(std::to_string(std::pow(two, eight)), "256");
+
+  EXPECT_EQ(std::to_string(std::pow(negativeOne, one)), "-1");
+  EXPECT_EQ(std::to_string(std::pow(negativeOne, two)), "1");
+  EXPECT_EQ(std::to_string(std::pow(negativeFour, one)), "-4");
+  EXPECT_EQ(std::to_string(std::pow(negativeFour, two)), "16");
+  EXPECT_EQ(std::to_string(std::pow(negativeFour, three)), "-64");
+}
+
 TEST(Numbers_Number, Increment) {
   Number value(0);
   EXPECT_EQ(std::to_string(++value), "1");
