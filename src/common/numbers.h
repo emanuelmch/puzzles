@@ -22,8 +22,9 @@
 
 #pragma once
 
+#include "common/assertions.h"
+
 #include <algorithm>
-#include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <limits>
@@ -32,12 +33,12 @@
 namespace Puzzles::Numbers {
 
 inline uint8_t ctoi(char c) {
-  assert(c >= '0' && c <= '9');
+  ensure(c >= '0' && c <= '9');
   return c - '0';
 }
 
 inline char itoc(uint8_t i) {
-  assert(i < 10);
+  ensure(i < 10);
   return i + '0';
 }
 
