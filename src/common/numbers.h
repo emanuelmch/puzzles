@@ -90,6 +90,7 @@ struct Number {
   [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
   [[nodiscard]] bool operator==(const Number &) const;
   [[nodiscard]] bool operator==(intmax_t) const;
+  [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
 
   [[nodiscard]] std::string toString() const;
 
@@ -122,5 +123,11 @@ inline Puzzles::Numbers::Number pow(const Puzzles::Numbers::Number &base, const 
 
 inline string to_string(const Puzzles::Numbers::Number &number) {
   return number.toString();
+}
+
+// This doesn't have to be in std, but it must come after to_string, so...
+inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Number &number) {
+  s << std::to_string(number);
+  return s;
 }
 }

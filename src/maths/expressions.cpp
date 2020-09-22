@@ -29,6 +29,8 @@
 
 using namespace Maths;
 
+using Puzzles::Numbers::Number;
+
 using std::stack;
 using std::string;
 using std::vector;
@@ -37,20 +39,21 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
   vector<Token> tokens;
 
   bool isReadingNumber = false;
-  floatmax_t currentNumber = 0;
+  Number currentNumber(0);
 
   for (auto token : expression) {
     if (token >= '0' && token <= '9') {
       isReadingNumber = true;
-      currentNumber *= 10;
-      currentNumber += token - '0';
+      // TODO: operator*=(int) and operator+=(int)
+      currentNumber *= Number(10);
+      currentNumber += Number(token - '0');
       continue;
     }
 
     if (currentNumber != 0) {
       tokens.emplace_back(currentNumber);
       isReadingNumber = false;
-      currentNumber = 0;
+      currentNumber = Number(0);
     }
 
     if (token != ' ') {
@@ -75,7 +78,7 @@ inline uint_fast8_t getPrecedence(char operation) {
   return 0;
 }
 
-void reduceOnce(stack<floatmax_t> *numbers, stack<char> *operators) {
+void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
 
@@ -100,7 +103,7 @@ void reduceOnce(stack<floatmax_t> *numbers, stack<char> *operators) {
   }
 }
 
-inline void reduceToParenthesis(stack<floatmax_t> *numbers, stack<char> *operators) {
+inline void reduceToParenthesis(stack<Number> *numbers, stack<char> *operators) {
   assert(!operators->empty());
   while (operators->top() != '(') {
     reduceOnce(numbers, operators);
@@ -109,18 +112,18 @@ inline void reduceToParenthesis(stack<floatmax_t> *numbers, stack<char> *operato
   operators->pop();
 }
 
-inline void reduceToPrecedence(stack<floatmax_t> *numbers, stack<char> *operators, uint_fast8_t precedence) {
+inline void reduceToPrecedence(stack<Number> *numbers, stack<char> *operators, uint_fast8_t precedence) {
   while (!operators->empty() && getPrecedence(operators->top()) >= precedence) {
     reduceOnce(numbers, operators);
   }
 }
 
-floatmax_t Maths::evaluateExpression(const std::string &expression) {
-  stack<floatmax_t> numbers;
+Number Maths::evaluateExpression(const std::string &expression) {
+  stack<Number> numbers;
   stack<char> operators;
   int parenthesisCount = 0;
 
-  for (auto token : tokenizeExpression(expression)) {
+  for (const auto &token : tokenizeExpression(expression)) {
     if (token == ' ') continue;
 
     if (token.isNumber) {
