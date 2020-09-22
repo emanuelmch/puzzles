@@ -23,6 +23,7 @@
 #include "numbers.h"
 
 #include "common/strings.h"
+#include "compat/compare.h"
 
 #include <algorithm>
 #include <cassert>
@@ -59,6 +60,31 @@ inline char valueAndAdvance(iterator *it) {
   char value = **it;
   std::advance(*it, 1);
   return value;
+}
+
+compat::strong_ordering compareIntegers(const std::string &left, const std::string &right) {
+  if (left.length() != right.length()) {
+    return left.length() < right.length() ? compat::strong_ordering::less : compat::strong_ordering::greater;
+  }
+
+  if (left == right) return compat::strong_ordering::equal;
+
+  auto lit = left.cbegin(), rit = right.cbegin();
+  while (true) {
+    auto leftDigit = *lit;
+    auto rightDigit = *rit;
+
+    assert(lit != left.cend());
+    assert(rit != right.cend());
+
+    if (leftDigit == rightDigit) {
+      ++lit;
+      ++rit;
+      continue;
+    }
+
+    return (leftDigit < rightDigit) ? compat::strong_ordering::less : compat::strong_ordering::greater;
+  }
 }
 
 Number Number::operator+(const Number &o) const {
@@ -125,10 +151,10 @@ inline Number multiply(const std::string &_min, const std::string &_max) {
 
 Number Number::operator*(const Number &o) const {
   auto finalSign = this->positive == o.positive;
+
   auto [us, them] = normalizeDenominatorWith(o);
-  auto absUs = us.absolute();
-  auto absThem = them.absolute();
-  auto [min, max] = std::minmax(absUs, absThem);
+  auto absCmp = compareIntegers(us.numerator, them.numerator);
+  auto [min, max] = (absCmp == compat::strong_ordering::less) ? std::pair(us, them) : std::pair(them, us);
 
   if (min == 1) {
     return Number(max.numerator, max.denominator, finalSign);
@@ -201,22 +227,12 @@ bool Number::operator<(const Number &o) const {
   }
 
   auto [us, them] = normalizeDenominatorWith(o);
-  if (us == them) return false;
-
-  if (us.numerator.length() != them.numerator.length()) {
-    return (us.numerator.length() < them.numerator.length()) == us.positive;
+  auto result = compareIntegers(us.numerator, them.numerator);
+  if (this->positive) {
+    return result == compat::strong_ordering::less;
+  } else {
+    return result == compat::strong_ordering::greater;
   }
-
-  for (auto lit = us.numerator.cbegin(), rit = them.numerator.cbegin(); lit < us.numerator.cend(); ++lit, ++rit) {
-    auto leftDigit = *lit;
-    auto rightDigit = *rit;
-    if (leftDigit == rightDigit) continue;
-
-    return (leftDigit < rightDigit) == us.positive;
-  }
-
-  assert(!"Should never get here");
-  return false;
 }
 
 bool Number::operator==(const Number &o) const {
