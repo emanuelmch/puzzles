@@ -24,7 +24,7 @@
 
 #include <set>
 
-namespace Puzzles {
+namespace compat {
 
 #ifdef HAS_STD_SET_CONTAINS
 // We have all we need from std::set
