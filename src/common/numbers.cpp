@@ -140,6 +140,43 @@ Number Number::operator*(const Number &o) const {
   return result;
 }
 
+Number Number::operator/(const Number &o) const {
+  if (numerator == "0") {
+    return Number(0);
+  }
+
+  auto sameSign = this->positive == o.positive;
+  if (o.numerator == "1" && o.denominator == "1") {
+    return Number(numerator, denominator, sameSign);
+  }
+
+  assert(this->denominator == "1" && o.denominator == "1"); // Haven't implemented this yet
+
+  if (*this < o) {
+    Number result(this->numerator, o.numerator, sameSign);
+    result.simplify();
+    return result;
+  }
+
+  // Now for the actual implementation
+  Number remainder(this->numerator);
+  Number integer(0);
+
+  while (remainder >= o) {
+    remainder -= o;
+    ++integer;
+  }
+
+  if (remainder == 0) {
+    integer.positive = sameSign;
+    return integer;
+  } else {
+    Number rational(remainder.numerator, o.numerator, sameSign);
+    rational.simplify();
+    return integer + rational;
+  }
+}
+
 Number &Number::operator++() {
   copy(*this + Number(1));
   return *this;

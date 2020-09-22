@@ -77,11 +77,14 @@ struct Number {
   [[nodiscard]] Number operator+(const Number &) const;
   [[nodiscard]] Number operator-(const Number &) const;
   [[nodiscard]] Number operator*(const Number &) const;
+  [[nodiscard]] Number operator/(const Number &) const;
 
   void operator+=(const Number &o) { copy(*this + o); }
+  void operator-=(const Number &o) { copy(*this - o); }
   Number &operator++();
 
   [[nodiscard]] bool operator<(const Number &) const;
+  [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
   [[nodiscard]] bool operator==(const Number &) const;
   [[nodiscard]] bool operator==(intmax_t) const;
 

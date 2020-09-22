@@ -197,6 +197,28 @@ TEST(Numbers_Number, Multiplication) {
   EXPECT_EQ(std::to_string(absurdNumberOne * absurdNumberTwo), "931027");
 }
 
+TEST(Numbers_Number, Division) {
+  Number one(1);
+  Number two(2);
+  Number five(5);
+  Number ten(10);
+  Number sixteen(16);
+  Number fifty(50);
+  Number thousandTwentyFour(1024);
+  Number bigNumber(8192);
+
+  EXPECT_EQ(std::to_string(two / one), "2");
+  EXPECT_EQ(std::to_string(two / two), "1");
+  EXPECT_EQ(std::to_string(ten / two), "5");
+  EXPECT_EQ(std::to_string(fifty / two), "25");
+  EXPECT_EQ(std::to_string(fifty / ten), "5");
+  EXPECT_EQ(std::to_string(thousandTwentyFour / sixteen), "64");
+  EXPECT_EQ(std::to_string(bigNumber / sixteen), "512");
+
+  EXPECT_EQ(std::to_string(five / two), "5/2");
+  EXPECT_EQ(std::to_string(one / bigNumber), "1/8192");
+}
+
 TEST(Numbers_Number, Increment) {
   Number value(0);
   EXPECT_EQ(std::to_string(++value), "1");
