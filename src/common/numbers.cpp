@@ -54,15 +54,11 @@ Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
 Number::Number(std::string numerator, std::string denominator, bool positive)
     : numerator(std::move(numerator)), denominator(std::move(denominator)), positive(positive) {}
 
-template <typename iterator, typename iterator_end, typename T>
-inline T nextAndAdvance(iterator *it, const iterator_end &end, T defaultValue) {
-  if (*it == end) {
-    return defaultValue;
-  } else {
-    T value = **it;
-    std::advance(*it, 1);
-    return value;
-  }
+template <typename iterator>
+inline char valueAndAdvance(iterator *it) {
+  char value = **it;
+  std::advance(*it, 1);
+  return value;
 }
 
 Number Number::operator+(const Number &o) const {
@@ -79,8 +75,8 @@ Number Number::operator+(const Number &o) const {
   finalSum.reserve(std::max(left.numerator.length(), right.numerator.length()) + 1);
 
   while (lit != left.numerator.crend() || rit != right.numerator.crend()) {
-    auto leftDigit = ctoi(nextAndAdvance(&lit, left.numerator.crend(), '0'));
-    auto rightDigit = ctoi(nextAndAdvance(&rit, right.numerator.crend(), '0'));
+    auto leftDigit = lit == left.numerator.crend() ? 0 : ctoi(valueAndAdvance(&lit));
+    auto rightDigit = rit == right.numerator.crend() ? 0 : ctoi(valueAndAdvance(&rit));
     int_fast8_t digitSum = sameSign ? leftDigit + rightDigit + carryOver : leftDigit - rightDigit - carryOver;
 
     if (digitSum > 9) {
