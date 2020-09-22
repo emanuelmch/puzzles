@@ -24,6 +24,7 @@
 
 #include "common/strings.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cinttypes>
 #include <cmath>
@@ -75,6 +76,8 @@ Number Number::operator+(const Number &o) const {
   std::string finalSum;
   auto carryOver = 0;
 
+  finalSum.reserve(std::max(left.numerator.length(), right.numerator.length()) + 1);
+
   while (lit != left.numerator.crend() || rit != right.numerator.crend()) {
     auto leftDigit = ctoi(nextAndAdvance(&lit, left.numerator.crend(), '0'));
     auto rightDigit = ctoi(nextAndAdvance(&rit, right.numerator.crend(), '0'));
@@ -90,11 +93,14 @@ Number Number::operator+(const Number &o) const {
       carryOver = 0;
     }
 
-    finalSum = itoc(digitSum) + finalSum;
+    finalSum += itoc(digitSum);
   }
+
   if (carryOver) {
-    finalSum = "1" + finalSum;
+    finalSum += '1';
   }
+
+  std::reverse(finalSum.begin(), finalSum.end());
 
   Number result(finalSum);
   result.denominator = left.denominator;
