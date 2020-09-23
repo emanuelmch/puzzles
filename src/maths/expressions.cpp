@@ -57,7 +57,7 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
     }
 
     if (token != ' ') {
-      tokens.push_back(Token::fromChar(token));
+      tokens.emplace_back(token);
     }
   }
 

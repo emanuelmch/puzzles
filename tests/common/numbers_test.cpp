@@ -60,6 +60,12 @@ TEST(Numbers, Factorial) {
   EXPECT_EQ(factorial(12), 479001600);
 }
 
+TEST(Numbers, LargestCommonFactor) {
+  EXPECT_EQ(largestCommonFactor(1, 3), 1);
+  EXPECT_EQ(largestCommonFactor(17, 19), 1);
+  EXPECT_EQ(largestCommonFactor(3154, 4522), 38);
+}
+
 TEST(Numbers_Number, CreateFromString) {
   Number negativeOne("-1");
   Number zero("0");
@@ -83,6 +89,7 @@ TEST(Numbers_Number, CreateFromInt) {
 TEST(Numbers_Number, Addition) {
   Number negativeFive(-5);
   Number negativeOne(-1);
+  Number zero(0);
   Number one(1);
   Number two(2);
   Number three(3);
@@ -98,6 +105,8 @@ TEST(Numbers_Number, Addition) {
   Number half(1, 2);
   Number oneOverFiveHundredTwelve(1, 512);
 
+  EXPECT_EQ(std::to_string(zero + one), "1");
+  EXPECT_EQ(std::to_string(one + zero), "1");
   EXPECT_EQ(std::to_string(one + one), "2");
   EXPECT_EQ(std::to_string(one + two), "3");
   EXPECT_EQ(std::to_string(two + one), "3");
@@ -112,9 +121,11 @@ TEST(Numbers_Number, Addition) {
   EXPECT_EQ(std::to_string(nine + fifteen), "24");
   EXPECT_EQ(std::to_string(fifteen + nine), "24");
   EXPECT_EQ(std::to_string(absurdNumberOne + absurdNumberTwo), "1492060758891967656088063919776936");
+  EXPECT_EQ(std::to_string(absurdNumberOne + zero), "1354645611354413541715318441313195");
 
   EXPECT_EQ(std::to_string(five + oneOverFiveHundredTwelve), "2561/512");
   EXPECT_EQ(std::to_string(half + half), "1");
+  EXPECT_EQ(std::to_string(half + zero), "1/2");
 
   EXPECT_EQ(std::to_string(one + negativeFive), "-4");
   EXPECT_EQ(std::to_string(negativeFive + one), "-4");
@@ -125,6 +136,8 @@ TEST(Numbers_Number, Addition) {
   EXPECT_EQ(std::to_string(negativeOne + negativeOne), "-2");
   EXPECT_EQ(std::to_string(negativeOne + negativeFive), "-6");
   EXPECT_EQ(std::to_string(negativeFive + negativeOne), "-6");
+  EXPECT_EQ(std::to_string(negativeOne + zero), "-1");
+  EXPECT_EQ(std::to_string(zero + negativeOne), "-1");
 }
 
 TEST(Numbers_Number, Subtraction) {
@@ -222,16 +235,20 @@ TEST(Numbers_Number, Division) {
 TEST(Numbers_Number, Power) {
   Number negativeFour(-4);
   Number negativeOne(-1);
+  Number zero(0);
   Number one(1);
   Number two(2);
   Number three(3);
   Number eight(8);
 
   EXPECT_EQ(std::to_string(std::pow(one, one)), "1");
+  EXPECT_EQ(std::to_string(std::pow(one, zero)), "1");
   EXPECT_EQ(std::to_string(std::pow(one, eight)), "1");
   EXPECT_EQ(std::to_string(std::pow(two, one)), "2");
   EXPECT_EQ(std::to_string(std::pow(two, two)), "4");
   EXPECT_EQ(std::to_string(std::pow(two, eight)), "256");
+  EXPECT_EQ(std::to_string(std::pow(eight, zero)), "1");
+  EXPECT_EQ(std::to_string(std::pow(zero, eight)), "0");
 
   EXPECT_EQ(std::to_string(std::pow(negativeOne, one)), "-1");
   EXPECT_EQ(std::to_string(std::pow(negativeOne, two)), "1");
@@ -271,4 +288,30 @@ TEST(Numbers_Number, Comparison_LessThan) {
   EXPECT_FALSE(Number(1) < Number(-500));
   EXPECT_FALSE(Number(-499) < Number(-500));
   EXPECT_FALSE(Number(-500) < Number(-500));
+}
+
+TEST(Numbers_Number, Comparison_EqualToNumber) {
+  EXPECT_TRUE(Number(-1) == Number(-1));
+  EXPECT_TRUE(Number(0) == Number(0));
+  EXPECT_TRUE(Number(1) == Number(1));
+
+  EXPECT_FALSE(Number(-1) == Number(0));
+  EXPECT_FALSE(Number(-1) == Number(1));
+  EXPECT_FALSE(Number(0) == Number(-1));
+  EXPECT_FALSE(Number(0) == Number(1));
+  EXPECT_FALSE(Number(1) == Number(-1));
+  EXPECT_FALSE(Number(1) == Number(0));
+}
+
+TEST(Numbers_Number, Comparison_EqualToInt) {
+  EXPECT_TRUE(Number(-1) == -1);
+  EXPECT_TRUE(Number(0) == 0);
+  EXPECT_TRUE(Number(1) == 1);
+
+  EXPECT_FALSE(Number(-1) == 0);
+  EXPECT_FALSE(Number(-1) == 1);
+  EXPECT_FALSE(Number(0) == -1);
+  EXPECT_FALSE(Number(0) == 1);
+  EXPECT_FALSE(Number(1) == -1);
+  EXPECT_FALSE(Number(1) == 0);
 }

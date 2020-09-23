@@ -35,10 +35,9 @@ struct Token {
   char asOperator;
   Puzzles::Numbers::Number asNumber;
 
-  Token(Puzzles::Numbers::Number number) // NOLINT(google-explicit-constructor)
-      : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
+  explicit Token(Puzzles::Numbers::Number number) : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
 
-  static inline Token fromChar(char anOperator) { return Token(false, anOperator, Puzzles::Numbers::Number(0)); }
+  explicit Token(char anOperator) : isNumber(false), asOperator(anOperator), asNumber(0) {}
 
   inline bool operator==(const char &anOperator) const { return !isNumber && asOperator == anOperator; }
 
@@ -59,4 +58,24 @@ private:
 std::vector<Token> tokenizeExpression(const std::string &);
 
 Puzzles::Numbers::Number evaluateExpression(const std::string &);
+}
+
+namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline string to_string(const Maths::Token &token) {
+  if (token.isNumber) {
+    return std::to_string(token.asNumber);
+  } else {
+    return std::to_string(token.asOperator);
+  }
+}
+
+inline string to_string(const vector<Maths::Token> &tokens) {
+  string result = "{";
+  for (const auto &token : tokens) {
+    result += to_string(token) + ",";
+  }
+  return result + "}";
+}
+
 }

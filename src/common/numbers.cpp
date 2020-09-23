@@ -35,14 +35,11 @@ using namespace Puzzles::Numbers;
 
 Number::Number(std::string value) : numerator(std::move(value)), denominator("1"), positive(true) {
   // TODO: assert there are no invalid characters
-  if (numerator[0] == '-') {
+  if (!numerator.empty() && numerator[0] == '-') {
     numerator = numerator.substr(1);
     positive = false;
   }
   numerator = trimLeadingView(numerator, '0');
-  if (numerator.empty()) {
-    numerator = "0";
-  }
 }
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
@@ -50,10 +47,13 @@ Number::Number(intmax_t value) : Number(std::to_string(value)) {}
 Number::Number(intmax_t _n, uintmax_t _d) : Number(_n >= 0 ? _n : _n * -1, _d, _n >= 0) {}
 
 Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
-    : numerator(std::to_string(numerator)), denominator(std::to_string(denominator)), positive(positive) {}
+    : Number(std::to_string(numerator), std::to_string(denominator), positive) {}
 
-Number::Number(std::string numerator, std::string denominator, bool positive)
-    : numerator(std::move(numerator)), denominator(std::move(denominator)), positive(positive) {}
+Number::Number(std::string _numerator, std::string _denominator, bool positive)
+    : numerator(std::move(_numerator)), denominator(std::move(_denominator)), positive(positive) {
+  // TODO: assert there are no invalid characters
+  numerator = trimLeadingView(numerator, '0');
+}
 
 template <typename iterator>
 inline char valueAndAdvance(iterator *it) {
@@ -63,6 +63,8 @@ inline char valueAndAdvance(iterator *it) {
 }
 
 compat::strong_ordering compareIntegers(const std::string &left, const std::string &right) {
+  assert(left.empty() || left[0] != '0');
+  assert(right.empty() || right[0] != '0');
   if (left.length() != right.length()) {
     return left.length() < right.length() ? compat::strong_ordering::less : compat::strong_ordering::greater;
   }
@@ -169,6 +171,7 @@ Number Number::operator*(const Number &o) const {
 }
 
 Number Number::operator/(const Number &o) const {
+  assert(o != 0); // division by zero is undefined
   if (numerator == "0") {
     return Number(0);
   }
@@ -206,7 +209,8 @@ Number Number::operator/(const Number &o) const {
 }
 
 Number Number::power(const Number &exp) const {
-  assert(exp.positive); // Haven't implemented this yet;
+  assert(*this != 0 || exp != 0); // zero ^ zero is undefined
+  assert(exp.positive);           // Haven't implemented this yet;
   Number result(1);
 
   for (Number i(0); i < exp; ++i) {
@@ -240,10 +244,14 @@ bool Number::operator==(const Number &o) const {
 }
 
 bool Number::operator==(intmax_t o) const {
-  return this->numerator == std::to_string(std::abs(o)) && this->denominator == "1" && this->positive == (o >= 0);
+  if (o == 0) return numerator.empty();
+
+  return this->denominator == "1" && this->positive == (o >= 0) && this->numerator == std::to_string(std::abs(o));
 }
 
 std::string Number::toString() const {
+  if (numerator.empty()) return "0";
+
   auto result = numerator;
 
   if (denominator != "1") {
