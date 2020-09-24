@@ -277,8 +277,7 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
   uint32_t leftNumerator = strtoumax(this->numerator.c_str(), nullptr, 10);
   uint32_t rightDenominator = strtoumax(o.denominator.c_str(), nullptr, 10);
   uint32_t rightNumerator = strtoumax(o.numerator.c_str(), nullptr, 10);
-  // TODO: This could be more efficient, we don't actually have to go that high every time
-  uint64_t newDenominator = leftDenominator * rightDenominator;
+  uint64_t newDenominator = lowestCommonMultiple(leftDenominator, rightDenominator);
 
   auto left = newDenominator / leftDenominator * leftNumerator;
   auto right = newDenominator / rightDenominator * rightNumerator;

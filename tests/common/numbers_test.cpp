@@ -67,6 +67,11 @@ TEST(Numbers, GreatestCommonDivisor) {
   EXPECT_EQ(greatestCommonDivisor(3154, 4522), 38);
 }
 
+TEST(Numbers, LowestCommonMultiple) {
+  EXPECT_EQ(lowestCommonMultiple(1, 30), 30);
+  EXPECT_EQ(lowestCommonMultiple(10, 25), 50);
+}
+
 TEST(Numbers_Number, CreateFromString) {
   Number negativeOne("-1");
   Number zero("0");

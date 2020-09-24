@@ -61,6 +61,12 @@ constexpr uintmax_t greatestCommonDivisor(uintmax_t lhs, uintmax_t rhs) {
   }
 }
 
+constexpr uintmax_t lowestCommonMultiple(uintmax_t lhs, uintmax_t rhs) {
+  ensure(lhs != 0 && rhs != 0); // This is undefined
+  auto gcd = greatestCommonDivisor(lhs, rhs);
+  return lhs * rhs / gcd;
+}
+
 struct Number {
 
   explicit Number(std::string);
