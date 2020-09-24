@@ -60,10 +60,10 @@ TEST(Numbers, Factorial) {
   EXPECT_EQ(factorial(12), 479001600);
 }
 
-TEST(Numbers, LargestCommonFactor) {
-  EXPECT_EQ(largestCommonFactor(1, 3), 1);
-  EXPECT_EQ(largestCommonFactor(17, 19), 1);
-  EXPECT_EQ(largestCommonFactor(3154, 4522), 38);
+TEST(Numbers, GreatestCommonDivisor) {
+  EXPECT_EQ(greatestCommonDivisor(1, 3), 1);
+  EXPECT_EQ(greatestCommonDivisor(17, 19), 1);
+  EXPECT_EQ(greatestCommonDivisor(3154, 4522), 38);
 }
 
 TEST(Numbers_Number, CreateFromString) {

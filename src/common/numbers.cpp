@@ -307,12 +307,12 @@ void Number::simplify() {
     return;
   }
   // oh boy
-  auto factor = largestCommonFactor(num, den);
+  auto factor = greatestCommonDivisor(num, den);
   while (factor > 1) {
     num = num / factor;
     den = den / factor;
 
-    factor = largestCommonFactor(num, den);
+    factor = greatestCommonDivisor(num, den);
   }
 
   this->numerator = std::to_string(num);

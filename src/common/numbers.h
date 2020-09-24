@@ -51,7 +51,7 @@ inline bool fits(Input value) {
   return value >= std::numeric_limits<Target>::min() && value <= std::numeric_limits<Target>::max();
 }
 
-inline uintmax_t largestCommonFactor(const uintmax_t &lhs, const uintmax_t &rhs) {
+inline uintmax_t greatestCommonDivisor(const uintmax_t &lhs, const uintmax_t &rhs) {
   auto [min, max] = std::minmax(lhs, rhs);
 
   if (std::remainder(max, min) == 0) {
