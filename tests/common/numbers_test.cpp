@@ -110,6 +110,7 @@ TEST(Numbers_Number, Addition) {
 
   Number half(1, 2);
   Number oneOverFiveHundredTwelve(1, 512);
+  Number negativeOneOverFiveHundredTwelve(-1, 512);
 
   EXPECT_EQ(std::to_string(zero + one), "1");
   EXPECT_EQ(std::to_string(one + zero), "1");
@@ -130,6 +131,9 @@ TEST(Numbers_Number, Addition) {
   EXPECT_EQ(std::to_string(absurdNumberOne + zero), "1354645611354413541715318441313195");
 
   EXPECT_EQ(std::to_string(five + oneOverFiveHundredTwelve), "2561/512");
+  EXPECT_EQ(std::to_string(oneOverFiveHundredTwelve + five), "2561/512");
+  EXPECT_EQ(std::to_string(five + negativeOneOverFiveHundredTwelve), "2559/512");
+  EXPECT_EQ(std::to_string(negativeOneOverFiveHundredTwelve + five), "2559/512");
   EXPECT_EQ(std::to_string(half + half), "1");
   EXPECT_EQ(std::to_string(half + zero), "1/2");
 

@@ -108,23 +108,28 @@ compat::strong_ordering compareIntegers(const std::string &left, const std::stri
 }
 
 Number Number::operator+(const Number &o) const {
-  auto sameSign = this->positive == o.positive;
   auto [left, right] = normalizeDenominatorWith(o);
+  auto sameSign = left.positive == right.positive;
+  auto finalSign = left.positive;
 
-  if (!sameSign && left.absolute() < right.absolute()) return right + left;
+  if (!sameSign && compareIntegers(left.numerator, right.numerator) == compat::strong_ordering::less) {
+    std::swap(left.numerator, right.numerator);
+    finalSign = right.positive;
+  }
 
   auto lit = left.numerator.crbegin();
   auto rit = right.numerator.crbegin();
-  std::string finalSum;
   auto carryOver = 0;
 
+  std::string finalSum;
   finalSum.reserve(std::max(left.numerator.length(), right.numerator.length()) + 1);
 
   while (lit != left.numerator.crend() || rit != right.numerator.crend()) {
     auto leftDigit = lit == left.numerator.crend() ? 0 : ctoi(valueAndAdvance(&lit));
     auto rightDigit = rit == right.numerator.crend() ? 0 : ctoi(valueAndAdvance(&rit));
-    int_fast8_t digitSum = sameSign ? leftDigit + rightDigit + carryOver : leftDigit - rightDigit - carryOver;
+    auto digitSum = sameSign ? leftDigit + rightDigit + carryOver : leftDigit - rightDigit - carryOver;
 
+    ensure_m(digitSum >= -9 && digitSum <= 19, "digitSum is " << int(digitSum));
     if (digitSum > 9) {
       carryOver = 1;
       digitSum -= 10;
@@ -138,15 +143,14 @@ Number Number::operator+(const Number &o) const {
     finalSum += itoc(digitSum);
   }
 
+  ensure(carryOver == 0 || (carryOver == 1 && sameSign));
   if (carryOver) {
     finalSum += '1';
   }
 
   std::reverse(finalSum.begin(), finalSum.end());
 
-  Number result(finalSum);
-  result.denominator = left.denominator;
-  result.positive = left.positive;
+  Number result(finalSum, left.denominator, finalSign);
   result.simplify();
 
   return result;
