@@ -50,23 +50,15 @@ constexpr bool fits(Input value) {
   return value >= std::numeric_limits<Target>::min() && value <= std::numeric_limits<Target>::max();
 }
 
-constexpr intmax_t greatestCommonDivisor(const intmax_t &lhs, const intmax_t &rhs) {
-  auto [min, max] = std::minmax(lhs, rhs);
-
-  if (max % min == 0) {
-    return min;
+constexpr uintmax_t greatestCommonDivisor(uintmax_t lhs, uintmax_t rhs) {
+  // This is the Eucledian algorithm
+  if (lhs == 0) return rhs;
+  while (true) {
+    if (rhs == 0) return lhs;
+    lhs %= rhs;
+    if (lhs == 0) return rhs;
+    rhs %= lhs;
   }
-
-  auto quotient = min / 2;
-  auto remainder = min % 2;
-  auto i = (remainder == 0 ? quotient : quotient - 1) / 2;
-
-  for (; i > 1; --i) {
-    if (min % i == 0 && max % i == 0) {
-      return i;
-    }
-  }
-  return 1;
 }
 
 struct Number {

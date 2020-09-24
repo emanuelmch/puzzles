@@ -63,6 +63,7 @@ TEST(Numbers, Factorial) {
 TEST(Numbers, GreatestCommonDivisor) {
   EXPECT_EQ(greatestCommonDivisor(1, 3), 1);
   EXPECT_EQ(greatestCommonDivisor(17, 19), 1);
+  EXPECT_EQ(greatestCommonDivisor(10, 25), 5);
   EXPECT_EQ(greatestCommonDivisor(3154, 4522), 38);
 }
 
