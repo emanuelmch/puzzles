@@ -24,14 +24,20 @@
 
 #include "expressions.h"
 #include "primes.h"
+#include "sequences.h"
 
 #include "common/runners.h"
 
 #include <iostream>
 #include <string>
 
+#if __has_include(<version>)
+#include <version>
+#endif
+
 using namespace Maths;
 
+using Puzzles::LazySequence;
 using Puzzles::runningTime;
 
 using std::cout;
@@ -67,6 +73,43 @@ bool runEvaluateExpression(const string &expression, long expected) {
   }
 }
 
+bool runHighlyCompositeNumberSequence() {
+#if !defined(__cpp_impl_coroutine)
+  cout << "Maths: Skipping Highly Composite Number due to lack of compiler support\n";
+  return true;
+#else // !defined(__cpp_impl_coroutine)
+  auto expectedSequence = {1u,    2u,    4u,     6u,     12u,    24u,    36u,    48u,    60u,
+                           120u,  180u,  240u,   360u,   720u,   840u,   1260u,  1680u,  2520u,
+                           5040u, 7560u, 10080u, 15120u, 20160u, 25200u, 27720u, 45360u, 50400u};
+  auto [result, duration] = runningTime([&expectedSequence] {
+    auto actualSequence = Sequences::highlyCompositeNumbers();
+
+    auto ait = actualSequence.begin();
+    auto eit = expectedSequence.begin();
+
+    for (; eit != expectedSequence.end(); ++ait, ++eit) {
+      auto actual = *ait;
+      auto expected = *eit;
+      if (*ait != *eit) {
+        cout << "Maths: Failure! The next Highly Composite Number returned was " << actual << ", but it should've been "
+             << expected << "\n";
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  if (result) {
+    cout << "Maths: Success! Calculated " << expectedSequence.size()
+         << " integers of the Highly Composite Number sequence, it took " << duration << " microseconds!\n";
+  }
+
+  return result;
+#endif // !defined(__cpp_impl_coroutine)
+}
+
 bool Maths::run() {
-  return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579);
+  return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
+         runHighlyCompositeNumberSequence();
 }
