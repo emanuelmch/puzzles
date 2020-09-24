@@ -66,20 +66,34 @@ inline char valueAndAdvance(iterator *it) {
 compat::strong_ordering compareIntegers(const std::string &left, const std::string &right) {
   ensure(left.empty() || left[0] != '0');
   ensure(right.empty() || right[0] != '0');
+
+#ifdef __cpp_lib_three_way_comparison
+  auto lengthComparison = left.length() <=> right.length();
+  if (lengthComparison != std::strong_ordering::equal) {
+    return lengthComparison;
+  }
+#else
   if (left.length() != right.length()) {
     return left.length() < right.length() ? compat::strong_ordering::less : compat::strong_ordering::greater;
   }
-
-  if (left == right) return compat::strong_ordering::equal;
+#endif
 
   auto lit = left.cbegin(), rit = right.cbegin();
-  while (true) {
+  while (lit != left.cend()) {
+    ensure(rit != right.cend());
     auto leftDigit = *lit;
     auto rightDigit = *rit;
 
-    ensure(lit != left.cend());
-    ensure(rit != right.cend());
+#if defined(__cpp_lib_three_way_comparison) && __has_cpp_attribute(likely)
+    auto digitComparison = leftDigit <=> rightDigit;
+    if (digitComparison == std::strong_ordering::equal) [[likely]] {
+      ++lit;
+      ++rit;
+      continue;
+    }
 
+    return digitComparison;
+#else
     if (leftDigit == rightDigit) {
       ++lit;
       ++rit;
@@ -87,7 +101,10 @@ compat::strong_ordering compareIntegers(const std::string &left, const std::stri
     }
 
     return (leftDigit < rightDigit) ? compat::strong_ordering::less : compat::strong_ordering::greater;
+#endif
   }
+
+  return compat::strong_ordering::equal;
 }
 
 Number Number::operator+(const Number &o) const {
