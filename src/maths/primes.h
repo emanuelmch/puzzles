@@ -24,7 +24,7 @@
 
 namespace Maths {
 
-static bool isPrime(long n) {
+constexpr bool isPrime(long n) {
   if (n == 1) return false;
   if (n == 2) return true;
 
@@ -37,7 +37,7 @@ static bool isPrime(long n) {
   return true;
 }
 
-static long largestPrimeFactor(long n) {
+constexpr long largestPrimeFactor(long n) {
   long largest = (n % 2 == 0) ? 2 : 1;
 
   for (long i = 3; i <= n; i += 2) {
