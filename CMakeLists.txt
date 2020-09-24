@@ -24,6 +24,8 @@ cmake_minimum_required(VERSION 3.9) # CMP0069
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
+include(CheckCXXCompilerFlag)
+
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
@@ -47,6 +49,16 @@ if (supportsSetContains)
     add_compile_definitions(HAS_STD_SET_CONTAINS)
 else ()
     message(STATUS "Looking for std::set::contains support - not found")
+endif ()
+
+check_cxx_compiler_flag(-fcoroutines _CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
+if (_CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
+    add_compile_options(-fcoroutines)
+endif ()
+
+check_cxx_compiler_flag(-fcoroutines-ts _CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+    add_compile_options(-fcoroutines-ts)
 endif ()
 
 # Source Files
