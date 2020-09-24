@@ -115,7 +115,3 @@ foreach (testfile ${test_sources})
     add_test(${test_name} ${test_name})
     add_dependencies(check ${test_name})
 endforeach (testfile)
-
-# Workaround for running all tests under one target
-add_executable(all_tests ${test_sources} $<TARGET_OBJECTS:puzzles_lib>)
-target_link_libraries(all_tests gtest gtest_main pthread)
