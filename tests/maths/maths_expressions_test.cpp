@@ -25,6 +25,7 @@
 #include <gtest/gtest.h>
 
 using namespace Maths;
+using Puzzles::Numbers::Number;
 
 using std::vector;
 
@@ -52,10 +53,17 @@ TEST(Expressions, Evaluator) {
 }
 
 TEST(Expressions, Tokenizer) {
-  auto plus = Token::fromChar('+');
-  auto divided = Token::fromChar('/');
+  Token plus('+');
+  Token divided('/');
 
-  EXPECT_EQ(tokenizeExpression("1 +2"), vector<Token>({1, plus, 2}));
-  EXPECT_EQ(tokenizeExpression("1000/123"), vector<Token>({1000, divided, 123}));
-  EXPECT_EQ(tokenizeExpression("0"), vector({Token(0)}));
+  Token zero(Number(0));
+  Token one(Number(1));
+  Token two(Number(2));
+  Token hundredTwentyThree(Number(123));
+  Token thousand(Number(1000));
+
+  EXPECT_EQ(std::to_string(tokenizeExpression("1 +2")), std::to_string(vector({one, plus, two})));
+  EXPECT_EQ(std::to_string(tokenizeExpression("1000/123")),
+            std::to_string(vector({thousand, divided, hundredTwentyThree})));
+  EXPECT_EQ(std::to_string(tokenizeExpression("0")), std::to_string(vector({zero})));
 }

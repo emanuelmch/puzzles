@@ -20,31 +20,18 @@
  * SOFTWARE.
  */
 
-#include "maths/primes.h"
-
-#include "compat/set.h"
+#include "common/strings.h"
 
 #include <gtest/gtest.h>
 
-using namespace Maths;
+using namespace Puzzles;
 
-TEST(Maths, IsPrime) {
-  compat::set<uint_fast8_t> primes = {2,  3,  5,  7,  11, 13, 17, 19, 23, 29, 31, 37, 41,
-                                      43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
-  for (auto i = 1; i <= 100; ++i) {
-    if (primes.contains(i)) {
-      EXPECT_TRUE(isPrime(i)) << "Prime number " << i << " was reported as NOT being prime";
-    } else {
-      EXPECT_FALSE(isPrime(i)) << "NON prime number " << i << " was reported as being prime";
-    }
-  }
-}
+TEST(Strings, TrimLeadingView) {
+  std::string simple = " test";
+  EXPECT_EQ(trimLeadingView(simple, ' '), "test");
+  EXPECT_EQ(trimLeadingView(simple, 't'), " test");
 
-TEST(Maths, LargestPrimeFactor) {
-  EXPECT_EQ(largestPrimeFactor(2), 2);
-  EXPECT_EQ(largestPrimeFactor(3), 3);
-  EXPECT_EQ(largestPrimeFactor(4), 2);
-  EXPECT_EQ(largestPrimeFactor(5), 5);
-  EXPECT_EQ(largestPrimeFactor(6), 3);
-  EXPECT_EQ(largestPrimeFactor(13195), 29);
+  std::string repeat = "rrr";
+  EXPECT_EQ(trimLeadingView(repeat, 'r'), "");
+  EXPECT_EQ(trimLeadingView(repeat, ' '), "rrr");
 }

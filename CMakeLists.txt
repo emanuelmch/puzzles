@@ -31,8 +31,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -W
 # Pre-requisites
 try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)
 IF (NOT supportsCTAD)
-        MESSAGE(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
-ENDIF()
+    MESSAGE(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
+ENDIF ()
 
 try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
 if (supportsSetContains)
@@ -45,6 +45,7 @@ endif ()
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
+        src/common/numbers.cpp
         src/cpic/runner.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
@@ -92,6 +93,7 @@ add_subdirectory(libs/googletest)
 set(test_sources
         tests/common/arbitrary_container_test.cpp
         tests/common/numbers_test.cpp
+        tests/common/strings_test.cpp
         tests/cpic/model/cpic_board_builder_test.cpp
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp

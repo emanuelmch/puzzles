@@ -22,21 +22,112 @@
 
 #pragma once
 
-#include <cstddef>
+#include <algorithm>
+#include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <limits>
+#include <string>
 
 namespace Puzzles::Numbers {
 
-inline bool fitsUnsignedInt8(int8_t value) {
-  return value >= std::numeric_limits<uint8_t>::min();
+inline uint8_t ctoi(char c) {
+  assert(c >= '0' && c <= '9');
+  return c - '0';
 }
 
-inline bool fitsUShort(size_t value) {
-  return value <= std::numeric_limits<uint8_t>::max();
+inline char itoc(uint8_t i) {
+  assert(i < 10);
+  return i + '0';
 }
 
-inline unsigned long long factorial(unsigned int value) {
+inline uintmax_t factorial(uintmax_t value) {
   return (value < 2) ? 1 : value * factorial(value - 1);
+}
+
+template <typename Target, typename Input>
+inline bool fits(Input value) {
+  return value >= std::numeric_limits<Target>::min() && value <= std::numeric_limits<Target>::max();
+}
+
+inline uintmax_t largestCommonFactor(const uintmax_t &lhs, const uintmax_t &rhs) {
+  auto [min, max] = std::minmax(lhs, rhs);
+
+  if (std::remainder(max, min) == 0) {
+    return min;
+  }
+
+  auto div = std::div(min, 2);
+  auto i = (div.rem == 0 ? div.quot : div.quot - 1) / 2;
+
+  for (; i > 1; --i) {
+    if (std::remainder(min, i) == 0 && std::remainder(max, i) == 0) {
+      return i;
+    }
+  }
+  return 1;
+}
+
+struct Number {
+
+  explicit Number(std::string);
+  explicit Number(intmax_t);
+  Number(intmax_t, uintmax_t);
+
+  [[nodiscard]] Number operator+(const Number &) const;
+  [[nodiscard]] Number operator-(const Number &) const;
+  [[nodiscard]] Number operator*(const Number &) const;
+  [[nodiscard]] Number operator/(const Number &) const;
+
+  [[nodiscard]] Number power(const Number &exponent) const;
+
+  void operator+=(const Number &o) { copy(*this + o); }
+  void operator-=(const Number &o) { copy(*this - o); }
+  void operator*=(const Number &o) { copy(*this * o); }
+  Number &operator++();
+
+  [[nodiscard]] bool operator<(const Number &) const;
+  [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
+  [[nodiscard]] bool operator==(const Number &) const;
+  [[nodiscard]] bool operator==(intmax_t) const;
+  [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
+
+  [[nodiscard]] std::string toString() const;
+
+private:
+  std::string numerator;
+  std::string denominator;
+  bool positive;
+
+  Number(uintmax_t, uintmax_t, bool);
+  Number(std::string, std::string, bool);
+
+  inline void copy(const Number &o) {
+    this->numerator = o.numerator;
+    this->denominator = o.denominator;
+    this->positive = o.positive;
+  }
+
+  [[nodiscard]] inline Number absolute() const { return Number(numerator, denominator, true); }
+  [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
+
+  void simplify();
+};
+}
+
+namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline Puzzles::Numbers::Number pow(const Puzzles::Numbers::Number &base, const Puzzles::Numbers::Number &exponent) {
+  return base.power(exponent);
+}
+
+inline string to_string(const Puzzles::Numbers::Number &number) {
+  return number.toString();
+}
+
+// This doesn't have to be in std, but it must come after to_string, so...
+inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Number &number) {
+  s << std::to_string(number);
+  return s;
 }
 }

@@ -22,22 +22,22 @@
 
 #pragma once
 
-#include "common/defs.h"
+#include "common/numbers.h"
 
 #include <string>
+#include <utility>
 #include <vector>
 
-// TODO: Currently we're limited to whatever size `int` is
 namespace Maths {
 
 struct Token {
   bool isNumber;
   char asOperator;
-  floatmax_t asNumber;
+  Puzzles::Numbers::Number asNumber;
 
-  Token(floatmax_t number) : isNumber(true), asOperator(0), asNumber(number) {} // NOLINT(google-explicit-constructor)
+  explicit Token(Puzzles::Numbers::Number number) : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
 
-  static inline Token fromChar(char anOperator) { return Token(false, anOperator, 0); }
+  explicit Token(char anOperator) : isNumber(false), asOperator(anOperator), asNumber(0) {}
 
   inline bool operator==(const char &anOperator) const { return !isNumber && asOperator == anOperator; }
 
@@ -51,11 +51,31 @@ struct Token {
   }
 
 private:
-  inline Token(bool isNumber, char asOperator, floatmax_t asNumber)
-      : isNumber(isNumber), asOperator(asOperator), asNumber(asNumber) {}
+  inline Token(bool isNumber, char asOperator, Puzzles::Numbers::Number asNumber)
+      : isNumber(isNumber), asOperator(asOperator), asNumber(std::move(asNumber)) {}
 };
 
 std::vector<Token> tokenizeExpression(const std::string &);
 
-floatmax_t evaluateExpression(const std::string &);
+Puzzles::Numbers::Number evaluateExpression(const std::string &);
+}
+
+namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline string to_string(const Maths::Token &token) {
+  if (token.isNumber) {
+    return std::to_string(token.asNumber);
+  } else {
+    return std::to_string(token.asOperator);
+  }
+}
+
+inline string to_string(const vector<Maths::Token> &tokens) {
+  string result = "{";
+  for (const auto &token : tokens) {
+    result += to_string(token) + ",";
+  }
+  return result + "}";
+}
+
 }

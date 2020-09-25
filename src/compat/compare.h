@@ -22,22 +22,18 @@
 
 #pragma once
 
-#include <set>
-
-namespace Puzzles {
-
-#ifdef HAS_STD_SET_CONTAINS
-// We have all we need from std::set
-template <typename Key, typename Compare = std::less<Key>, typename Alloc = std::allocator<Key>>
-using set = std::set<Key, Compare, Alloc>;
-#else
-// std::set is incomplete, we need more (in this case, just std::set::contains)
-template <typename Key, typename Compare = std::less<Key>, typename Alloc = std::allocator<Key>>
-struct set : public std::set<Key, Compare, Alloc> {
-  set(std::initializer_list<Key> init) : std::set<Key, Compare, Alloc>(init) {}
-
-  inline bool contains(Key item) { return this->find(item) != this->end(); }
-};
+#if __has_include("<version>")
+#include <version>
 #endif
 
-};
+#ifdef __cpp_lib_three_way_comparison
+#include <compare>
+
+namespace compat {
+using strong_ordering = std::strong_ordering;
+}
+#else
+namespace compat {
+enum class strong_ordering { less, equal, greater };
+}
+#endif // __cpp_lib_three_way_comparison
