@@ -73,40 +73,65 @@ bool runEvaluateExpression(const string &expression, long expected) {
   }
 }
 
-bool runHighlyCompositeNumberSequence() {
 #if !defined(__cpp_impl_coroutine)
-  cout << "Maths: Skipping Highly Composite Number due to lack of compiler support\n";
+template <typename list>
+bool runInfiniteSequence(const string &name, const list &, const Puzzles::LazySequence<uintmax_t> &) {
+  cout << "Maths: Skipping " << name << " due to lack of compiler support\n";
   return true;
+}
 #else // !defined(__cpp_impl_coroutine)
-  auto expectedSequence = {1u,    2u,    4u,     6u,     12u,    24u,    36u,    48u,    60u,
-                           120u,  180u,  240u,   360u,   720u,   840u,   1260u,  1680u,  2520u,
-                           5040u, 7560u, 10080u, 15120u, 20160u, 25200u, 27720u, 45360u, 50400u};
-  auto [result, duration] = runningTime([&expectedSequence] {
-    auto actualSequence = Sequences::highlyCompositeNumbers();
+template <typename list>
+bool runInfiniteSequence(const string &name, const list &expectedSequence,
+                         const Puzzles::LazySequence<uintmax_t> &actualSequence) {
+  struct result_type {
+    bool success = true;
+    size_t count = 0;
+    size_t error = 0;
+  };
 
+  auto [result, duration] = runningTime([&expectedSequence, &actualSequence] {
+    result_type result;
+    // TODO: Double for each?
     auto ait = actualSequence.begin();
     auto eit = expectedSequence.begin();
 
     for (; eit != expectedSequence.end(); ++ait, ++eit) {
       auto actual = *ait;
       auto expected = *eit;
-      if (*ait != *eit) {
-        cout << "Maths: Failure! The next Highly Composite Number returned was " << actual << ", but it should've been "
-             << expected << "\n";
-        return false;
+      if (actual == expected) {
+        result.count++;
+      } else {
+        result.success = false;
+        result.error = actual;
+        break;
       }
     }
 
-    return true;
+    return result;
   });
 
-  if (result) {
-    cout << "Maths: Success! Calculated " << expectedSequence.size()
-         << " integers of the Highly Composite Number sequence, it took " << duration << " microseconds!\n";
+  if (result.success) {
+    ensure_m(expectedSequence.size() == result.count,
+             "Expected " << expectedSequence.size() << " numbers, got " << result.count);
+    cout << "Maths: Success! Calculated " << expectedSequence.size() << " integers of the " << name
+         << " sequence, it took " << duration << " microseconds!\n";
+  } else {
+    auto iterator = expectedSequence.begin();
+    std::advance(iterator, result.count);
+    cout << "Maths: Failure! The next " << name << " returned was " << result.error << ", but it should've been "
+         << *iterator << "\n";
   }
 
-  return result;
+  return result.success;
+}
 #endif // !defined(__cpp_impl_coroutine)
+
+bool runHighlyCompositeNumberSequence() {
+  auto expectedSequence = {1u,    2u,    4u,     6u,     12u,    24u,    36u,    48u,    60u,
+                           120u,  180u,  240u,   360u,   720u,   840u,   1260u,  1680u,  2520u,
+                           5040u, 7560u, 10080u, 15120u, 20160u, 25200u, 27720u, 45360u, 50400u};
+  auto actualSequence = Sequences::highlyCompositeNumbers();
+  return runInfiniteSequence("Highly Composite Number", expectedSequence, actualSequence);
 }
 
 bool Maths::run() {
