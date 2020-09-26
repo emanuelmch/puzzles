@@ -66,6 +66,8 @@ struct LazySequence {
 
     explicit constexpr iterator(const std::coroutine_handle<promise_type> *handle) : handle(handle) {}
 
+    constexpr bool operator!=(const iterator &o) const { return handle != o.handle; }
+
     constexpr T operator*() {
       ensure_m(handle != nullptr, "Tried to dereference the end() of a LazySequence");
 

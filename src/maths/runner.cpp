@@ -27,6 +27,7 @@
 #include "sequences.h"
 
 #include "common/runners.h"
+#include "common/views.h"
 
 #include <iostream>
 #include <string>
@@ -91,13 +92,8 @@ bool runInfiniteSequence(const string &name, const list &expectedSequence,
 
   auto [result, duration] = runningTime([&expectedSequence, &actualSequence] {
     result_type result;
-    // TODO: Double for each?
-    auto ait = actualSequence.begin();
-    auto eit = expectedSequence.begin();
 
-    for (; eit != expectedSequence.end(); ++ait, ++eit) {
-      auto actual = *ait;
-      auto expected = *eit;
+    for (auto [actual, expected] : Puzzles::zip(actualSequence, expectedSequence)) {
       if (actual == expected) {
         result.count++;
       } else {
