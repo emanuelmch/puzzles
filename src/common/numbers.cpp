@@ -48,7 +48,7 @@ Number::Number(const std::string &value)
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
 
-Number::Number(intmax_t _n, uintmax_t _d) : Number(_n >= 0 ? _n : _n * -1, _d, _n >= 0) {}
+Number::Number(intmax_t _n, uintmax_t _d) : Number(static_cast<uintmax_t>(std::abs(_n)), _d, _n >= 0) {}
 
 Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
     : Number(std::to_string(numerator), std::to_string(denominator), positive) {}
@@ -323,9 +323,8 @@ void Number::simplify() {
   auto num = std::strtoumax(numerator.c_str(), nullptr, 10);
   auto den = std::strtoumax(denominator.c_str(), nullptr, 10);
 
-  auto div = std::lldiv(num, den);
-  if (div.rem == 0) {
-    this->numerator = std::to_string(div.quot);
+  if (num % den == 0) {
+    this->numerator = std::to_string(num / den);
     this->denominator = "1";
     return;
   }

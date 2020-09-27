@@ -34,6 +34,6 @@ struct Solver {
 
   const std::string_view name;
 
-  virtual const Board solve(const Board &) const = 0;
+  [[nodiscard]] virtual Board solve(const Board &) const = 0;
 };
 }

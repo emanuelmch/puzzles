@@ -33,12 +33,12 @@ namespace Puzzles::Numbers {
 
 constexpr uint8_t ctoi(char c) {
   ensure(c >= '0' && c <= '9');
-  return c - '0';
+  return static_cast<uint8_t>(c - '0');
 }
 
 constexpr char itoc(uint8_t i) {
   ensure(i < 10);
-  return i + '0';
+  return static_cast<char>(i + '0');
 }
 
 constexpr uintmax_t factorial(uintmax_t value) {

@@ -22,6 +22,9 @@
 
 #include "heuristic_board_solver.h"
 
+#include "common/assertions.h"
+#include "common/numbers.h"
+
 #include <cstdint>
 #include <vector>
 
@@ -29,17 +32,17 @@ using namespace Sudoku;
 
 using std::vector;
 
-const int SIZE = 9;
-const int CELL_COUNT = SIZE * SIZE;
+const uint_fast8_t SIZE = 9;
+const uint_fast8_t CELL_COUNT = SIZE * SIZE;
 
 const vector<vector<bool>> findCandidates(const Board &board);
-void removeCandidatesFromColumn(int index, uint8_t value, vector<vector<bool>> *candidates);
-void removeCandidatesFromRow(int index, uint8_t value, vector<vector<bool>> *candidates);
-void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *candidates);
+void removeCandidatesFromColumn(uint8_t index, uint8_t value, vector<vector<bool>> *candidates);
+void removeCandidatesFromRow(uint8_t index, uint8_t value, vector<vector<bool>> *candidates);
+void removeCandidatesFromSquare(uint8_t index, uint8_t value, vector<vector<bool>> *candidates);
 bool applyCandidates(Board *board, const vector<vector<bool>> &candidates);
 uint8_t getSingleCandidate(const vector<bool> &candidates);
 
-const Board HeuristicBoardSolver::solve(const Sudoku::Board &original) const {
+Board HeuristicBoardSolver::solve(const Sudoku::Board &original) const {
   auto board = original;
   bool changedAny;
   do {
@@ -57,7 +60,8 @@ const vector<vector<bool>> findCandidates(const Board &board) {
     candidates.push_back({true, true, true, true, true, true, true, true, true});
   }
 
-  for (int i = 0; i < CELL_COUNT; ++i) {
+  for (auto i = 0u; i < CELL_COUNT; ++i) {
+    ensure(Puzzles::Numbers::fits<uint8_t>(i));
     auto cell = board.getCell(i);
     if (cell != 0) {
       removeCandidatesFromColumn(i, cell, &candidates);
@@ -69,32 +73,39 @@ const vector<vector<bool>> findCandidates(const Board &board) {
   return candidates;
 }
 
-void removeCandidatesFromColumn(int index, uint8_t value, vector<vector<bool>> *candidates) {
+void removeCandidatesFromColumn(uint8_t index, uint8_t value, vector<vector<bool>> *candidates) {
+  ensure(value >= 1 && value <= 9);
+  auto valueIndex = static_cast<size_t>(value - 1);
+
   auto upwards = index - SIZE;
   while (upwards >= 0) {
-    (*candidates)[upwards][value - 1] = false;
+    (*candidates)[static_cast<size_t>(upwards)][valueIndex] = false;
     upwards -= SIZE;
   }
 
-  auto downwards = index + SIZE;
+  static_assert(SIZE < (std::numeric_limits<size_t>::max() - std::numeric_limits<uint8_t>::max()));
+  auto downwards = static_cast<size_t>(index + SIZE);
   while (downwards < CELL_COUNT) {
-    (*candidates)[downwards][value - 1] = false;
+    (*candidates)[downwards][valueIndex] = false;
     downwards += SIZE;
   }
 }
 
-void removeCandidatesFromRow(int index, uint8_t value, vector<vector<bool>> *candidates) {
-  auto rem = index % SIZE;
-  for (auto i = 1; i <= rem; ++i) {
-    (*candidates)[index - i][value - 1] = false;
+void removeCandidatesFromRow(uint8_t index, uint8_t value, vector<vector<bool>> *candidates) {
+  ensure(value >= 1 && value <= 9);
+  auto valueIndex = static_cast<size_t>(value - 1);
+
+  uint8_t rem = index % SIZE;
+  for (auto i = 1u; i <= rem; ++i) {
+    (*candidates)[index - i][valueIndex] = false;
   }
 
-  for (auto i = 1; i < (SIZE - rem); ++i) {
-    (*candidates)[index + i][value - 1] = false;
+  for (auto i = 1u; i < static_cast<uint8_t>(SIZE - rem); ++i) {
+    (*candidates)[index + i][valueIndex] = false;
   }
 }
 
-void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *candidates) {
+void removeCandidatesFromSquare(uint8_t index, uint8_t value, vector<vector<bool>> *candidates) {
   uint8_t rows[3] = {
       0,
   };
@@ -137,7 +148,9 @@ void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *
 
   for (auto row : rows) {
     for (auto column : columns) {
-      (*candidates)[row * SIZE + column][value - 1] = false;
+      auto rowIndex = static_cast<size_t>(row * SIZE + column);
+      auto columnIndex = static_cast<size_t>(value - 1);
+      (*candidates)[rowIndex][columnIndex] = false;
     }
   }
 }
@@ -145,7 +158,7 @@ void removeCandidatesFromSquare(int index, uint8_t value, vector<vector<bool>> *
 bool applyCandidates(Board *board, const vector<vector<bool>> &candidates) {
   auto changedAny = false;
 
-  for (int i = 0; i < CELL_COUNT; ++i) {
+  for (auto i = 0u; i < CELL_COUNT; ++i) {
     if (board->getCell(i) == 0) {
       auto cands = candidates[i];
       auto value = getSingleCandidate(cands);
@@ -160,9 +173,9 @@ bool applyCandidates(Board *board, const vector<vector<bool>> &candidates) {
 }
 
 uint8_t getSingleCandidate(const vector<bool> &candidates) {
-  auto value = 0;
+  auto value = 0u;
 
-  for (auto i = 0; i < SIZE; ++i) {
+  for (auto i = 0u; i < SIZE; ++i) {
     if (candidates[i]) {
       if (value == 0) {
         value = i + 1;

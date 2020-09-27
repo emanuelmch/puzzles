@@ -36,7 +36,7 @@ static constexpr inline size_t calculateValueBitLength(size_t value) {
   assert(value > 0);
   assert(value <= 0b11111111); // No real reason to stop there, I just haven't tested any further
 
-  auto digits = 0;
+  size_t digits = 0;
   size_t next = 1;
   while (value > 0) {
     digits++;

@@ -26,7 +26,7 @@ cmake_policy(SET CMP0069 NEW)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
 
 # Pre-requisites
 try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)

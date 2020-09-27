@@ -29,6 +29,6 @@ namespace Sudoku {
 struct BruteForceSolver : public Solver {
   BruteForceSolver() : Solver("Brute Force") {}
 
-  const Board solve(const Board &) const;
+  [[nodiscard]] Board solve(const Board &) const final;
 };
 }

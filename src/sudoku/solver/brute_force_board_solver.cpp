@@ -46,7 +46,7 @@ const vector<Board> getNext(const Board *board) {
   return next;
 }
 
-const Board BruteForceSolver::solve(const Board &board) const {
+Board BruteForceSolver::solve(const Board &board) const {
   stack<Board> nodes;
   nodes.push(board);
 
