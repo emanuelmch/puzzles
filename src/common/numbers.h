@@ -51,7 +51,7 @@ constexpr bool fits(Input value) {
 }
 
 constexpr uintmax_t greatestCommonDivisor(uintmax_t lhs, uintmax_t rhs) {
-  // This is the Eucledian algorithm
+  // This is the Euclidean algorithm
   if (lhs == 0) return rhs;
   while (true) {
     if (rhs == 0) return lhs;
