@@ -86,6 +86,8 @@ struct Number {
   Number &operator++();
 
   [[nodiscard]] bool operator<(const Number &) const;
+  // TODO: <= Could be more efficient
+  [[nodiscard]] inline bool operator<=(const Number &o) const { return *this < o || *this == o; }
   [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
   [[nodiscard]] bool operator==(const Number &) const;
   [[nodiscard]] bool operator==(intmax_t) const;

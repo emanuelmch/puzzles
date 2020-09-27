@@ -83,13 +83,9 @@ TEST(Numbers_Number, CreateFromString) {
 }
 
 TEST(Numbers_Number, CreateFromInt) {
-  Number negativeOne(-1);
-  Number zero(0);
-  Number one(1);
-
-  EXPECT_EQ(std::to_string(negativeOne), "-1");
-  EXPECT_EQ(std::to_string(zero), "0");
-  EXPECT_EQ(std::to_string(one), "1");
+  EXPECT_EQ(std::to_string(Number(-1)), "-1");
+  EXPECT_EQ(std::to_string(Number(0)), "0");
+  EXPECT_EQ(std::to_string(Number(1)), "1");
 }
 
 TEST(Numbers_Number, Addition) {

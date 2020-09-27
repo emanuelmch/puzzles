@@ -29,7 +29,6 @@
 #include <algorithm>
 #include <cassert>
 #include <cinttypes>
-#include <cmath>
 #include <utility>
 
 using namespace Puzzles::Numbers;
@@ -310,31 +309,24 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
 }
 
 void Number::simplify() {
-  if (numerator == "0") denominator = "1";
+  if (numerator.empty()) denominator = "1";
   if (denominator == "1") return;
 
-  if (numerator == denominator) {
-    numerator = "1";
-    denominator = "1";
-    return;
-  }
-
-  // FIXME: Use numbers here instead of umax
+  // Haven't implemented these two yet
+  ensure_m(Number(numerator) <= Number(std::to_string(std::numeric_limits<uintmax_t>::max())),
+           numerator << " > " << std::numeric_limits<uintmax_t>::max());
+  ensure_m(Number(denominator) <= Number(std::to_string(std::numeric_limits<uintmax_t>::max())),
+           denominator << " > " << std::numeric_limits<uintmax_t>::max());
   auto num = std::strtoumax(numerator.c_str(), nullptr, 10);
   auto den = std::strtoumax(denominator.c_str(), nullptr, 10);
 
-  if (num % den == 0) {
-    this->numerator = std::to_string(num / den);
-    this->denominator = "1";
-    return;
-  }
   // oh boy
-  auto factor = greatestCommonDivisor(num, den);
-  while (factor > 1) {
-    num = num / factor;
-    den = den / factor;
+  auto gcd = greatestCommonDivisor(num, den);
+  while (gcd > 1) {
+    num /= gcd;
+    den /= gcd;
 
-    factor = greatestCommonDivisor(num, den);
+    gcd = greatestCommonDivisor(num, den);
   }
 
   this->numerator = std::to_string(num);
