@@ -43,7 +43,7 @@ inline std::string_view fitNumerator(const std::string_view &original) {
 
 Number::Number(const std::string &value)
     : numerator(fitNumerator(value)), denominator("1"), positive(value.empty() || value[0] != '-') {
-  // TODO: assert there are no invalid characters
+  assert(numerator.find_first_not_of("0123456789") == numerator.npos);
 }
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
@@ -55,7 +55,8 @@ Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
 
 Number::Number(const std::string &_numerator, std::string _denominator, bool positive)
     : numerator(trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
-  // TODO: assert there are no invalid characters
+  assert(numerator.find_first_not_of("0123456789") == numerator.npos);
+  assert(denominator.find_first_not_of("0123456789") == denominator.npos);
 }
 
 template <typename iterator>
