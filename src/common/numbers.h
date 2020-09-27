@@ -22,50 +22,43 @@
 
 #pragma once
 
+#include "common/assertions.h"
+
 #include <algorithm>
-#include <cassert>
-#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <string>
 
 namespace Puzzles::Numbers {
 
-inline uint8_t ctoi(char c) {
-  assert(c >= '0' && c <= '9');
+constexpr uint8_t ctoi(char c) {
+  ensure(c >= '0' && c <= '9');
   return c - '0';
 }
 
-inline char itoc(uint8_t i) {
-  assert(i < 10);
+constexpr char itoc(uint8_t i) {
+  ensure(i < 10);
   return i + '0';
 }
 
-inline uintmax_t factorial(uintmax_t value) {
+constexpr uintmax_t factorial(uintmax_t value) {
   return (value < 2) ? 1 : value * factorial(value - 1);
 }
 
 template <typename Target, typename Input>
-inline bool fits(Input value) {
+constexpr bool fits(Input value) {
   return value >= std::numeric_limits<Target>::min() && value <= std::numeric_limits<Target>::max();
 }
 
-inline uintmax_t largestCommonFactor(const uintmax_t &lhs, const uintmax_t &rhs) {
-  auto [min, max] = std::minmax(lhs, rhs);
-
-  if (std::remainder(max, min) == 0) {
-    return min;
+constexpr uintmax_t greatestCommonDivisor(uintmax_t lhs, uintmax_t rhs) {
+  // This is the Eucledian algorithm
+  if (lhs == 0) return rhs;
+  while (true) {
+    if (rhs == 0) return lhs;
+    lhs %= rhs;
+    if (lhs == 0) return rhs;
+    rhs %= lhs;
   }
-
-  auto div = std::div(min, 2);
-  auto i = (div.rem == 0 ? div.quot : div.quot - 1) / 2;
-
-  for (; i > 1; --i) {
-    if (std::remainder(min, i) == 0 && std::remainder(max, i) == 0) {
-      return i;
-    }
-  }
-  return 1;
 }
 
 struct Number {

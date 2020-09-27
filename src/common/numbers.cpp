@@ -22,6 +22,7 @@
 
 #include "numbers.h"
 
+#include "common/assertions.h"
 #include "common/strings.h"
 #include "compat/compare.h"
 
@@ -63,8 +64,8 @@ inline char valueAndAdvance(iterator *it) {
 }
 
 compat::strong_ordering compareIntegers(const std::string &left, const std::string &right) {
-  assert(left.empty() || left[0] != '0');
-  assert(right.empty() || right[0] != '0');
+  ensure(left.empty() || left[0] != '0');
+  ensure(right.empty() || right[0] != '0');
   if (left.length() != right.length()) {
     return left.length() < right.length() ? compat::strong_ordering::less : compat::strong_ordering::greater;
   }
@@ -76,8 +77,8 @@ compat::strong_ordering compareIntegers(const std::string &left, const std::stri
     auto leftDigit = *lit;
     auto rightDigit = *rit;
 
-    assert(lit != left.cend());
-    assert(rit != right.cend());
+    ensure(lit != left.cend());
+    ensure(rit != right.cend());
 
     if (leftDigit == rightDigit) {
       ++lit;
@@ -181,7 +182,7 @@ Number Number::operator/(const Number &o) const {
     return Number(numerator, denominator, sameSign);
   }
 
-  assert(this->denominator == "1" && o.denominator == "1"); // Haven't implemented this yet
+  ensure(this->denominator == "1" && o.denominator == "1"); // Haven't implemented this yet
 
   if (*this < o) {
     Number result(this->numerator, o.numerator, sameSign);
@@ -210,7 +211,7 @@ Number Number::operator/(const Number &o) const {
 
 Number Number::power(const Number &exp) const {
   assert(*this != 0 || exp != 0); // zero ^ zero is undefined
-  assert(exp.positive);           // Haven't implemented this yet;
+  ensure(exp.positive);           // Haven't implemented this yet;
   Number result(1);
 
   for (Number i(0); i < exp; ++i) {
@@ -269,8 +270,8 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
   if (denominator == o.denominator) return std::pair(*this, o);
 
   // FIXME: Use numbers here after we've implemented operator* and remove these two asserts
-  assert(Number(denominator) < Number(std::numeric_limits<uint32_t>::max()));
-  assert(Number(o.denominator) < Number(std::numeric_limits<uint32_t>::max()));
+  ensure(Number(denominator) < Number(std::numeric_limits<uint32_t>::max()));
+  ensure(Number(o.denominator) < Number(std::numeric_limits<uint32_t>::max()));
 
   uint32_t leftDenominator = strtoumax(this->denominator.c_str(), nullptr, 10);
   uint32_t leftNumerator = strtoumax(this->numerator.c_str(), nullptr, 10);
@@ -306,12 +307,12 @@ void Number::simplify() {
     return;
   }
   // oh boy
-  auto factor = largestCommonFactor(num, den);
+  auto factor = greatestCommonDivisor(num, den);
   while (factor > 1) {
     num = num / factor;
     den = den / factor;
 
-    factor = largestCommonFactor(num, den);
+    factor = greatestCommonDivisor(num, den);
   }
 
   this->numerator = std::to_string(num);

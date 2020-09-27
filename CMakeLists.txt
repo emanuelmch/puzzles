@@ -46,7 +46,6 @@ endif ()
 include_directories(src)
 add_library(puzzles_lib OBJECT
         src/common/numbers.cpp
-        src/cpic/runner.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
@@ -56,16 +55,13 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
         src/maths/expressions.cpp
-        src/maths/runner.cpp
         src/shurikens/logger.cpp
         src/shurikens/model.cpp
-        src/shurikens/runner.cpp
         src/shurikens/data/easy.cpp
         src/shurikens/data/real.cpp
         src/shurikens/data/trivial.cpp
         src/shurikens/solver/breadth_search_solver.cpp
         src/shurikens/solver/depth_search_solver.cpp
-        src/sudoku/runner.cpp
         src/sudoku/data/easy.cpp
         src/sudoku/data/trivial.cpp
         src/sudoku/model/board.cpp
@@ -75,7 +71,13 @@ add_library(puzzles_lib OBJECT
         )
 
 # Executable
-add_executable(puzzles src/main.cpp $<TARGET_OBJECTS:puzzles_lib>)
+add_executable(puzzles
+        src/main.cpp
+        src/cpic/runner.cpp
+        src/maths/runner.cpp
+        src/shurikens/runner.cpp
+        src/sudoku/runner.cpp
+        $<TARGET_OBJECTS:puzzles_lib>)
 add_custom_target(run "./puzzles" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_dependencies(run puzzles)
 
