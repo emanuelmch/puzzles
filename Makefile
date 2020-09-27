@@ -40,10 +40,13 @@ run_full: debug
 release: build/release/Makefile
 	cmake --build build/release --target puzzles -- --no-print-directory
 
+check_release: build/release/Makefile
+	cmake --build build/release --target check -- --no-print-directory
+
 run_release: build/release/Makefile
 	${MAKE} -C build/release run --no-print-directory
 
-.PHONY: all clean gcc clang check_run check_run_release gcc_debug gcc_release clang_debug clang_release debug debug_all check run run_full release run_release
+.PHONY: all clean gcc clang check_run check_run_release gcc_debug gcc_release clang_debug clang_release debug debug_all check run run_full release check_release run_release
 
 # Specific file targets
 build/debug/Makefile: CMakeLists.txt

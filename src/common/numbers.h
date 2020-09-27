@@ -69,7 +69,7 @@ constexpr uintmax_t lowestCommonMultiple(uintmax_t lhs, uintmax_t rhs) {
 
 struct Number {
 
-  explicit Number(std::string);
+  explicit Number(const std::string &);
   explicit Number(intmax_t);
   Number(intmax_t, uintmax_t);
 
@@ -99,7 +99,7 @@ private:
   bool positive;
 
   Number(uintmax_t, uintmax_t, bool);
-  Number(std::string, std::string, bool);
+  Number(const std::string &, std::string, bool);
 
   inline void copy(const Number &o) {
     this->numerator = o.numerator;

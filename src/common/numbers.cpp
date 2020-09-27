@@ -34,13 +34,16 @@
 
 using namespace Puzzles::Numbers;
 
-Number::Number(std::string value) : numerator(std::move(value)), denominator("1"), positive(true) {
+inline std::string_view fitNumerator(const std::string_view &original) {
+  if (original.empty()) return original;
+
+  auto value = (original[0] == '-') ? original.substr(1) : original;
+  return Puzzles::trimLeadingView(value, '0');
+}
+
+Number::Number(const std::string &value)
+    : numerator(fitNumerator(value)), denominator("1"), positive(value.empty() || value[0] != '-') {
   // TODO: assert there are no invalid characters
-  if (!numerator.empty() && numerator[0] == '-') {
-    numerator = numerator.substr(1);
-    positive = false;
-  }
-  numerator = trimLeadingView(numerator, '0');
 }
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
@@ -50,10 +53,9 @@ Number::Number(intmax_t _n, uintmax_t _d) : Number(_n >= 0 ? _n : _n * -1, _d, _
 Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
     : Number(std::to_string(numerator), std::to_string(denominator), positive) {}
 
-Number::Number(std::string _numerator, std::string _denominator, bool positive)
-    : numerator(std::move(_numerator)), denominator(std::move(_denominator)), positive(positive) {
+Number::Number(const std::string &_numerator, std::string _denominator, bool positive)
+    : numerator(trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
   // TODO: assert there are no invalid characters
-  numerator = trimLeadingView(numerator, '0');
 }
 
 template <typename iterator>
