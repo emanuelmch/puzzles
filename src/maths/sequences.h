@@ -28,5 +28,6 @@
 
 namespace Maths::Sequences {
 
+Puzzles::LazySequence<uintmax_t> emirps();
 Puzzles::LazySequence<uintmax_t> highlyCompositeNumbers();
 }

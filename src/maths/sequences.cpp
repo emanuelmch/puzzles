@@ -22,20 +22,35 @@
 
 #include "sequences.h"
 
-#include <algorithm>
-#include <cinttypes>
+#include "maths/primes.h"
 
-#if __has_include(<execution>)
-#include <execution>
-#endif
+#include <cstdint>
 
 #if __has_include(<version>)
 #include <version>
 #endif
 
+#if defined(__cpp_impl_coroutine)
+
+#include <algorithm>
+#include <cinttypes>
+#include <execution>
+#include <string>
+
 using namespace Maths;
 
-#if defined(__cpp_impl_coroutine)
+Puzzles::LazySequence<uintmax_t> Sequences::emirps() {
+  for (uintmax_t i = 0;; ++i) {
+    if (isPrime(i)) {
+      std::string string = std::to_string(i);
+      std::reverse(string.begin(), string.end());
+      auto reversed = std::strtoumax(string.c_str(), nullptr, 10);
+      if (i != reversed && isPrime(reversed)) {
+        co_yield i;
+      }
+    }
+  }
+}
 
 Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
   auto lastCount = 0u;
@@ -53,7 +68,11 @@ Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
 
 #else // defined(__cpp_impl_coroutine)
 
-Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
+Puzzles::LazySequence<uintmax_t> Maths::Sequences::emirps() {
+  return Puzzles::LazySequence<uintmax_t>();
+}
+
+Puzzles::LazySequence<uintmax_t> Maths::Sequences::highlyCompositeNumbers() {
   return Puzzles::LazySequence<uintmax_t>();
 }
 

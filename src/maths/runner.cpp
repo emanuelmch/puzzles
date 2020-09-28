@@ -47,7 +47,7 @@ using std::chrono::duration_cast;
 using std::chrono::microseconds;
 using std::chrono::steady_clock;
 
-bool runLargestPrimeFactor(long value, long expected) {
+bool runLargestPrimeFactor(uintmax_t value, uintmax_t expected) {
   auto [result, duration] = runningTime([value] { return largestPrimeFactor(value); });
 
   if (result == expected) {
@@ -93,7 +93,8 @@ bool runInfiniteSequence(const string &name, const list &expectedSequence,
   auto [result, duration] = runningTime([&expectedSequence, &actualSequence] {
     result_type result;
 
-    for (auto [actual, expected] : Puzzles::zip(actualSequence, expectedSequence)) {
+    for (auto [actual, expected] :
+         Puzzles::zip(actualSequence.begin(), actualSequence.end(), expectedSequence.begin(), expectedSequence.end())) {
       if (actual == expected) {
         result.count++;
       } else {
@@ -130,7 +131,16 @@ bool runHighlyCompositeNumberSequence() {
   return runInfiniteSequence("Highly Composite Number", expectedSequence, actualSequence);
 }
 
+bool runEmirpsSequence() {
+  auto expectedSequence = {13u,   17u,   31u,   37u,   71u,   73u,   79u,   97u,   107u,  113u,  149u,  157u,  167u,
+                           179u,  199u,  311u,  337u,  347u,  359u,  389u,  701u,  709u,  733u,  739u,  743u,  751u,
+                           761u,  769u,  907u,  937u,  941u,  953u,  967u,  971u,  983u,  991u,  1009u, 1021u, 1031u,
+                           1033u, 1061u, 1069u, 1091u, 1097u, 1103u, 1109u, 1151u, 1153u, 1181u, 1193u};
+  auto actualSequence = Sequences::emirps();
+  return runInfiniteSequence("Emirps", expectedSequence, actualSequence);
+}
+
 bool Maths::run() {
   return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
-         runHighlyCompositeNumberSequence();
+         runHighlyCompositeNumberSequence() && runEmirpsSequence();
 }

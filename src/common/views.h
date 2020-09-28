@@ -57,9 +57,9 @@ private:
   const iterator it_end;
 };
 
-template <typename Iterable, typename Iterable2>
-constexpr ZipIterator<typename Iterable::iterator, typename Iterable2::iterator> zip(const Iterable &first,
-                                                                                     const Iterable2 &second) {
-  return ZipIterator(std::begin(first), std::end(first), std::begin(second), std::end(second));
+template <typename Iterator1, typename Iterator2>
+constexpr ZipIterator<Iterator1, Iterator2> zip(const Iterator1 firstBegin, const Iterator1 firstEnd,
+                                                const Iterator2 secondBegin, const Iterator2 secondEnd) {
+  return ZipIterator(firstBegin, firstEnd, secondBegin, secondEnd);
 }
 }
