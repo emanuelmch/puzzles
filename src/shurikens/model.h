@@ -54,10 +54,10 @@ namespace std {
 template <>
 struct hash<Shurikens::Shuriken> {
   std::size_t operator()(const Shurikens::Shuriken &shuriken) const {
-    auto first = 0;
-    auto second = 0;
+    size_t first = 0;
+    size_t second = 0;
 
-    for (int i = 0; i < 6; ++i) {
+    for (auto i = 0u; i < 6; ++i) {
       first = (first * 31) + hash<int>()(shuriken.cells[i]);
       second = (second * 31) + hash<int>()(shuriken.cells[i + 6]);
     }

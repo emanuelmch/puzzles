@@ -61,12 +61,12 @@ uint8_t Board::firstEmptyCell() const {
 
 bool Board::isValid() const {
   // Check for repetition on lines
-  for (auto min = 0; min < (SIZE * SIZE); min += SIZE) {
+  for (auto min = 0u; min < (SIZE * SIZE); min += SIZE) {
     bool used[SIZE] = {
         false,
     };
 
-    for (auto i = 0; i < SIZE; ++i) {
+    for (auto i = 0u; i < SIZE; ++i) {
       auto value = values[min + i];
       if (value == 0) continue;
       if (used[value - 1]) return false;
@@ -75,12 +75,12 @@ bool Board::isValid() const {
   }
 
   // Check for repetition on columns
-  for (auto min = 0; min < SIZE; min++) {
+  for (auto min = 0u; min < SIZE; min++) {
     bool used[SIZE] = {
         false,
     };
 
-    for (auto i = 0; i < SIZE; ++i) {
+    for (auto i = 0u; i < SIZE; ++i) {
       auto value = values[min + (SIZE * i)];
       if (value == 0) continue;
       if (used[value - 1]) return false;
@@ -89,10 +89,10 @@ bool Board::isValid() const {
   }
 
   // Check for repetitions on squares
-  for (auto i = 0; i < SIZE; i += 3) {
-    for (auto j = 0; j < SIZE; j += 3) {
+  for (auto i = 0u; i < SIZE; i += 3) {
+    for (auto j = 0u; j < SIZE; j += 3) {
       const auto first = i + (SIZE * j);
-      const auto indices = {0, 1, 2, 9, 10, 11, 18, 19, 20};
+      const auto indices = {0u, 1u, 2u, 9u, 10u, 11u, 18u, 19u, 20u};
       bool used[SIZE] = {
           false,
       };

@@ -67,6 +67,11 @@ TEST(Numbers, GreatestCommonDivisor) {
   EXPECT_EQ(greatestCommonDivisor(3154, 4522), 38);
 }
 
+TEST(Numbers, LowestCommonMultiple) {
+  EXPECT_EQ(lowestCommonMultiple(1, 30), 30);
+  EXPECT_EQ(lowestCommonMultiple(10, 25), 50);
+}
+
 TEST(Numbers_Number, CreateFromString) {
   Number negativeOne("-1");
   Number zero("0");
@@ -78,13 +83,9 @@ TEST(Numbers_Number, CreateFromString) {
 }
 
 TEST(Numbers_Number, CreateFromInt) {
-  Number negativeOne(-1);
-  Number zero(0);
-  Number one(1);
-
-  EXPECT_EQ(std::to_string(negativeOne), "-1");
-  EXPECT_EQ(std::to_string(zero), "0");
-  EXPECT_EQ(std::to_string(one), "1");
+  EXPECT_EQ(std::to_string(Number(-1)), "-1");
+  EXPECT_EQ(std::to_string(Number(0)), "0");
+  EXPECT_EQ(std::to_string(Number(1)), "1");
 }
 
 TEST(Numbers_Number, Addition) {
@@ -105,6 +106,7 @@ TEST(Numbers_Number, Addition) {
 
   Number half(1, 2);
   Number oneOverFiveHundredTwelve(1, 512);
+  Number negativeOneOverFiveHundredTwelve(-1, 512);
 
   EXPECT_EQ(std::to_string(zero + one), "1");
   EXPECT_EQ(std::to_string(one + zero), "1");
@@ -125,6 +127,9 @@ TEST(Numbers_Number, Addition) {
   EXPECT_EQ(std::to_string(absurdNumberOne + zero), "1354645611354413541715318441313195");
 
   EXPECT_EQ(std::to_string(five + oneOverFiveHundredTwelve), "2561/512");
+  EXPECT_EQ(std::to_string(oneOverFiveHundredTwelve + five), "2561/512");
+  EXPECT_EQ(std::to_string(five + negativeOneOverFiveHundredTwelve), "2559/512");
+  EXPECT_EQ(std::to_string(negativeOneOverFiveHundredTwelve + five), "2559/512");
   EXPECT_EQ(std::to_string(half + half), "1");
   EXPECT_EQ(std::to_string(half + zero), "1/2");
 

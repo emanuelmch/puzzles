@@ -33,12 +33,12 @@ namespace Puzzles::Numbers {
 
 constexpr uint8_t ctoi(char c) {
   ensure(c >= '0' && c <= '9');
-  return c - '0';
+  return static_cast<uint8_t>(c - '0');
 }
 
 constexpr char itoc(uint8_t i) {
   ensure(i < 10);
-  return i + '0';
+  return static_cast<char>(i + '0');
 }
 
 constexpr uintmax_t factorial(uintmax_t value) {
@@ -51,7 +51,7 @@ constexpr bool fits(Input value) {
 }
 
 constexpr uintmax_t greatestCommonDivisor(uintmax_t lhs, uintmax_t rhs) {
-  // This is the Eucledian algorithm
+  // This is the Euclidean algorithm
   if (lhs == 0) return rhs;
   while (true) {
     if (rhs == 0) return lhs;
@@ -61,9 +61,15 @@ constexpr uintmax_t greatestCommonDivisor(uintmax_t lhs, uintmax_t rhs) {
   }
 }
 
+constexpr uintmax_t lowestCommonMultiple(uintmax_t lhs, uintmax_t rhs) {
+  ensure(lhs != 0 && rhs != 0); // This is undefined
+  auto gcd = greatestCommonDivisor(lhs, rhs);
+  return lhs * rhs / gcd;
+}
+
 struct Number {
 
-  explicit Number(std::string);
+  explicit Number(const std::string &);
   explicit Number(intmax_t);
   Number(intmax_t, uintmax_t);
 
@@ -80,6 +86,8 @@ struct Number {
   Number &operator++();
 
   [[nodiscard]] bool operator<(const Number &) const;
+  // TODO: <= Could be more efficient
+  [[nodiscard]] inline bool operator<=(const Number &o) const { return *this < o || *this == o; }
   [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
   [[nodiscard]] bool operator==(const Number &) const;
   [[nodiscard]] bool operator==(intmax_t) const;
@@ -93,7 +101,7 @@ private:
   bool positive;
 
   Number(uintmax_t, uintmax_t, bool);
-  Number(std::string, std::string, bool);
+  Number(const std::string &, std::string, bool);
 
   inline void copy(const Number &o) {
     this->numerator = o.numerator;

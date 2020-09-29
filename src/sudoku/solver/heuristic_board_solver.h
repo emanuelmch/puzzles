@@ -29,6 +29,6 @@ namespace Sudoku {
 struct HeuristicBoardSolver : public Solver {
   HeuristicBoardSolver() : Solver("Heuristic") {}
 
-  const Board solve(const Board &) const;
+  [[nodiscard]] Board solve(const Board &) const final;
 };
 }

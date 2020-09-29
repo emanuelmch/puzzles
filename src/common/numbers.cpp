@@ -29,31 +29,33 @@
 #include <algorithm>
 #include <cassert>
 #include <cinttypes>
-#include <cmath>
 #include <utility>
 
 using namespace Puzzles::Numbers;
 
-Number::Number(std::string value) : numerator(std::move(value)), denominator("1"), positive(true) {
-  // TODO: assert there are no invalid characters
-  if (!numerator.empty() && numerator[0] == '-') {
-    numerator = numerator.substr(1);
-    positive = false;
-  }
-  numerator = trimLeadingView(numerator, '0');
+inline std::string_view fitNumerator(const std::string_view &original) {
+  if (original.empty()) return original;
+
+  auto value = (original[0] == '-') ? original.substr(1) : original;
+  return Puzzles::trimLeadingView(value, '0');
+}
+
+Number::Number(const std::string &value)
+    : numerator(fitNumerator(value)), denominator("1"), positive(value.empty() || value[0] != '-') {
+  assert(numerator.find_first_not_of("0123456789") == numerator.npos);
 }
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
 
-Number::Number(intmax_t _n, uintmax_t _d) : Number(_n >= 0 ? _n : _n * -1, _d, _n >= 0) {}
+Number::Number(intmax_t _n, uintmax_t _d) : Number(static_cast<uintmax_t>(std::abs(_n)), _d, _n >= 0) {}
 
 Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
     : Number(std::to_string(numerator), std::to_string(denominator), positive) {}
 
-Number::Number(std::string _numerator, std::string _denominator, bool positive)
-    : numerator(std::move(_numerator)), denominator(std::move(_denominator)), positive(positive) {
-  // TODO: assert there are no invalid characters
-  numerator = trimLeadingView(numerator, '0');
+Number::Number(const std::string &_numerator, std::string _denominator, bool positive)
+    : numerator(trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
+  assert(numerator.find_first_not_of("0123456789") == numerator.npos);
+  assert(denominator.find_first_not_of("0123456789") == denominator.npos);
 }
 
 template <typename iterator>
@@ -66,20 +68,34 @@ inline char valueAndAdvance(iterator *it) {
 compat::strong_ordering compareIntegers(const std::string &left, const std::string &right) {
   ensure(left.empty() || left[0] != '0');
   ensure(right.empty() || right[0] != '0');
+
+#ifdef __cpp_lib_three_way_comparison
+  auto lengthComparison = left.length() <=> right.length();
+  if (lengthComparison != std::strong_ordering::equal) {
+    return lengthComparison;
+  }
+#else
   if (left.length() != right.length()) {
     return left.length() < right.length() ? compat::strong_ordering::less : compat::strong_ordering::greater;
   }
-
-  if (left == right) return compat::strong_ordering::equal;
+#endif
 
   auto lit = left.cbegin(), rit = right.cbegin();
-  while (true) {
+  while (lit != left.cend()) {
+    ensure(rit != right.cend());
     auto leftDigit = *lit;
     auto rightDigit = *rit;
 
-    ensure(lit != left.cend());
-    ensure(rit != right.cend());
+#if defined(__cpp_lib_three_way_comparison) && __has_cpp_attribute(likely)
+    auto digitComparison = leftDigit <=> rightDigit;
+    if (digitComparison == std::strong_ordering::equal) [[likely]] {
+      ++lit;
+      ++rit;
+      continue;
+    }
 
+    return digitComparison;
+#else
     if (leftDigit == rightDigit) {
       ++lit;
       ++rit;
@@ -87,27 +103,35 @@ compat::strong_ordering compareIntegers(const std::string &left, const std::stri
     }
 
     return (leftDigit < rightDigit) ? compat::strong_ordering::less : compat::strong_ordering::greater;
+#endif
   }
+
+  return compat::strong_ordering::equal;
 }
 
 Number Number::operator+(const Number &o) const {
-  auto sameSign = this->positive == o.positive;
   auto [left, right] = normalizeDenominatorWith(o);
+  auto sameSign = left.positive == right.positive;
+  auto finalSign = left.positive;
 
-  if (!sameSign && left.absolute() < right.absolute()) return right + left;
+  if (!sameSign && compareIntegers(left.numerator, right.numerator) == compat::strong_ordering::less) {
+    std::swap(left.numerator, right.numerator);
+    finalSign = right.positive;
+  }
 
   auto lit = left.numerator.crbegin();
   auto rit = right.numerator.crbegin();
-  std::string finalSum;
   auto carryOver = 0;
 
+  std::string finalSum;
   finalSum.reserve(std::max(left.numerator.length(), right.numerator.length()) + 1);
 
   while (lit != left.numerator.crend() || rit != right.numerator.crend()) {
     auto leftDigit = lit == left.numerator.crend() ? 0 : ctoi(valueAndAdvance(&lit));
     auto rightDigit = rit == right.numerator.crend() ? 0 : ctoi(valueAndAdvance(&rit));
-    int_fast8_t digitSum = sameSign ? leftDigit + rightDigit + carryOver : leftDigit - rightDigit - carryOver;
+    auto digitSum = sameSign ? leftDigit + rightDigit + carryOver : leftDigit - rightDigit - carryOver;
 
+    ensure_m(digitSum >= -9 && digitSum <= 19, "digitSum is " << int(digitSum));
     if (digitSum > 9) {
       carryOver = 1;
       digitSum -= 10;
@@ -121,15 +145,14 @@ Number Number::operator+(const Number &o) const {
     finalSum += itoc(digitSum);
   }
 
+  ensure(carryOver == 0 || (carryOver == 1 && sameSign));
   if (carryOver) {
     finalSum += '1';
   }
 
   std::reverse(finalSum.begin(), finalSum.end());
 
-  Number result(finalSum);
-  result.denominator = left.denominator;
-  result.positive = left.positive;
+  Number result(finalSum, left.denominator, finalSign);
   result.simplify();
 
   return result;
@@ -277,8 +300,7 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
   uint32_t leftNumerator = strtoumax(this->numerator.c_str(), nullptr, 10);
   uint32_t rightDenominator = strtoumax(o.denominator.c_str(), nullptr, 10);
   uint32_t rightNumerator = strtoumax(o.numerator.c_str(), nullptr, 10);
-  // TODO: This could be more efficient, we don't actually have to go that high every time
-  uint64_t newDenominator = leftDenominator * rightDenominator;
+  uint64_t newDenominator = lowestCommonMultiple(leftDenominator, rightDenominator);
 
   auto left = newDenominator / leftDenominator * leftNumerator;
   auto right = newDenominator / rightDenominator * rightNumerator;
@@ -287,32 +309,24 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
 }
 
 void Number::simplify() {
-  if (numerator == "0") denominator = "1";
+  if (numerator.empty()) denominator = "1";
   if (denominator == "1") return;
 
-  if (numerator == denominator) {
-    numerator = "1";
-    denominator = "1";
-    return;
-  }
-
-  // FIXME: Use numbers here instead of umax
+  // Haven't implemented these two yet
+  ensure_m(Number(numerator) <= Number(std::to_string(std::numeric_limits<uintmax_t>::max())),
+           numerator << " > " << std::numeric_limits<uintmax_t>::max());
+  ensure_m(Number(denominator) <= Number(std::to_string(std::numeric_limits<uintmax_t>::max())),
+           denominator << " > " << std::numeric_limits<uintmax_t>::max());
   auto num = std::strtoumax(numerator.c_str(), nullptr, 10);
   auto den = std::strtoumax(denominator.c_str(), nullptr, 10);
 
-  auto div = std::lldiv(num, den);
-  if (div.rem == 0) {
-    this->numerator = std::to_string(div.quot);
-    this->denominator = "1";
-    return;
-  }
   // oh boy
-  auto factor = greatestCommonDivisor(num, den);
-  while (factor > 1) {
-    num = num / factor;
-    den = den / factor;
+  auto gcd = greatestCommonDivisor(num, den);
+  while (gcd > 1) {
+    num /= gcd;
+    den /= gcd;
 
-    factor = greatestCommonDivisor(num, den);
+    gcd = greatestCommonDivisor(num, den);
   }
 
   this->numerator = std::to_string(num);

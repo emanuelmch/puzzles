@@ -50,6 +50,7 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("3 + 4 * 2 ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 67);
   EXPECT_EQ(evaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 1048579);
   EXPECT_EQ(evaluateExpression(" 3 + (4 * 2) ^ 2 ^ 3 ^ 1 ^ 1 / ( 1 - 5 ) ^ 2 ^ 3"), 259);
+  EXPECT_EQ(std::to_string(evaluateExpression("3 + ((4 * 2) ^ 2 ^ 3/ ( 1 - 5 ) ^ 2 ^ 3 ) * 15/154")), "2151/77");
 }
 
 TEST(Expressions, Tokenizer) {
