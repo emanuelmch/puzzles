@@ -40,11 +40,12 @@
                                                          ": Assertion failed: " + #condition))
 
 #define ensure_m(condition, message)                                                                                   \
-  (static_cast<bool>(condition) ? static_cast<void>(0) : [&] {                                                         \
-    std::stringstream ss;                                                                                              \
-    ss << std::string(__FILE__) << ":" << std::to_string(__LINE__) << ": Assertion failed: " << #condition;            \
-    ss << ", " << message;                                                                                             \
-    throw std::logic_error(ss.str());                                                                                  \
-  }());
+  (static_cast<bool>(condition)                                                                                        \
+       ? static_cast<void>(0)                                                                                          \
+       : throw std::logic_error(                                                                                       \
+             static_cast<std::stringstream &>(std::stringstream().flush()                                              \
+                                              << std::string(__FILE__) << ":" << std::to_string(__LINE__)              \
+                                              << ": Assertion failed: " << #condition << ", " << message)              \
+                 .str()));
 
 #endif // defined(NDEBUG)
