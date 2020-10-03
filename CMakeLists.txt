@@ -28,6 +28,12 @@ project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
 
+# Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
+if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
+    add_compile_options(-stdlib=libc++)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+endif ()
+
 # Pre-requisites
 try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)
 if (NOT supportsCTAD)

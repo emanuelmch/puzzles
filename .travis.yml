@@ -23,11 +23,21 @@ jobs:
       os: linux
       dist: bionic
       compiler: clang
+      addons:
+        apt:
+          packages:
+            - libc++-dev
+            - libc++abi-dev
 
     - name: Linux Clang 10.0
       os: linux
       dist: focal
       compiler: clang
+      addons:
+        apt:
+          packages:
+            - libc++-dev
+            - libc++abi-dev
 
     - name: OSX GCC 7
       os: osx
