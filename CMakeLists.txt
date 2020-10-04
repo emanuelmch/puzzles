@@ -28,18 +28,25 @@ project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
 
+# Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
+if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
+    add_compile_options(-stdlib=libc++)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+endif ()
+
 # Pre-requisites
 try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)
-IF (NOT supportsCTAD)
-    MESSAGE(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
-ENDIF ()
+if (NOT supportsCTAD)
+    message(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
+endif ()
 
+message(STATUS "Looking for std::set::contains support")
 try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
 if (supportsSetContains)
-    message(STATUS "Compiler supports std::set::contains")
+    message(STATUS "Looking for std::set::contains support - done")
     add_compile_definitions(HAS_STD_SET_CONTAINS)
 else ()
-    message(STATUS "Compiler does NOT support std::set::contains")
+    message(STATUS "Looking for std::set::contains support - not found")
 endif ()
 
 # Source Files
@@ -115,7 +122,3 @@ foreach (testfile ${test_sources})
     add_test(${test_name} ${test_name})
     add_dependencies(check ${test_name})
 endforeach (testfile)
-
-# Workaround for running all tests under one target
-add_executable(all_tests ${test_sources} $<TARGET_OBJECTS:puzzles_lib>)
-target_link_libraries(all_tests gtest gtest_main pthread)

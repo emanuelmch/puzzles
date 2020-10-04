@@ -27,7 +27,6 @@
 
 #include "common/runners.h"
 
-#include <chrono>
 #include <iostream>
 #include <string>
 
