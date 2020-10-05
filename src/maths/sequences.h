@@ -24,30 +24,10 @@
 
 #include <cstdint>
 
-namespace Maths {
+#include "common/coroutines.h"
 
-constexpr bool isPrime(uintmax_t n) {
-  if (n == 1) return false;
-  if (n == 2) return true;
+namespace Maths::Sequences {
 
-  if (n % 2 == 0) return false;
-
-  for (auto i = 3u; i < (n / 2); i += 2) {
-    if (n % i == 0) return false;
-  }
-
-  return true;
-}
-
-constexpr uintmax_t largestPrimeFactor(uintmax_t n) {
-  uintmax_t largest = (n % 2 == 0) ? 2 : 1;
-
-  for (auto i = 3u; i <= n; i += 2) {
-    if (n % i == 0 && isPrime(i)) {
-      largest = i;
-    }
-  }
-
-  return largest;
-}
+Puzzles::LazySequence<uintmax_t> emirps();
+Puzzles::LazySequence<uintmax_t> highlyCompositeNumbers();
 }

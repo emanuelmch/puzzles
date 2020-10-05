@@ -24,6 +24,8 @@ cmake_minimum_required(VERSION 3.9) # CMP0069
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
+include(CheckCXXCompilerFlag)
+
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
@@ -49,6 +51,16 @@ else ()
     message(STATUS "Looking for std::set::contains support - not found")
 endif ()
 
+check_cxx_compiler_flag(-fcoroutines _CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
+if (_CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
+    add_compile_options(-fcoroutines)
+endif ()
+
+check_cxx_compiler_flag(-fcoroutines-ts _CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+    add_compile_options(-fcoroutines-ts)
+endif ()
+
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
@@ -62,6 +74,7 @@ add_library(puzzles_lib OBJECT
         src/cpic/solver/heuristic_board_solver.cpp
         src/cpic/view/board_logger.cpp
         src/maths/expressions.cpp
+        src/maths/sequences.cpp
         src/shurikens/logger.cpp
         src/shurikens/model.cpp
         src/shurikens/data/easy.cpp
@@ -109,6 +122,7 @@ set(test_sources
         tests/cpic/model/cpic_board_test.cpp
         tests/maths/maths_expressions_test.cpp
         tests/maths/maths_primes_test.cpp
+        tests/maths/maths_sequences_test.cpp
         tests/shurikens/shurikens_model_test.cpp
         tests/sudoku/model/sudoku_board_test.cpp
         tests/sudoku/model/sudoku_board_validity_test.cpp
