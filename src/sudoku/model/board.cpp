@@ -27,7 +27,7 @@
 
 using namespace Sudoku;
 
-static const int SIZE = 9;
+static const uint8_t SIZE = 9;
 
 Board::Board(std::vector<std::vector<uint8_t>> _values) {
   assert(_values.size() == SIZE);

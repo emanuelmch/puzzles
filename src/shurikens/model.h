@@ -30,23 +30,26 @@
 
 namespace Shurikens {
 
-enum Move : uint8_t { swap_top, swap_bottom, turn_a, turn_b, reverse_a, reverse_b };
+enum Move : uint8_t { swap, turn_a, turn_b, reverse_a, reverse_b };
 enum Cell : uint8_t { A, B, C, D, E, F, G, H, I, J, K, L };
 
-const std::array<Move, 6> allMoves = {swap_top, swap_bottom, turn_a, turn_b, reverse_a, reverse_b};
+const std::array allMoves = {swap, turn_a, turn_b, reverse_a, reverse_b};
 typedef Puzzles::ArbitraryContainer<allMoves.size()> MoveContainer;
 
 class Shuriken {
 public:
   explicit Shuriken(std::array<Cell, 12> cells) : cells(cells) {}
 
-  Shuriken apply(Move move) const;
+  [[nodiscard]] Shuriken apply(Move move) const;
 
-  inline bool isSolved() const { return *this == Shuriken({A, B, C, D, E, F, G, H, I, J, K, L}); }
+  [[nodiscard]] inline bool isSolved() const { return *this == Shuriken({A, B, C, D, E, F, G, H, I, J, K, L}); }
 
-  bool operator==(const Shuriken &other) const;
+  Shuriken &operator=(const Shuriken &) = default;
 
-  const std::array<Cell, 12> cells;
+  [[nodiscard]] bool operator==(const Shuriken &) const;
+
+  // TODO: Make cells private
+  std::array<Cell, 12> cells;
 };
 }
 

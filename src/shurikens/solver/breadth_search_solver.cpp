@@ -42,8 +42,8 @@ struct Node {
   const Shuriken shuriken;
   const MoveContainer moves;
 
-  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+  explicit Node(Shuriken shuriken) : shuriken(shuriken), moves() {}
+  Node(Shuriken shuriken, MoveContainer moves) : shuriken(shuriken), moves(move(moves)) {}
 };
 }
 
@@ -68,9 +68,7 @@ MoveContainer BreadthSearchSolver::solve(const Shuriken &shuriken, size_t knownU
       auto newShuriken = next.shuriken.apply(move);
 
       if (cache.insert(newShuriken).second) {
-        MoveContainer newMoves(next.moves);
-        newMoves.push(move);
-        newMoves.shrink_to_fit();
+        MoveContainer newMoves = next.moves + move;
 
         if (newShuriken.isSolved()) {
           return newMoves;

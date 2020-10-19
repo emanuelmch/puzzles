@@ -26,35 +26,37 @@
 #include "shurikens/logger.h"
 #include "shurikens/solver/breadth_search_solver.h"
 #include "shurikens/solver/depth_search_solver.h"
+#include "shurikens/solver/threaded_search_solver.h"
 
 #include "common/runners.h"
 
 #include <iostream>
+#include <memory>
 
 using namespace Shurikens;
+using namespace std::chrono_literals;
 
 using Puzzles::runningTime;
 
 using std::cout;
 
-bool Shurikens::run(bool fullRun) {
-  BreadthSearchSolver breadthSearchSolver;
-  DepthSearchSolver depthSearchSolver;
-
-  Solver *solvers[] = {&breadthSearchSolver, &depthSearchSolver};
+inline bool runSolvers(bool fullRun) {
+  std::unique_ptr<Solver> solvers[] = {std::make_unique<BreadthSearchSolver>(), std::make_unique<DepthSearchSolver>(),
+                                       std::make_unique<ThreadedSearchSolver>()};
   Logger logger;
 
+  auto allSuccess = true;
   auto shurikens = Shurikens::createAllShurikens();
 
   for (const auto &data : shurikens) {
-    for (const auto solver : solvers) {
+    for (const auto &solver : solvers) {
       if (!fullRun && data.solutionSize() > solver->quickSolveLimit) {
-        cout << "Shuriken: Skipped " << solver->name << " solve for " << data.name << "\n";
+        //        cout << "Shuriken: Skipped " << solver->name << " solve for " << data.name << "\n";
         continue;
       }
 
       auto [solution, duration] =
-          runningTime([solver, &data] { return solver->solve(data.shuriken, data.solutionSize()); });
+          runningTime([&solver, &data] { return solver->solve(data.shuriken, data.solutionSize()); });
 
       if (data.isSolution(solution)) {
         cout << "Shuriken: " << solver->name << " solved " << data.name << ", it took about " << duration
@@ -67,10 +69,14 @@ bool Shurikens::run(bool fullRun) {
         }
         cout << "Shuriken: But got this:\n";
         logger.log(solution);
-        return false;
+        allSuccess = false;
       }
     }
   }
 
-  return true;
+  return allSuccess;
+}
+
+bool Shurikens::run(bool fullRun) {
+  return runSolvers(fullRun);
 }

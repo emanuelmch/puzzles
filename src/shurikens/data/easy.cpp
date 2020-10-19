@@ -28,7 +28,7 @@ using std::vector;
 
 inline ShurikenData createEasy0() {
   Shuriken shuriken({I, D, E, F, G, H, A, B, C, J, K, L});
-  return ShurikenData("easy0", shuriken, {turn_a, turn_a, swap_top});
+  return ShurikenData("easy0", shuriken, {turn_a, turn_a, swap});
 }
 
 vector<ShurikenData> Shurikens::createEasyShurikens() {

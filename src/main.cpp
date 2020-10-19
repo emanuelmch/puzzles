@@ -40,8 +40,12 @@ int main(int argc, char *argv[]) {
   string arg = argc >= 2 ? argv[1] : "";
   auto fullRun = arg == "full";
 
-  auto [success, duration] =
-      runningTime([=] { return CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run(); });
+  auto [success, duration] = runningTime([=] {
+    return // CPic::run() && Maths::run() &&
+        Shurikens::run(fullRun)
+        //&& Sudoku::run()
+        ;
+  });
 
   if (!success) return 1;
   cout << "All good, we took roughly " << duration << " microseconds!\n";

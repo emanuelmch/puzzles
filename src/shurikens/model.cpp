@@ -28,24 +28,13 @@ using namespace Shurikens;
 
 using std::array;
 
-static inline array<Cell, 12> doSwapTop(const array<Cell, 12> &cells) {
+static inline array<Cell, 12> doSwap(const array<Cell, 12> &cells) {
   array<Cell, 12> turned = cells;
 
   auto cellsBegin = cells.begin();
   auto turnedBegin = turned.begin();
   std::copy(cellsBegin, cellsBegin + 3, turnedBegin + 6);
   std::copy(cellsBegin + 6, cellsBegin + 9, turnedBegin);
-
-  return turned;
-}
-
-static inline array<Cell, 12> doSwapBottom(const array<Cell, 12> &cells) {
-  array<Cell, 12> turned = cells;
-
-  auto cellsBegin = cells.begin();
-  auto turnedBegin = turned.begin();
-  std::copy(cellsBegin + 3, cellsBegin + 6, turnedBegin + 9);
-  std::copy(cellsBegin + 9, cellsBegin + 12, turnedBegin + 3);
 
   return turned;
 }
@@ -92,10 +81,8 @@ static inline array<Cell, 12> doReverseB(const array<Cell, 12> &cells) {
 
 Shuriken Shuriken::apply(Shurikens::Move move) const {
   switch (move) {
-  case swap_top:
-    return Shuriken(doSwapTop(this->cells));
-  case swap_bottom:
-    return Shuriken(doSwapBottom(this->cells));
+  case swap:
+    return Shuriken(doSwap(this->cells));
   case turn_a:
     return Shuriken(doTurnA(this->cells));
   case turn_b:
@@ -121,6 +108,8 @@ bool Shuriken::operator==(const Shuriken &other) const {
     if (*(us + 6) != *them) return false;
 
     ++us, ++them;
+    assert(us != cells.end());
+    assert(them != other.cells.end());
   }
 
   return true;

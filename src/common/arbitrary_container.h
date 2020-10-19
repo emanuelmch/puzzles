@@ -30,7 +30,7 @@
 
 namespace Puzzles {
 
-typedef size_t value_t;
+typedef uintmax_t value_t;
 
 static constexpr inline size_t calculateValueBitLength(size_t value) {
   assert(value > 0);
@@ -58,6 +58,7 @@ struct ArbitraryContainer {
   // Constructors
   ArbitraryContainer() = default;
   ArbitraryContainer(const ArbitraryContainer<MAX_VALUE> &) = default;
+  ArbitraryContainer(ArbitraryContainer<MAX_VALUE> &&) = default;
   explicit ArbitraryContainer(size_t count) : internal(count * valueBitLength, 0) {}
 
   ArbitraryContainer(std::initializer_list<value_t> values) {
@@ -135,10 +136,22 @@ struct ArbitraryContainer {
   inline const_iterator end() const { return const_iterator(this, size()); }
 
   // Operators
+  constexpr ArbitraryContainer<MAX_VALUE> operator+(const value_t value) const {
+    assert(value <= MAX_VALUE);
+    ArbitraryContainer<MAX_VALUE> result;
+    result.reserve(this->size() + 1);
+    result.internal = this->internal;
+    result.push(value);
+    assert(result.size() == this->size() + 1);
+    return result;
+  }
+
   inline ArbitraryContainer<MAX_VALUE> &operator=(const ArbitraryContainer<MAX_VALUE> &other) {
     internal = other.internal;
     return *this;
   }
+
+  inline bool operator==(const ArbitraryContainer<MAX_VALUE> &o) const { return this->internal == o.internal; }
 
   inline bool operator<(const ArbitraryContainer<MAX_VALUE> &o) const {
     auto size = internal.size();

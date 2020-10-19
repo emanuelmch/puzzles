@@ -22,31 +22,32 @@
 
 #include "depth_search_solver.h"
 
+#include "common/numbers.h"
+
 #include <stack>
 #include <unordered_map>
 
 using namespace Shurikens;
-
-using std::move;
-using std::stack;
-using std::unordered_map;
-using std::vector;
 
 namespace {
 struct Node {
   const Shuriken shuriken;
   const MoveContainer moves;
 
-  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+  explicit Node(Shuriken shuriken) : shuriken(std::move(shuriken)), moves() {}
+  Node(Shuriken shuriken, const MoveContainer &moves) : shuriken(std::move(shuriken)), moves(moves) {}
 };
 }
 
 MoveContainer DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpperBound) const {
-  unordered_map<Shuriken, uint8_t> cache;
+  auto maxNodes = static_cast<size_t>(std::pow(allMoves.size(), knownUpperBound) + 1);
+  auto maxShurikens = static_cast<size_t>(std::ceil(Puzzles::Numbers::factorial(12) / 2));
+
+  std::unordered_map<Shuriken, uint8_t> cache;
+  cache.reserve(std::min(maxNodes, maxShurikens));
   cache[shuriken] = 0;
 
-  stack<Node> nodes;
+  std::stack<Node> nodes;
   nodes.emplace(shuriken);
 
   MoveContainer bestSolution(knownUpperBound + 1);
@@ -69,15 +70,13 @@ MoveContainer DepthSearchSolver::solve(const Shuriken &shuriken, size_t knownUpp
       auto it = cache.find(newShuriken);
 
       if (it == cache.end() || it->second > (next.moves.size() + 1)) {
-        MoveContainer newMoves(next.moves);
-        newMoves.push(move);
-        newMoves.shrink_to_fit();
+        MoveContainer newMoves = next.moves + move;
         cache[newShuriken] = newMoves.size();
 
         nodes.emplace(newShuriken, newMoves);
       }
     }
-  } while (nodes.empty() == false);
+  } while (!nodes.empty());
 
   return bestSolution;
 }

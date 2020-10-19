@@ -24,10 +24,13 @@
 
 #include "solver.h"
 
+#include <thread>
+#include <vector>
+
 namespace Shurikens {
-class BreadthSearchSolver : public Solver {
+class ThreadedSearchSolver : public Solver {
 public:
-  BreadthSearchSolver() : Solver("Breadth", 14) {}
+  ThreadedSearchSolver() : Solver(" Thread", 14) {}
 
   [[nodiscard]] MoveContainer solve(const Shuriken &, size_t knownUpperBound) const override;
 };

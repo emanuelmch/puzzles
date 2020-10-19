@@ -28,21 +28,25 @@ using std::vector;
 
 inline ShurikenData createReal0() {
   Shuriken shuriken({C, A, B, D, E, F, G, H, I, J, K, L});
-  Shurikens::MoveContainer solution0 = {turn_a,    swap_top, turn_b, reverse_a, swap_top,  turn_a,   swap_top,
-                                        reverse_b, swap_top, turn_b, swap_top,  reverse_b, swap_top, reverse_a};
-  Shurikens::MoveContainer solution1 = {reverse_a, swap_top, reverse_b, swap_top,  turn_b, swap_top, reverse_b,
-                                        swap_top,  turn_a,   swap_top,  reverse_a, turn_b, swap_top, turn_a};
-  return ShurikenData("real0", shuriken, solution0, solution1);
+  Shurikens::MoveContainer solution0 = {turn_a,    swap, turn_b, reverse_a, swap,      turn_a, swap,
+                                        reverse_b, swap, turn_b, swap,      reverse_b, swap,   reverse_a};
+  Shurikens::MoveContainer solution1 = {turn_a,    swap, reverse_a, turn_b, swap,      turn_a, swap,
+                                        reverse_b, swap, turn_b,    swap,   reverse_b, swap,   reverse_a};
+  Shurikens::MoveContainer solution2 = {reverse_a, swap,   reverse_b, swap,      turn_b, swap, reverse_b,
+                                        swap,      turn_a, swap,      reverse_a, turn_b, swap, turn_a};
+  Shurikens::MoveContainer solution3 = {reverse_a, swap,   reverse_b, swap,   turn_b,    swap, reverse_b,
+                                        swap,      turn_a, swap,      turn_b, reverse_a, swap, turn_a};
+  return ShurikenData("real0", shuriken, solution0, solution1, solution2, solution3);
 }
 
 inline ShurikenData createReal1() {
   Shuriken shuriken({B, A, C, D, E, F, G, H, I, J, K, L});
-  Shurikens::MoveContainer solution0 = {swap_top, turn_a, reverse_b, swap_top,  turn_a,   turn_a, swap_top,
-                                        turn_a,   turn_a, swap_top,  turn_a,    swap_top, turn_a, turn_a,
-                                        swap_top, turn_b, swap_top,  reverse_a, swap_top, turn_a, turn_a};
-  Shurikens::MoveContainer solution1 = {reverse_b, reverse_a, swap_top,  reverse_b, reverse_b, swap_top,  reverse_a,
-                                        swap_top,  reverse_b, reverse_b, swap_top,  reverse_a, reverse_a, swap_top,
-                                        reverse_b, turn_a,    swap_top,  reverse_a, swap_top,  turn_b,    swap_top};
+  Shurikens::MoveContainer solution0 = {swap,   turn_a, reverse_b, swap,      turn_a, turn_a, swap,
+                                        turn_a, turn_a, swap,      turn_a,    swap,   turn_a, turn_a,
+                                        swap,   turn_b, swap,      reverse_a, swap,   turn_a, turn_a};
+  Shurikens::MoveContainer solution1 = {reverse_b, reverse_a, swap,      reverse_b, reverse_b, swap,      reverse_a,
+                                        swap,      reverse_b, reverse_b, swap,      reverse_a, reverse_a, swap,
+                                        reverse_b, turn_a,    swap,      reverse_a, swap,      turn_b,    swap};
   return ShurikenData("real1", shuriken, solution0, solution1);
 }
 

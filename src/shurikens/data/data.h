@@ -34,12 +34,28 @@ namespace Shurikens {
 struct ShurikenData {
 
   ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution)
-      : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution}) {}
+      : name(std::move(name)), shuriken(shuriken), solutions({solution}) {}
 
   ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution0,
                const Shurikens::MoveContainer &solution1)
-      : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution0, solution1}) {
+      : name(std::move(name)), shuriken(shuriken), solutions({solution0, solution1}) {
     assert(solution0.size() == solution1.size());
+  }
+
+  ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution0,
+               const Shurikens::MoveContainer &solution1, const Shurikens::MoveContainer &solution2)
+      : name(std::move(name)), shuriken(shuriken), solutions({solution0, solution1, solution2}) {
+    assert(solution0.size() == solution1.size());
+    assert(solution0.size() == solution2.size());
+  }
+
+  ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution0,
+               const Shurikens::MoveContainer &solution1, const Shurikens::MoveContainer &solution2,
+               const Shurikens::MoveContainer &solution3)
+      : name(std::move(name)), shuriken(shuriken), solutions({solution0, solution1, solution2, solution3}) {
+    assert(solution0.size() == solution1.size());
+    assert(solution0.size() == solution2.size());
+    assert(solution0.size() == solution3.size());
   }
 
   inline size_t solutionSize() const { return solutions.cbegin()->size(); }

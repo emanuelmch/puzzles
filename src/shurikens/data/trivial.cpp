@@ -33,7 +33,7 @@ inline ShurikenData createTrivial0() {
 
 inline ShurikenData createTrivial1() {
   Shuriken shuriken({G, H, I, D, E, F, A, B, C, J, K, L});
-  return ShurikenData("trivial1", shuriken, {swap_top});
+  return ShurikenData("trivial1", shuriken, {swap});
 }
 
 vector<ShurikenData> Shurikens::createTrivialShurikens() {

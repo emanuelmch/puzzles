@@ -131,4 +131,9 @@ inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Number 
   s << std::to_string(number);
   return s;
 }
+
+// Specializing for the noexcept
+constexpr size_t min(const size_t a, const size_t b) noexcept {
+  return (b < a) ? b : a;
+}
 }

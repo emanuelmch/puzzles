@@ -28,19 +28,11 @@ using namespace Shurikens;
 
 using std::array;
 
-TEST(Shuriken, SwapTop) {
+TEST(Shuriken, Swap) {
   auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
-  auto swapped = shuriken.apply(swap_top);
+  auto swapped = shuriken.apply(swap);
 
   array<Cell, 12> cells = {G, H, I, D, E, F, A, B, C, J, K, L};
-  EXPECT_EQ(swapped.cells, cells);
-}
-
-TEST(Shuriken, SwapBottom) {
-  auto shuriken = Shuriken({A, B, C, D, E, F, G, H, I, J, K, L});
-  auto swapped = shuriken.apply(swap_bottom);
-
-  array<Cell, 12> cells = {A, B, C, J, K, L, G, H, I, D, E, F};
   EXPECT_EQ(swapped.cells, cells);
 }
 

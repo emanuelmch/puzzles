@@ -29,6 +29,6 @@ class DepthSearchSolver : public Solver {
 public:
   DepthSearchSolver() : Solver("  Depth", 10) {}
 
-  MoveContainer solve(const Shuriken &, size_t knownUpperBound) const override;
+  [[nodiscard]] MoveContainer solve(const Shuriken &, size_t knownUpperBound) const override;
 };
 }

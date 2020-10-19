@@ -35,6 +35,6 @@ struct Solver {
   const std::string name;
   const uint8_t quickSolveLimit;
 
-  virtual MoveContainer solve(const Shuriken &, size_t knownUpperBound) const = 0;
+  [[nodiscard]] virtual MoveContainer solve(const Shuriken &, size_t knownUpperBound) const = 0;
 };
 }

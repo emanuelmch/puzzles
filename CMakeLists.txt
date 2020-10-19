@@ -45,7 +45,8 @@ endif ()
 # Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
 if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
     add_compile_options(-stdlib=libc++)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+    add_link_options(-stdlib=libc++)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-attributes") # Workaround for likely & unlikely
 endif ()
 
 # Pre-requisites
@@ -94,6 +95,7 @@ add_library(puzzles_lib OBJECT
         src/shurikens/data/trivial.cpp
         src/shurikens/solver/breadth_search_solver.cpp
         src/shurikens/solver/depth_search_solver.cpp
+        src/shurikens/solver/threaded_search_solver.cpp
         src/sudoku/data/easy.cpp
         src/sudoku/data/trivial.cpp
         src/sudoku/model/board.cpp
@@ -110,6 +112,7 @@ add_executable(puzzles
         src/shurikens/runner.cpp
         src/sudoku/runner.cpp
         $<TARGET_OBJECTS:puzzles_lib>)
+target_link_libraries(puzzles pthread)
 add_custom_target(run "./puzzles" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_dependencies(run puzzles)
 
@@ -148,3 +151,15 @@ foreach (testfile ${test_sources})
     add_test(${test_name} ${test_name})
     add_dependencies(check ${test_name})
 endforeach (testfile)
+
+# Benchmarking
+#add_subdirectory(libs/googlebenchmark)
+#set(benchmark_sources
+#        benchmark/shurikens/shurikens_solver_benchmarks.cpp
+#        )
+#
+#foreach (benchmark_source ${benchmark_sources})
+#    get_filename_component(benchmark_name ${benchmark_source} NAME_WE)
+#    add_executable(${benchmark_name} ${benchmark_source} $<TARGET_OBJECTS:puzzles_lib>)
+#    target_link_libraries(${benchmark_name} benchmark::benchmark_main pthread)
+#endforeach (benchmark_source)
