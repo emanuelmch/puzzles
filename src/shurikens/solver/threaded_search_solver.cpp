@@ -23,18 +23,17 @@
 #include "threaded_search_solver.h"
 
 #include "common/numbers.h"
+#include "common/thread_safe_queue.h"
 
 #include <cstdint>
 #include <mutex>
 #include <optional>
-#include <queue>
 #include <thread>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
 using namespace Shurikens;
-using namespace std::chrono_literals;
 
 namespace {
 const auto WORKER_COUNT = std::min(static_cast<size_t>(std::thread::hardware_concurrency()), allMoves.size());
@@ -54,7 +53,7 @@ struct WorkerState {
 
       if (newShuriken.isSolved()) {
         solution = MoveContainer{move};
-        break;
+        return;
       }
 
       nodes.emplace(newShuriken, MoveContainer{move});
@@ -62,8 +61,8 @@ struct WorkerState {
   }
 
   inline void addNodes(const std::vector<Node> &newNodes, size_t depth) {
-    if (!newNodes.empty() && depth + 1 < getSolutionSize()) {
-      std::unique_lock lock(nodesMutex);
+    if (depth + 1 < getSolutionSize()) {
+      // nodes.push(newNodes.begin(), newNodes.end());
       for (const auto &node : newNodes) {
         nodes.push(node);
       }
@@ -71,23 +70,18 @@ struct WorkerState {
   }
 
   std::optional<Node> next() {
-    std::unique_lock lock(nodesMutex);
     if (nodes.empty()) {
       return std::nullopt;
     }
 
     auto max = getSolutionSize();
 
-    auto next = nodes.front();
-    nodes.pop();
-
-    assert(next.shuriken.isSolved() == false);
+    auto next = *nodes.pop();
     while (next.moves.size() + 1 >= max && !nodes.empty()) {
-      next = nodes.front();
-      nodes.pop();
       assert(next.shuriken.isSolved() == false);
+      next = *nodes.pop();
     }
-    lock.unlock();
+    assert(next.shuriken.isSolved() == false);
 
     if (next.moves.size() + 1 >= max) [[unlikely]] {
       return std::nullopt;
@@ -111,9 +105,9 @@ struct WorkerState {
   }
 
 private:
-  std::mutex nodesMutex, solutionMutex;
+  std::mutex solutionMutex;
 
-  std::queue<Node> nodes;
+  bill::ThreadSafeQueue<Node> nodes;
   MoveContainer solution;
 };
 }
