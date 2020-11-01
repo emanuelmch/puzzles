@@ -23,10 +23,12 @@
 #include "expressions.h"
 
 #include "common/assertions.h"
+#include "common/strings.h"
 
-#include <cmath>
-#include <cstdint>
-#include <stack>
+#include <cmath>   // std::pow
+#include <cstdint> // uint_fast8_t
+#include <stack>   // std::stack
+#include <vector>  // std::vector
 
 using namespace Maths;
 
@@ -37,12 +39,15 @@ using std::string;
 using std::vector;
 
 vector<Token> Maths::tokenizeExpression(const string &expression) {
+  ensure(expression.find(' ') == expression.npos);
   vector<Token> tokens;
 
+  bool isLastTokenAnOperator = false;
   bool isReadingNumber = false;
+  bool readingNegativeNumber = false;
   Number currentNumber(0);
 
-  for (auto token : expression) {
+  for (const auto token : expression) {
     if (token >= '0' && token <= '9') {
       isReadingNumber = true;
       // TODO: operator*=(int) and operator+=(int)
@@ -52,17 +57,28 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
     }
 
     if (currentNumber != 0) {
+      if (readingNegativeNumber) {
+        currentNumber = currentNumber * Number(-1);
+      }
       tokens.emplace_back(currentNumber);
+      isLastTokenAnOperator = false;
       isReadingNumber = false;
+      readingNegativeNumber = false;
       currentNumber = Number(0);
     }
 
-    if (token != ' ') {
+    if (token == '-' && (isLastTokenAnOperator || tokens.empty())) {
+      readingNegativeNumber = true;
+    } else {
       tokens.emplace_back(token);
+      isLastTokenAnOperator = true;
     }
   }
 
   if (isReadingNumber) {
+    if (readingNegativeNumber) {
+      currentNumber = currentNumber * Number(-1);
+    }
     tokens.emplace_back(currentNumber);
   }
 
@@ -83,7 +99,7 @@ void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
 
-  ensure(next == '+' || next == '-' || next == '*' || next == '/' || next == '^');
+  ensure(std::string("+-*/^").find(next) != std::string::npos);
 
   ensure(numbers->size() >= 2);
   auto right = numbers->top();
@@ -119,7 +135,18 @@ inline void reduceToPrecedence(stack<Number> *numbers, stack<char> *operators, u
   }
 }
 
-Number Maths::evaluateExpression(const std::string &expression) {
+inline void replace_all(std::string *expression, const std::string &before, const std::string &after) {
+  for (size_t pos = expression->find(before); pos != std::string::npos; pos = expression->find(before, pos)) {
+    expression->replace(pos, before.length(), after);
+  }
+}
+
+Number Maths::evaluateExpression(std::string expression) {
+  expression.erase(remove_if(expression.begin(), expression.end(), isspace), expression.end());
+  replace_all(&expression, "--", "+");
+  replace_all(&expression, "++", "+");
+  replace_all(&expression, "-(", "-1*(");
+
   stack<Number> numbers;
   stack<char> operators;
   int parenthesisCount = 0;

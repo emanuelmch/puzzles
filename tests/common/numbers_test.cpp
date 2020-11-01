@@ -202,6 +202,8 @@ TEST(Numbers_Number, Multiplication) {
   EXPECT_EQ(std::to_string(one * bigNumber), "18446744073709551616");
   EXPECT_EQ(std::to_string(two * bigNumber), "36893488147419103232");
 
+  EXPECT_EQ(std::to_string(zero * negativeOne), "0");
+
   EXPECT_EQ(std::to_string(negativeFour * negativeOne), "4");
   EXPECT_EQ(std::to_string(negativeOne * negativeFour), "4");
   EXPECT_EQ(std::to_string(negativeFour * one), "-4");

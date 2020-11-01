@@ -57,7 +57,7 @@ private:
 
 std::vector<Token> tokenizeExpression(const std::string &);
 
-Puzzles::Numbers::Number evaluateExpression(const std::string &);
+Puzzles::Numbers::Number evaluateExpression(std::string);
 }
 
 namespace std { // NOLINT(cert-dcl58-cpp)
