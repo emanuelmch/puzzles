@@ -208,27 +208,24 @@ Number Number::operator/(const Number &o) const {
 
   ensure(this->denominator == "1" && o.denominator == "1"); // Haven't implemented this yet
 
-  if (*this < o) {
-    Number result(this->numerator, o.numerator, sameSign);
-    result.simplify();
-    return result;
-  }
+  auto result = division(this->numerator, o.numerator);
+  return Number(result.numerator, result.denominator, sameSign);
+}
 
-  // Now for the actual implementation
-  Number remainder(this->numerator);
+Number Number::division(const std::string &_numerator, const std::string &_denominator) {
+  Number remainder(_numerator);
+  Number factor(_denominator);
   Number integer(0);
 
-  while (remainder >= o) {
-    remainder -= o;
+  while (remainder >= factor) {
+    remainder -= factor;
     ++integer;
   }
 
   if (remainder == 0) {
-    integer.positive = sameSign;
     return integer;
   } else {
-    Number rational(remainder.numerator, o.numerator, sameSign);
-    rational.simplify();
+    Number rational(remainder.numerator, _denominator, true);
     return integer + rational;
   }
 }

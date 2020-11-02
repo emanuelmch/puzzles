@@ -219,6 +219,7 @@ TEST(Numbers_Number, Multiplication) {
 }
 
 TEST(Numbers_Number, Division) {
+  Number minusTwo(-2);
   Number one(1);
   Number two(2);
   Number five(5);
@@ -235,6 +236,10 @@ TEST(Numbers_Number, Division) {
   EXPECT_EQ(std::to_string(fifty / ten), "5");
   EXPECT_EQ(std::to_string(thousandTwentyFour / sixteen), "64");
   EXPECT_EQ(std::to_string(bigNumber / sixteen), "512");
+
+  EXPECT_EQ(std::to_string(one / minusTwo), "-1/2");
+  EXPECT_EQ(std::to_string(two / minusTwo), "-1");
+  EXPECT_EQ(std::to_string(minusTwo / minusTwo), "1");
 
   EXPECT_EQ(std::to_string(five / two), "5/2");
   EXPECT_EQ(std::to_string(one / bigNumber), "1/8192");
