@@ -2,9 +2,8 @@
 
 # Puzzles
 
-My personal collection of puzzle-solving algorithms. It's got two games so far:
+My personal collection of puzzle-solving algorithms. It's got four "modules" so far:
+* Maths
 * Picross (Color variant)
 * Sudoku
 * Shurikens
-
-Everything's in its very early stages so far, so don't expect much.
