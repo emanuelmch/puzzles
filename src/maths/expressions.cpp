@@ -42,9 +42,7 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
   ensure(expression.find(' ') == expression.npos);
   vector<Token> tokens;
 
-  bool isLastTokenAnOperator = false;
   bool isReadingNumber = false;
-  bool readingNegativeNumber = false;
   Number currentNumber(0);
 
   for (const auto token : expression) {
@@ -57,28 +55,15 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
     }
 
     if (currentNumber != 0) {
-      if (readingNegativeNumber) {
-        currentNumber = currentNumber * Number(-1);
-      }
       tokens.emplace_back(currentNumber);
-      isLastTokenAnOperator = false;
       isReadingNumber = false;
-      readingNegativeNumber = false;
       currentNumber = Number(0);
     }
 
-    if (token == '-' && (isLastTokenAnOperator || tokens.empty())) {
-      readingNegativeNumber = true;
-    } else {
-      tokens.emplace_back(token);
-      isLastTokenAnOperator = true;
-    }
+    tokens.emplace_back(token);
   }
 
   if (isReadingNumber) {
-    if (readingNegativeNumber) {
-      currentNumber = currentNumber * Number(-1);
-    }
     tokens.emplace_back(currentNumber);
   }
 
@@ -145,14 +130,14 @@ Number Maths::evaluateExpression(std::string expression) {
   expression.erase(remove_if(expression.begin(), expression.end(), isspace), expression.end());
   replace_all(&expression, "--", "+");
   replace_all(&expression, "++", "+");
-  replace_all(&expression, "-(", "-1*(");
 
   stack<Number> numbers;
   stack<char> operators;
   int parenthesisCount = 0;
+  bool isLastTokenAnOperator = false;
 
   for (const auto &token : tokenizeExpression(expression)) {
-    if (token == ' ') continue;
+    ensure(token != ' ');
 
     if (token.isNumber) {
       numbers.push(token.asNumber);
@@ -165,10 +150,15 @@ Number Maths::evaluateExpression(std::string expression) {
       reduceToParenthesis(&numbers, &operators);
     } else if (token == '^') {
       operators.push('^');
+    } else if (token == '-' && (numbers.empty() || isLastTokenAnOperator)) {
+      numbers.push(Number(-1));
+      operators.push('*');
     } else {
       reduceToPrecedence(&numbers, &operators, getPrecedence(token.asOperator));
       operators.push(token.asOperator);
     }
+
+    isLastTokenAnOperator = !token.isNumber && token.asOperator != ')';
   }
 
   while (!operators.empty()) {
