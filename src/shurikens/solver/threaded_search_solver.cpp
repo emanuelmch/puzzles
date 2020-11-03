@@ -61,11 +61,8 @@ struct WorkerState {
   }
 
   inline void addNodes(const std::vector<Node> &newNodes, size_t depth) {
-    if (depth + 1 < getSolutionSize()) {
-      // nodes.push(newNodes.begin(), newNodes.end());
-      for (const auto &node : newNodes) {
-        nodes.push(node);
-      }
+    if (!newNodes.empty() && depth + 1 < getSolutionSize()) {
+       nodes.push(newNodes.begin(), newNodes.end());
     }
   }
 

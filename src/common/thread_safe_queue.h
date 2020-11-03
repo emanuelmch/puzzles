@@ -56,8 +56,18 @@ struct ThreadSafeQueue {
   }
 
   template <typename Iterator>
-  inline void push(const Iterator &begin, const Iterator &end) {
-    push_nodes(begin, end);
+  inline void push(Iterator begin, const Iterator &end) {
+    assert(begin != end);
+    auto newFront = new Node{*begin, nullptr};
+    auto newBack = newFront;
+
+    while (++begin != end) {
+      auto newNode = new Node{*begin, nullptr};
+      newBack->next = newNode;
+      newBack = newNode;
+    }
+
+    push_nodes(newFront, newBack);
   }
 
   [[nodiscard]] std::optional<T> pop() {
@@ -91,7 +101,7 @@ private:
     if (back == nullptr) {
       std::unique_lock frontLock(frontMutex);
       front = node;
-      back = front;
+      back = node;
       return;
     }
 
@@ -101,29 +111,20 @@ private:
     back = node;
   }
 
-  template <typename Iterator>
-  void push_nodes(Iterator begin, const Iterator &end) {
-    assert(begin != end);
+  void push_nodes(Node *newFront, Node *newBack) {
     std::unique_lock backLock(backMutex);
 
     if (back == nullptr) {
       std::unique_lock frontLock(frontMutex);
-      front = new Node{*begin, nullptr};
-      back = front;
-
-      ++begin;
+      front = newFront;
+      back = newBack;
+      return;
     }
 
     assert(back != nullptr);
     assert(back->next == nullptr);
-
-    while (begin != end) {
-      auto newNode = new Node{*begin, nullptr};
-      back->next = newNode;
-      back = newNode;
-
-      ++begin;
-    }
+    back->next = newFront;
+    back = newBack;
   }
 };
 }
