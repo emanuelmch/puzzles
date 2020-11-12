@@ -57,7 +57,7 @@ Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
 
   for (auto number = 0u;; ++number) {
     auto range = std::views::iota(1u, number + 1);
-    auto count = std::count_if(std::execution::par_unseq, range.begin(), range.end(),
+    auto count = std::count_if(range.begin(), range.end(),
                                [number](auto i) { return number % i == 0; });
     if (count > lastCount) {
       co_yield number;
