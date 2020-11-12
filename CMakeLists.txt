@@ -28,7 +28,15 @@ include(CheckCXXCompilerFlag)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -omit-frame-pointer -fno-exceptions")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
+if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
+    # https://bugs.llvm.org//show_bug.cgi?id=32155
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+else ()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
+endif ()
 
 # Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
 if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
