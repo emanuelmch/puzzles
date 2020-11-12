@@ -50,6 +50,7 @@ if (NOT supportsCTAD)
     message(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
 endif ()
 
+# Optionals
 message(STATUS "Looking for std::set::contains support")
 try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
 if (supportsSetContains)
@@ -67,6 +68,10 @@ else ()
     if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
         add_compile_options(-fcoroutines-ts)
     endif ()
+endif ()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=leak -fsanitize=undefined")
 endif ()
 
 # Source Files
