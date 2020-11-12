@@ -25,6 +25,7 @@
 #include "common/assertions.h"
 #include "common/strings.h"
 #include "compat/compare.h"
+#include "compat/defs.h"
 
 #include <algorithm>
 #include <cassert>
@@ -88,7 +89,7 @@ compat::strong_ordering compareIntegers(const std::string &left, const std::stri
 
 #if defined(__cpp_lib_three_way_comparison) && __has_cpp_attribute(likely)
     auto digitComparison = leftDigit <=> rightDigit;
-    if (digitComparison == std::strong_ordering::equal) [[likely]] {
+    if (digitComparison == std::strong_ordering::equal) [[pzl_likely]] {
       ++lit;
       ++rit;
       continue;
