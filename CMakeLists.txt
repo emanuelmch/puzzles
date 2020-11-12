@@ -38,6 +38,10 @@ else ()
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
 endif ()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=leak -fsanitize=undefined")
+endif ()
+
 # Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
 if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
     add_compile_options(-stdlib=libc++)
