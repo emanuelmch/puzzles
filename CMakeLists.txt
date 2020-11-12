@@ -54,11 +54,11 @@ endif ()
 check_cxx_compiler_flag(-fcoroutines _CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
 if (_CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
     add_compile_options(-fcoroutines)
-endif ()
-
-check_cxx_compiler_flag(-fcoroutines-ts _CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
-if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
-    add_compile_options(-fcoroutines-ts)
+else ()
+    check_cxx_compiler_flag(-fcoroutines-ts _CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+    if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+        add_compile_options(-fcoroutines-ts)
+    endif ()
 endif ()
 
 # Source Files
