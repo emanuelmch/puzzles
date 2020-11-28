@@ -53,14 +53,14 @@ jobs:
         - HOMEBREW_NO_INSTALL_CLEANUP=1
         - MATRIX_EVAL="brew upgrade gcc && CC=gcc-10 && CXX=g++-10"
 
-    - name: OSX Clang 8.1.0
+    - name: OSX Clang 9
       os: osx
       osx_image: xcode9.4
       compiler: clang
 
-    - name: OSX Clang 11.0.3
+    - name: OSX Clang 12
       os: osx
-      osx_image: xcode11.6
+      osx_image: xcode12.2
       compiler: clang
 
 before_install:
