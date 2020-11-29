@@ -30,7 +30,7 @@ using std::cout;
 using std::vector;
 
 void Logger::log(const MoveContainer &moves) const {
-  for (const auto &move : moves) {
+  for (const auto move : moves) {
     switch (move) {
     case swap_top:
       cout << "s";
