@@ -28,7 +28,15 @@ include(CheckCXXCompilerFlag)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O3 -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -omit-frame-pointer -fno-exceptions")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
+if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
+    # https://bugs.llvm.org//show_bug.cgi?id=32155
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+else ()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
+endif ()
 
 # Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
 if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
@@ -42,6 +50,7 @@ if (NOT supportsCTAD)
     message(FATAL_ERROR "Pre-requisite not met: Compiler doesn't support class template argument deduction")
 endif ()
 
+# Optionals
 message(STATUS "Looking for std::set::contains support")
 try_compile(supportsSetContains ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_set_contains.cpp)
 if (supportsSetContains)
@@ -54,11 +63,15 @@ endif ()
 check_cxx_compiler_flag(-fcoroutines _CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
 if (_CXX_SUPPORTS_COROUTINES_COMPILER_FLAG)
     add_compile_options(-fcoroutines)
+else ()
+    check_cxx_compiler_flag(-fcoroutines-ts _CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+    if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
+        add_compile_options(-fcoroutines-ts)
+    endif ()
 endif ()
 
-check_cxx_compiler_flag(-fcoroutines-ts _CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
-if (_CXX_SUPPORTS_COROUTINES_TS_COMPILER_FLAG)
-    add_compile_options(-fcoroutines-ts)
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=leak -fsanitize=undefined")
 endif ()
 
 # Source Files
