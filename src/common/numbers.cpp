@@ -28,7 +28,6 @@
 #include "compat/defs.h"
 
 #include <algorithm>
-#include <cassert>
 #include <cinttypes>
 #include <utility>
 
@@ -43,7 +42,7 @@ inline std::string_view fitNumerator(const std::string_view &original) {
 
 Number::Number(const std::string &value)
     : numerator(fitNumerator(value)), denominator("1"), positive(value.empty() || value[0] != '-') {
-  assert(numerator.find_first_not_of("0123456789") == numerator.npos);
+  ensure(numerator.find_first_not_of("0123456789") == numerator.npos);
 }
 
 Number::Number(intmax_t value) : Number(std::to_string(value)) {}
@@ -55,8 +54,8 @@ Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
 
 Number::Number(const std::string &_numerator, std::string _denominator, bool positive)
     : numerator(trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
-  assert(numerator.find_first_not_of("0123456789") == numerator.npos);
-  assert(denominator.find_first_not_of("0123456789") == denominator.npos);
+  ensure(numerator.find_first_not_of("0123456789") == numerator.npos);
+  ensure(denominator.find_first_not_of("0123456789") == denominator.npos);
 }
 
 template <typename iterator>
@@ -196,7 +195,7 @@ Number Number::operator*(const Number &o) const {
 }
 
 Number Number::operator/(const Number &o) const {
-  assert(o != 0); // division by zero is undefined
+  ensure(o != 0); // division by zero is undefined
   if (numerator == "0") {
     return Number(0);
   }
@@ -231,7 +230,7 @@ Number Number::division(const std::string &_numerator, const std::string &_denom
 }
 
 Number Number::power(const Number &exp) const {
-  assert(*this != 0 || exp != 0); // zero ^ zero is undefined
+  ensure(*this != 0 || exp != 0); // zero ^ zero is undefined
   ensure(exp.positive);           // Haven't implemented this yet;
   Number result(1);
 
@@ -290,7 +289,7 @@ std::string Number::toString() const {
 std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) const {
   if (denominator == o.denominator) return std::pair(*this, o);
 
-  // FIXME: Use numbers here after we've implemented operator* and remove these two asserts
+  // FIXME: Use numbers here after we've implemented operator* and remove these two ensures
   ensure(Number(denominator) < Number(std::numeric_limits<uint32_t>::max()));
   ensure(Number(o.denominator) < Number(std::numeric_limits<uint32_t>::max()));
 
