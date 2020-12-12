@@ -162,6 +162,25 @@ TEST(Integer, Multiplication) {
   EXPECT_EQ(std::to_string(two * negativeOne), "-2");
 }
 
+TEST(Integer, Division) {
+  Integer one{1};
+  Integer two{2};
+  Integer five{5};
+  Integer ten{10};
+  Integer sixteen{16};
+  Integer fifty{50};
+  Integer thousandTwentyFour{1024};
+  Integer bigInteger{8192};
+
+  EXPECT_EQ(std::to_string(two / one), "2");
+  EXPECT_EQ(std::to_string(two / two), "1");
+  EXPECT_EQ(std::to_string(ten / two), "5");
+  EXPECT_EQ(std::to_string(fifty / two), "25");
+  EXPECT_EQ(std::to_string(fifty / ten), "5");
+  EXPECT_EQ(std::to_string(thousandTwentyFour / sixteen), "64");
+  EXPECT_EQ(std::to_string(bigInteger / sixteen), "512");
+}
+
 TEST(Integer, Comparison_EqualTo) {
   EXPECT_TRUE(Integer{-1} == Integer{-1});
   EXPECT_TRUE(Integer{0} == Integer{0});
@@ -173,6 +192,19 @@ TEST(Integer, Comparison_EqualTo) {
   EXPECT_FALSE(Integer{0} == Integer{1});
   EXPECT_FALSE(Integer{1} == Integer{-1});
   EXPECT_FALSE(Integer{1} == Integer{0});
+}
+
+TEST(Integer, Comparison_NotEqualTo) {
+  EXPECT_TRUE(Integer{-1} != Integer{0});
+  EXPECT_TRUE(Integer{-1} != Integer{1});
+  EXPECT_TRUE(Integer{0} != Integer{-1});
+  EXPECT_TRUE(Integer{0} != Integer{1});
+  EXPECT_TRUE(Integer{1} != Integer{-1});
+  EXPECT_TRUE(Integer{1} != Integer{0});
+
+  EXPECT_FALSE(Integer{-1} != Integer{-1});
+  EXPECT_FALSE(Integer{0} != Integer{0});
+  EXPECT_FALSE(Integer{1} != Integer{1});
 }
 
 TEST(Integer, Comparison_LessThan) {
@@ -191,4 +223,23 @@ TEST(Integer, Comparison_LessThan) {
   EXPECT_FALSE(Integer{1} < Integer{-500});
   EXPECT_FALSE(Integer{-499} < Integer{-500});
   EXPECT_FALSE(Integer{-500} < Integer{-500});
+}
+
+TEST(Integer, Comparison_LessThanOrEqualTo) {
+  EXPECT_TRUE(Integer{0} <= Integer{1});
+  EXPECT_TRUE(Integer{0} <= Integer{0});
+  EXPECT_TRUE(Integer{9} <= Integer{10});
+  EXPECT_TRUE(Integer{"18446744073709551615"} <= Integer{"18446744073709551616"});
+  EXPECT_TRUE(Integer{"18446744073709551616"} <= Integer{"18446744073709551616"});
+  EXPECT_TRUE(Integer{-500} <= Integer{0});
+  EXPECT_TRUE(Integer{-500} <= Integer{1});
+  EXPECT_TRUE(Integer{-500} <= Integer{-499});
+  EXPECT_TRUE(Integer{-500} <= Integer{-500});
+
+  EXPECT_FALSE(Integer{1} <= Integer{0});
+  EXPECT_FALSE(Integer{10} <= Integer{9});
+  EXPECT_FALSE(Integer{"18446744073709551616"} <= Integer{"18446744073709551615"});
+  EXPECT_FALSE(Integer{0} <= Integer{-500});
+  EXPECT_FALSE(Integer{1} <= Integer{-500});
+  EXPECT_FALSE(Integer{-499} <= Integer{-500});
 }

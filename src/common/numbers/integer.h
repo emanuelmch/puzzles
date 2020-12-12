@@ -43,16 +43,22 @@ struct Integer {
   [[nodiscard]] Integer operator+(const Integer &) const;
   [[nodiscard]] Integer operator-(const Integer &) const;
   [[nodiscard]] Integer operator*(const Integer &) const;
+  [[nodiscard]] Integer operator/(const Integer &) const;
 
 #ifdef __cpp_lib_three_way_comparison
   [[nodiscard]] inline bool operator==(const Integer &) const = default;
+  [[nodiscard]] inline bool operator!=(const Integer &) const = default;
 #else
   [[nodiscard]] inline bool operator==(const Integer &o) const {
     return this->_positive == o._positive && this->slices == o.slices;
   }
+  [[nodiscard]] inline bool operator!=(const Integer &o) const {
+    return this->_positive != o._positive || this->slices != o.slices;
+  }
 #endif
 
   [[nodiscard]] bool operator<(const Integer &) const;
+  [[nodiscard]] bool operator<=(const Integer &) const;
 
 private:
   Integer(std::vector<value_t> slices, bool positive)

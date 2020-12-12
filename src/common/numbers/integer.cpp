@@ -220,6 +220,32 @@ Integer Integer::operator*(const Integer &o) const {
   return result;
 }
 
+Integer Integer::operator/(const Integer &o) const {
+  // TODO: Replace with o != 0
+  ensure(o != Integer{0}); // division by zero is undefined
+
+  if (slices.empty()) { // Zero divided by anything is always zero
+    return *this;
+  }
+
+  ensure(o <= *this); // if (this < o) then (this / o) will be a fraction, which we don't support
+
+  // Now for the actual division implementation
+  Integer remainder{this->slices, true};
+  Integer result{0};
+
+  while (!remainder.slices.empty()) {
+    // TODO: Replace with remainder -= o
+    remainder = remainder - o;
+    // TODO: Replace with ++result
+    result = result + Integer{1};
+    ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
+  }
+
+  result._positive = this->positive() == o.positive();
+  return result;
+}
+
 bool Integer::operator<(const Integer &o) const {
   if (this->positive() != o.positive()) {
     return this->positive() < o.positive();
@@ -230,5 +256,18 @@ bool Integer::operator<(const Integer &o) const {
     return sliceComparison == compat::strong_ordering::less;
   } else {
     return sliceComparison == compat::strong_ordering::greater;
+  }
+}
+
+bool Integer::operator<=(const Integer &o) const {
+  if (this->positive() != o.positive()) {
+    return this->positive() < o.positive();
+  }
+
+  auto bitComparison = compareSlices(this->slices, o.slices);
+  if (this->positive()) {
+    return bitComparison != compat::strong_ordering::greater;
+  } else {
+    return bitComparison != compat::strong_ordering::less;
   }
 }
