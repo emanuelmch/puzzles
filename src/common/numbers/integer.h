@@ -44,6 +44,7 @@ struct Integer {
   [[nodiscard]] Integer operator-(const Integer &) const;
   [[nodiscard]] Integer operator*(const Integer &) const;
   [[nodiscard]] Integer operator/(const Integer &) const;
+  [[nodiscard]] Integer operator%(const Integer &) const;
 
   [[nodiscard]] Integer operator+(intmax_t) const;
 
@@ -64,12 +65,14 @@ struct Integer {
   [[nodiscard]] bool operator<(const Integer &) const;
   [[nodiscard]] bool operator<=(const Integer &) const;
 
+  [[nodiscard]] inline bool operator==(intmax_t o) const { return *this == Integer{o}; }
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return *this != Integer{o}; }
 
   Integer &operator++();
   inline void operator+=(const Integer &o) { *this = *this + o; }
   inline void operator-=(const Integer &o) { *this = *this - o; }
   inline void operator*=(const Integer &o) { *this = *this * o; }
+  inline void operator%=(const Integer &o) { *this = *this % o; }
 
 private:
   Integer(std::vector<value_t> slices, bool positive)

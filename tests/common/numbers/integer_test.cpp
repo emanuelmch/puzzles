@@ -232,6 +232,24 @@ TEST(Integer, Division) {
   EXPECT_EQ(std::to_string(bigInteger / sixteen), "512");
 }
 
+TEST(Integer, Modulo) {
+  Integer five{5};
+  Integer fifty{50};
+  Integer fiftyTwo{52};
+
+  EXPECT_EQ(std::to_string(five % five), "0");
+  EXPECT_EQ(std::to_string(fifty % five), "0");
+  EXPECT_EQ(std::to_string(fiftyTwo % five), "2");
+
+  EXPECT_EQ(std::to_string(five % fifty), "5");
+  EXPECT_EQ(std::to_string(fifty % fifty), "0");
+  EXPECT_EQ(std::to_string(fiftyTwo % fifty), "2");
+
+  EXPECT_EQ(std::to_string(five % fiftyTwo), "5");
+  EXPECT_EQ(std::to_string(fifty % fiftyTwo), "50");
+  EXPECT_EQ(std::to_string(fiftyTwo % fiftyTwo), "0");
+}
+
 TEST(Integer, Power) {
   Integer negativeFour{-4};
   Integer negativeOne{-1};
@@ -268,6 +286,19 @@ TEST(Integer, Comparison_EqualTo) {
   EXPECT_FALSE(Integer{0} == Integer{1});
   EXPECT_FALSE(Integer{1} == Integer{-1});
   EXPECT_FALSE(Integer{1} == Integer{0});
+}
+
+TEST(Integer, Comparison_EqualToInt) {
+  EXPECT_TRUE(Integer{-1} == -1);
+  EXPECT_TRUE(Integer{0} == 0);
+  EXPECT_TRUE(Integer{1} == 1);
+
+  EXPECT_FALSE(Integer{-1} == 0);
+  EXPECT_FALSE(Integer{-1} == 1);
+  EXPECT_FALSE(Integer{0} == -1);
+  EXPECT_FALSE(Integer{0} == 1);
+  EXPECT_FALSE(Integer{1} == -1);
+  EXPECT_FALSE(Integer{1} == 0);
 }
 
 TEST(Integer, Comparison_NotEqualTo) {

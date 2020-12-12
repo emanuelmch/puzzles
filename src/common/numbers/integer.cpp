@@ -241,6 +241,20 @@ Integer Integer::operator/(const Integer &o) const {
   return result;
 }
 
+Integer Integer::operator%(const Integer &o) const {
+  ensure(o != 0); // division by zero is undefined
+
+  if (slices.empty()) { // Zero divided by anything is always zero
+    return *this;
+  }
+
+  Integer remainder{this->slices, true};
+  while (o <= remainder) {
+    remainder -= o;
+  }
+  return remainder;
+}
+
 Integer Integer::operator+(intmax_t value) const {
   if (value == 0) return *this;
   if (slices.empty()) return Integer{value};
