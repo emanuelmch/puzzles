@@ -45,6 +45,8 @@ struct Integer {
   [[nodiscard]] Integer operator*(const Integer &) const;
   [[nodiscard]] Integer operator/(const Integer &) const;
 
+  [[nodiscard]] Integer operator+(intmax_t) const;
+
   [[nodiscard]] Integer power(const Integer &) const;
 
 #ifdef __cpp_lib_three_way_comparison

@@ -241,6 +241,21 @@ Integer Integer::operator/(const Integer &o) const {
   return result;
 }
 
+Integer Integer::operator+(intmax_t value) const {
+  if (value == 0) return *this;
+  if (slices.empty()) return Integer{value};
+
+  auto sameSign = (value >= 0 && this->positive()) || (value < 0 && !this->positive());
+  auto absValue = std::abs(value);
+  if (sameSign && absValue + slices[0] < 1000000000) {
+    Integer result{*this};
+    result.slices[0] += absValue;
+    return result;
+  }
+
+  return *this + Integer{value};
+}
+
 Integer Integer::power(const Integer &exponent) const {
   ensure(*this != 0 || exponent != 0); // zero ^ zero is undefined
   ensure(exponent.positive());         // Haven't implemented this yet

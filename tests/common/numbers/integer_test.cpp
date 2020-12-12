@@ -104,6 +104,57 @@ TEST(Integer, Addition) {
   EXPECT_EQ(std::to_string(zero + negativeOne), "-1");
 }
 
+TEST(Integer, Addition_Int) {
+  Integer negativeFive{-5};
+  Integer negativeOne{-1};
+  Integer zero{0};
+  Integer one{1};
+  Integer five{5};
+  Integer bigNumber{1234567890};
+
+  EXPECT_EQ(std::to_string(negativeFive + (-5)), "-10");
+  EXPECT_EQ(std::to_string(negativeFive + (-1)), "-6");
+  EXPECT_EQ(std::to_string(negativeFive + 0), "-5");
+  EXPECT_EQ(std::to_string(negativeFive + 1), "-4");
+  EXPECT_EQ(std::to_string(negativeFive + 5), "0");
+  EXPECT_EQ(std::to_string(negativeFive + 1234567890), "1234567885");
+
+  EXPECT_EQ(std::to_string(negativeOne + (-5)), "-6");
+  EXPECT_EQ(std::to_string(negativeOne + (-1)), "-2");
+  EXPECT_EQ(std::to_string(negativeOne + 0), "-1");
+  EXPECT_EQ(std::to_string(negativeOne + 1), "0");
+  EXPECT_EQ(std::to_string(negativeOne + 5), "4");
+  EXPECT_EQ(std::to_string(negativeOne + 1234567890), "1234567889");
+
+  EXPECT_EQ(std::to_string(zero + (-5)), "-5");
+  EXPECT_EQ(std::to_string(zero + (-1)), "-1");
+  EXPECT_EQ(std::to_string(zero + 0), "0");
+  EXPECT_EQ(std::to_string(zero + 1), "1");
+  EXPECT_EQ(std::to_string(zero + 5), "5");
+  EXPECT_EQ(std::to_string(zero + 1234567890), "1234567890");
+
+  EXPECT_EQ(std::to_string(one + (-5)), "-4");
+  EXPECT_EQ(std::to_string(one + (-1)), "0");
+  EXPECT_EQ(std::to_string(one + 0), "1");
+  EXPECT_EQ(std::to_string(one + 1), "2");
+  EXPECT_EQ(std::to_string(one + 5), "6");
+  EXPECT_EQ(std::to_string(one + 1234567890), "1234567891");
+
+  EXPECT_EQ(std::to_string(five + (-5)), "0");
+  EXPECT_EQ(std::to_string(five + (-1)), "4");
+  EXPECT_EQ(std::to_string(five + 0), "5");
+  EXPECT_EQ(std::to_string(five + 1), "6");
+  EXPECT_EQ(std::to_string(five + 5), "10");
+  EXPECT_EQ(std::to_string(five + 1234567890), "1234567895");
+
+  EXPECT_EQ(std::to_string(bigNumber + (-5)), "1234567885");
+  EXPECT_EQ(std::to_string(bigNumber + (-1)), "1234567889");
+  EXPECT_EQ(std::to_string(bigNumber + 0), "1234567890");
+  EXPECT_EQ(std::to_string(bigNumber + 1), "1234567891");
+  EXPECT_EQ(std::to_string(bigNumber + 5), "1234567895");
+  EXPECT_EQ(std::to_string(bigNumber + 1234567890), "2469135780");
+}
+
 TEST(Integer, Subtraction) {
   Integer zero{0};
   Integer one{1};
