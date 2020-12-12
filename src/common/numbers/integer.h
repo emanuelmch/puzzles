@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "compat/defs.h"
+
 #include <cstdint> // uint32_t, intmax_t
 #include <string>  // std::string
 #include <vector>  // std::vector
@@ -38,7 +40,21 @@ struct Integer {
   [[nodiscard]] inline bool positive() const { return _positive; }
   [[nodiscard]] std::string toString() const;
 
+  [[nodiscard]] Integer operator+(const Integer &) const;
+  [[nodiscard]] Integer operator-(const Integer &) const;
+
+#ifdef __cpp_lib_three_way_comparison
+  [[nodiscard]] inline bool operator==(const Integer &) const = default;
+#else
+  [[nodiscard]] inline bool operator==(const Integer &o) const {
+    return this->_positive == o._positive && this->slices == o.slices;
+  }
+#endif
+
 private:
+  Integer(std::vector<value_t> slices, bool positive)
+      : slices(std::move(slices)), _positive(positive || this->slices.empty()) {}
+
   std::vector<value_t> slices; // Low-endian base-10 storage
   bool _positive;
 };

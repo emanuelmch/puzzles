@@ -132,6 +132,7 @@ set(test_sources
         tests/common/strings_test.cpp
         tests/common/numbers/integer_test.cpp
         tests/common/numbers/rational_test.cpp
+        tests/compat/compare_test.cpp
         tests/cpic/model/cpic_board_builder_test.cpp
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp

@@ -20,20 +20,28 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "compat/compare.h"
 
-#if __has_include(<version>)
-#include <version>
-#endif
+#include <gtest/gtest.h>
 
-#if __has_cpp_attribute(likely) && __has_cpp_attribute(unlikely)
+using namespace compat;
 
-#define pzl_likely likely
-#define pzl_unlikely unlikely
+TEST(Compare, CompareInts) {
+  EXPECT_EQ(compare(-1, -2), strong_ordering::greater);
+  EXPECT_EQ(compare(-1, -1), strong_ordering::equal);
+  EXPECT_EQ(compare(-1, 0), strong_ordering::less);
+  EXPECT_EQ(compare(-1, 1), strong_ordering::less);
+  EXPECT_EQ(compare(-1, 2), strong_ordering::less);
 
-#else
+  EXPECT_EQ(compare(0, -2), strong_ordering::greater);
+  EXPECT_EQ(compare(0, -1), strong_ordering::greater);
+  EXPECT_EQ(compare(0, 0), strong_ordering::equal);
+  EXPECT_EQ(compare(0, 1), strong_ordering::less);
+  EXPECT_EQ(compare(0, 2), strong_ordering::less);
 
-#define pzl_likely
-#define pzl_unlikely
-
-#endif
+  EXPECT_EQ(compare(1, -2), strong_ordering::greater);
+  EXPECT_EQ(compare(1, -1), strong_ordering::greater);
+  EXPECT_EQ(compare(1, 0), strong_ordering::greater);
+  EXPECT_EQ(compare(1, 1), strong_ordering::equal);
+  EXPECT_EQ(compare(1, 2), strong_ordering::less);
+}

@@ -31,9 +31,20 @@
 
 namespace compat {
 using strong_ordering = std::strong_ordering;
+
+template <typename L, typename R>
+constexpr strong_ordering compare(L left, R right) {
+  return left <=> right;
+}
 }
 #else
 namespace compat {
 enum class strong_ordering { less, equal, greater };
+
+template <typename L, typename R>
+constexpr strong_ordering compare(L left, R right) {
+  if (left == right) return strong_ordering::equal;
+  return left < right ? strong_ordering::less : strong_ordering::greater;
+}
 }
 #endif // __cpp_lib_three_way_comparison

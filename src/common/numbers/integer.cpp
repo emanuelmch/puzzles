@@ -24,6 +24,7 @@
 
 #include "common/assertions.h" // ensure
 #include "common/strings.h"    // Puzzles::padLeading
+#include "compat/compare.h"    // compat::strong_ordering, compat::compare
 
 #include <cmath> // std::pow
 
@@ -94,4 +95,108 @@ std::string Integer::toString() const {
   }
 
   return result;
+}
+
+inline compat::strong_ordering compareSlices(const std::vector<Integer::value_t> &left,
+                                             const std::vector<Integer::value_t> &right) {
+  auto lengthComparison = compat::compare(left.size(), right.size());
+  if (lengthComparison != compat::strong_ordering::equal) {
+    return lengthComparison;
+  }
+
+  auto lit = left.crbegin(), rit = right.crbegin();
+  while (lit != left.crend()) {
+    ensure(rit != right.crend());
+
+    auto sliceComparison = compat::compare(*lit, *rit);
+    if (sliceComparison == compat::strong_ordering::equal) {
+      ++lit;
+      ++rit;
+      continue;
+    }
+
+    return sliceComparison;
+  }
+
+  return compat::strong_ordering::equal;
+}
+
+Integer Integer::operator+(const Integer &o) const {
+  if (slices.empty()) return o;
+  if (o.slices.empty()) return *this;
+
+  auto sameSign = this->positive() == o.positive();
+  if (!sameSign && this->slices == o.slices) {
+    return Integer(0);
+  }
+
+  bool finalSign;
+  typeof(slices.cbegin()) lit, rit;
+  typeof(slices.cend()) lend, rend;
+
+  // if sameSign, we don't care about the order, so we can avoid the compareSlices call
+  if (sameSign || compareSlices(this->slices, o.slices) != compat::strong_ordering::less) {
+    finalSign = this->_positive;
+    lit = this->slices.cbegin();
+    lend = this->slices.cend();
+
+    rit = o.slices.cbegin();
+    rend = o.slices.cend();
+  } else {
+    finalSign = o._positive;
+    lit = o.slices.cbegin();
+    lend = o.slices.cend();
+
+    rit = this->slices.cbegin();
+    rend = this->slices.cend();
+  }
+
+  std::vector<value_t> result;
+  result.reserve(std::max(this->slices.size(), o.slices.size()) + 1);
+
+  int_fast64_t carryOver = 0;
+
+  while (lit != lend || rit != rend) {
+    int_fast64_t lbit = lit == lend ? 0 : valueAndAdvance<value_t>(&lit);
+    int_fast64_t rbit = rit == rend ? 0 : valueAndAdvance<value_t>(&rit);
+    int_fast64_t sum = sameSign ? lbit + rbit + carryOver : lbit - rbit - carryOver;
+
+    ensure(sum >= (SLICE_SIZE * static_cast<intmax_t>(-1)) && sum <= (SLICE_SIZE * 2 - 1));
+
+    if (sum < 0) {
+      carryOver = 1;
+      sum += SLICE_SIZE;
+    } else if (sum > SLICE_MAX) {
+      carryOver = 1;
+      sum -= SLICE_SIZE;
+    } else {
+      carryOver = 0;
+    }
+
+    result.push_back(sum);
+  }
+
+  ensure_m(carryOver == 0 || (carryOver == 1 && sameSign), "carry over is " << carryOver);
+  if (carryOver) result.push_back(1);
+
+  while (result.back() == 0) {
+    result.pop_back();
+    ensure_m(!result.empty(), "sum is 0, but we should've left the function at the beginning");
+  }
+
+  return Integer(result, finalSign);
+}
+
+Integer Integer::operator-(const Integer &o) const {
+  if (this->slices.empty()) return Integer{o.slices, !o._positive};
+  if (*this == o) return Integer{0};
+
+  if (this->positive() == o.positive() && o.slices.size() == 1 && o.slices[0] <= this->slices[0]) {
+    // Optimizing this common scenario
+    Integer newInteger{*this};
+    newInteger.slices[0] -= o.slices[0];
+    return newInteger;
+  }
+
+  return *this + Integer{o.slices, !o._positive};
 }
