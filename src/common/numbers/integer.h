@@ -20,33 +20,33 @@
  * SOFTWARE.
  */
 
-#include "common/strings.h"
+#pragma once
 
-#include <gtest/gtest.h>
+#include <cstdint> // uint32_t, intmax_t
+#include <string>  // std::string
+#include <vector>  // std::vector
 
-using namespace Puzzles;
+namespace pzl {
 
-TEST(Strings, PadLeading) {
-  EXPECT_EQ(padLeading("", 8, '0'), "00000000");
-  EXPECT_EQ(padLeading("1234", 8, '0'), "00001234");
-  EXPECT_EQ(padLeading("12345678", 8, '0'), "12345678");
-  EXPECT_EQ(padLeading("123456789", 8, '0'), "123456789");
+struct Integer {
+
+  using value_t = uint32_t;
+
+  explicit Integer(const std::string &);
+  explicit Integer(intmax_t value);
+
+  [[nodiscard]] inline bool positive() const { return _positive; }
+  [[nodiscard]] std::string toString() const;
+
+private:
+  std::vector<value_t> slices; // Low-endian base-10 storage
+  bool _positive;
+};
 }
 
-TEST(Strings, TrimLeading) {
-  EXPECT_EQ(trimLeadingView(" test", ' '), "test");
-  EXPECT_EQ(trimLeadingView(" test", 't'), " test");
+namespace std { // NOLINT(cert-dcl58-cpp)
 
-  EXPECT_EQ(trimLeadingView("rrr", 'r'), "");
-  EXPECT_EQ(trimLeadingView("rrr", ' '), "rrr");
+inline string to_string(const pzl::Integer &integer) {
+  return integer.toString();
 }
-
-TEST(Strings, TrimLeadingView) {
-  std::string simple = " test";
-  EXPECT_EQ(trimLeadingView(simple, ' '), "test");
-  EXPECT_EQ(trimLeadingView(simple, 't'), " test");
-
-  std::string repeat = "rrr";
-  EXPECT_EQ(trimLeadingView(repeat, 'r'), "");
-  EXPECT_EQ(trimLeadingView(repeat, ' '), "rrr");
 }
