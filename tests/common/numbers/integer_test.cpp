@@ -181,6 +181,31 @@ TEST(Integer, Division) {
   EXPECT_EQ(std::to_string(bigInteger / sixteen), "512");
 }
 
+TEST(Integer, Power) {
+  Integer negativeFour{-4};
+  Integer negativeOne{-1};
+  Integer zero{0};
+  Integer one{1};
+  Integer two{2};
+  Integer three{3};
+  Integer eight{8};
+
+  EXPECT_EQ(std::to_string(std::pow(one, one)), "1");
+  EXPECT_EQ(std::to_string(std::pow(one, zero)), "1");
+  EXPECT_EQ(std::to_string(std::pow(one, eight)), "1");
+  EXPECT_EQ(std::to_string(std::pow(two, one)), "2");
+  EXPECT_EQ(std::to_string(std::pow(two, two)), "4");
+  EXPECT_EQ(std::to_string(std::pow(two, eight)), "256");
+  EXPECT_EQ(std::to_string(std::pow(eight, zero)), "1");
+  EXPECT_EQ(std::to_string(std::pow(zero, eight)), "0");
+
+  EXPECT_EQ(std::to_string(std::pow(negativeOne, one)), "-1");
+  EXPECT_EQ(std::to_string(std::pow(negativeOne, two)), "1");
+  EXPECT_EQ(std::to_string(std::pow(negativeFour, one)), "-4");
+  EXPECT_EQ(std::to_string(std::pow(negativeFour, two)), "16");
+  EXPECT_EQ(std::to_string(std::pow(negativeFour, three)), "-64");
+}
+
 TEST(Integer, Comparison_EqualTo) {
   EXPECT_TRUE(Integer{-1} == Integer{-1});
   EXPECT_TRUE(Integer{0} == Integer{0});

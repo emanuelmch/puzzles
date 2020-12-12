@@ -246,6 +246,22 @@ Integer Integer::operator/(const Integer &o) const {
   return result;
 }
 
+Integer Integer::power(const Integer &exponent) const {
+  // TODO: Replace with *this != 0 || exponent != 0
+  ensure(*this != Integer{0} || exponent != Integer{0}); // zero ^ zero is undefined
+  ensure(exponent.positive());                           // Haven't implemented this yet
+
+  Integer result{1};
+
+  // TODO: Replace with ++i
+  for (Integer i{0}; i < exponent; i = i + Integer{1}) {
+    // TODO: Replace with result *= *this
+    result = result * *this;
+  }
+
+  return result;
+}
+
 bool Integer::operator<(const Integer &o) const {
   if (this->positive() != o.positive()) {
     return this->positive() < o.positive();

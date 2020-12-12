@@ -45,6 +45,8 @@ struct Integer {
   [[nodiscard]] Integer operator*(const Integer &) const;
   [[nodiscard]] Integer operator/(const Integer &) const;
 
+  [[nodiscard]] Integer power(const Integer &) const;
+
 #ifdef __cpp_lib_three_way_comparison
   [[nodiscard]] inline bool operator==(const Integer &) const = default;
   [[nodiscard]] inline bool operator!=(const Integer &) const = default;
@@ -72,6 +74,10 @@ private:
 }
 
 namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline pzl::Integer pow(const pzl::Integer &base, const pzl::Integer &exponent) {
+  return base.power(exponent);
+}
 
 inline string to_string(const pzl::Integer &integer) {
   return integer.toString();
