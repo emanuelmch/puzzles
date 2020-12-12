@@ -232,6 +232,19 @@ TEST(Integer, Comparison_NotEqualTo) {
   EXPECT_FALSE(Integer{1} != Integer{1});
 }
 
+TEST(Integer, Comparison_NotEqualToInt) {
+  EXPECT_TRUE(Integer{-1} != 0);
+  EXPECT_TRUE(Integer{-1} != 1);
+  EXPECT_TRUE(Integer{0} != -1);
+  EXPECT_TRUE(Integer{0} != 1);
+  EXPECT_TRUE(Integer{1} != -1);
+  EXPECT_TRUE(Integer{1} != 0);
+
+  EXPECT_FALSE(Integer{-1} != -1);
+  EXPECT_FALSE(Integer{0} != 0);
+  EXPECT_FALSE(Integer{1} != 1);
+}
+
 TEST(Integer, Comparison_LessThan) {
   EXPECT_TRUE(Integer{0} < Integer{1});
   EXPECT_TRUE(Integer{9} < Integer{10});

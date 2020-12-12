@@ -62,6 +62,8 @@ struct Integer {
   [[nodiscard]] bool operator<(const Integer &) const;
   [[nodiscard]] bool operator<=(const Integer &) const;
 
+  [[nodiscard]] inline bool operator!=(intmax_t o) const { return *this != Integer{o}; }
+
   Integer &operator++();
 
 private:

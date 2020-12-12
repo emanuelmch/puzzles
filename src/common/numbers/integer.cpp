@@ -220,8 +220,7 @@ Integer Integer::operator*(const Integer &o) const {
 }
 
 Integer Integer::operator/(const Integer &o) const {
-  // TODO: Replace with o != 0
-  ensure(o != Integer{0}); // division by zero is undefined
+  ensure(o != 0); // division by zero is undefined
 
   if (slices.empty()) { // Zero divided by anything is always zero
     return *this;
@@ -245,9 +244,8 @@ Integer Integer::operator/(const Integer &o) const {
 }
 
 Integer Integer::power(const Integer &exponent) const {
-  // TODO: Replace with *this != 0 || exponent != 0
-  ensure(*this != Integer{0} || exponent != Integer{0}); // zero ^ zero is undefined
-  ensure(exponent.positive());                           // Haven't implemented this yet
+  ensure(*this != 0 || exponent != 0); // zero ^ zero is undefined
+  ensure(exponent.positive());         // Haven't implemented this yet
 
   Integer result{1};
 
