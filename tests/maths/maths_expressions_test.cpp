@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 
 using namespace Maths;
-using Puzzles::Numbers::Number;
+using Puzzles::Numbers::Rational;
 
 TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("1 +2"), 3);
@@ -71,13 +71,13 @@ TEST(Expressions, Tokenizer) {
   Token open('(');
   Token close(')');
 
-  Token zero(Number(0));
-  Token one(Number(1));
-  Token two(Number(2));
-  Token twelve(Number(12));
-  Token thirteen(Number(13));
-  Token hundredTwentyThree(Number(123));
-  Token thousand(Number(1000));
+  Token zero(Rational(0));
+  Token one(Rational(1));
+  Token two(Rational(2));
+  Token twelve(Rational(12));
+  Token thirteen(Rational(13));
+  Token hundredTwentyThree(Rational(123));
+  Token thousand(Rational(1000));
 
   EXPECT_EQ(std::to_string(tokenizeExpression("1+2")), std::to_string(std::vector{one, plus, two}));
   EXPECT_EQ(std::to_string(tokenizeExpression("1000/123")),

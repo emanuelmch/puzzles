@@ -25,7 +25,6 @@
 #include <gtest/gtest.h>
 
 using namespace Puzzles::Numbers;
-using Puzzles::Numbers::Number;
 
 TEST(Numbers, CharToInt) {
   EXPECT_EQ(ctoi('0'), 0);
@@ -72,41 +71,41 @@ TEST(Numbers, LowestCommonMultiple) {
   EXPECT_EQ(lowestCommonMultiple(10, 25), 50);
 }
 
-TEST(Numbers_Number, CreateFromString) {
-  Number negativeOne("-1");
-  Number zero("0");
-  Number one("1");
+TEST(Numbers_Rational, CreateFromString) {
+  Rational negativeOne("-1");
+  Rational zero("0");
+  Rational one("1");
 
   EXPECT_EQ(std::to_string(negativeOne), "-1");
   EXPECT_EQ(std::to_string(zero), "0");
   EXPECT_EQ(std::to_string(one), "1");
 }
 
-TEST(Numbers_Number, CreateFromInt) {
-  EXPECT_EQ(std::to_string(Number(-1)), "-1");
-  EXPECT_EQ(std::to_string(Number(0)), "0");
-  EXPECT_EQ(std::to_string(Number(1)), "1");
+TEST(Numbers_Rational, CreateFromInt) {
+  EXPECT_EQ(std::to_string(Rational(-1)), "-1");
+  EXPECT_EQ(std::to_string(Rational(0)), "0");
+  EXPECT_EQ(std::to_string(Rational(1)), "1");
 }
 
-TEST(Numbers_Number, Addition) {
-  Number negativeFive(-5);
-  Number negativeOne(-1);
-  Number zero(0);
-  Number one(1);
-  Number two(2);
-  Number three(3);
-  Number four(4);
-  Number five(5);
-  Number nine(9);
-  Number fifteen(15);
-  Number oneHundredTwentyThree(123);
-  Number twoHundredThirtyFour(234);
-  Number absurdNumberOne("1354645611354413541715318441313195");
-  Number absurdNumberTwo("137415147537554114372745478463741");
+TEST(Numbers_Rational, Addition) {
+  Rational negativeFive(-5);
+  Rational negativeOne(-1);
+  Rational zero(0);
+  Rational one(1);
+  Rational two(2);
+  Rational three(3);
+  Rational four(4);
+  Rational five(5);
+  Rational nine(9);
+  Rational fifteen(15);
+  Rational oneHundredTwentyThree(123);
+  Rational twoHundredThirtyFour(234);
+  Rational absurdNumberOne("1354645611354413541715318441313195");
+  Rational absurdNumberTwo("137415147537554114372745478463741");
 
-  Number half(1, 2);
-  Number oneOverFiveHundredTwelve(1, 512);
-  Number negativeOneOverFiveHundredTwelve(-1, 512);
+  Rational half(1, 2);
+  Rational oneOverFiveHundredTwelve(1, 512);
+  Rational negativeOneOverFiveHundredTwelve(-1, 512);
 
   EXPECT_EQ(std::to_string(zero + one), "1");
   EXPECT_EQ(std::to_string(one + zero), "1");
@@ -146,19 +145,19 @@ TEST(Numbers_Number, Addition) {
   EXPECT_EQ(std::to_string(zero + negativeOne), "-1");
 }
 
-TEST(Numbers_Number, Subtraction) {
-  Number zero(0);
-  Number one(1);
-  Number two(2);
-  Number five(5);
-  Number ten(10);
-  Number hundred(100);
+TEST(Numbers_Rational, Subtraction) {
+  Rational zero(0);
+  Rational one(1);
+  Rational two(2);
+  Rational five(5);
+  Rational ten(10);
+  Rational hundred(100);
 
-  Number absurdNumberOne(1537, 512);
-  Number absurdNumberTwo(1, 8192);
+  Rational absurdNumberOne(1537, 512);
+  Rational absurdNumberTwo(1, 8192);
 
-  Number oneOverTwo(1, 2);
-  Number threeOverTwo(3, 2);
+  Rational oneOverTwo(1, 2);
+  Rational threeOverTwo(3, 2);
 
   EXPECT_EQ(std::to_string(zero - zero), "0");
   EXPECT_EQ(std::to_string(one - zero), "1");
@@ -178,15 +177,15 @@ TEST(Numbers_Number, Subtraction) {
   EXPECT_EQ(std::to_string(absurdNumberOne - absurdNumberTwo), "24591/8192");
 }
 
-TEST(Numbers_Number, Multiplication) {
-  Number negativeFour(-4);
-  Number negativeOne(-1);
-  Number zero(0);
-  Number one(1);
-  Number two(2);
-  Number four(4);
-  Number bigNumber("18446744073709551616");
-  Number absurdNumberOne(15630, 6), absurdNumberTwo(5361, 15);
+TEST(Numbers_Rational, Multiplication) {
+  Rational negativeFour(-4);
+  Rational negativeOne(-1);
+  Rational zero(0);
+  Rational one(1);
+  Rational two(2);
+  Rational four(4);
+  Rational bigNumber("18446744073709551616");
+  Rational absurdNumberOne(15630, 6), absurdNumberTwo(5361, 15);
 
   EXPECT_EQ(std::to_string(zero * zero), "0");
   EXPECT_EQ(std::to_string(zero * one), "0");
@@ -218,16 +217,16 @@ TEST(Numbers_Number, Multiplication) {
   EXPECT_EQ(std::to_string(absurdNumberOne * absurdNumberTwo), "931027");
 }
 
-TEST(Numbers_Number, Division) {
-  Number minusTwo(-2);
-  Number one(1);
-  Number two(2);
-  Number five(5);
-  Number ten(10);
-  Number sixteen(16);
-  Number fifty(50);
-  Number thousandTwentyFour(1024);
-  Number bigNumber(8192);
+TEST(Numbers_Rational, Division) {
+  Rational minusTwo(-2);
+  Rational one(1);
+  Rational two(2);
+  Rational five(5);
+  Rational ten(10);
+  Rational sixteen(16);
+  Rational fifty(50);
+  Rational thousandTwentyFour(1024);
+  Rational bigNumber(8192);
 
   EXPECT_EQ(std::to_string(two / one), "2");
   EXPECT_EQ(std::to_string(two / two), "1");
@@ -245,14 +244,14 @@ TEST(Numbers_Number, Division) {
   EXPECT_EQ(std::to_string(one / bigNumber), "1/8192");
 }
 
-TEST(Numbers_Number, Power) {
-  Number negativeFour(-4);
-  Number negativeOne(-1);
-  Number zero(0);
-  Number one(1);
-  Number two(2);
-  Number three(3);
-  Number eight(8);
+TEST(Numbers_Rational, Power) {
+  Rational negativeFour(-4);
+  Rational negativeOne(-1);
+  Rational zero(0);
+  Rational one(1);
+  Rational two(2);
+  Rational three(3);
+  Rational eight(8);
 
   EXPECT_EQ(std::to_string(std::pow(one, one)), "1");
   EXPECT_EQ(std::to_string(std::pow(one, zero)), "1");
@@ -270,8 +269,8 @@ TEST(Numbers_Number, Power) {
   EXPECT_EQ(std::to_string(std::pow(negativeFour, three)), "-64");
 }
 
-TEST(Numbers_Number, Increment) {
-  Number value(0);
+TEST(Numbers_Rational, Increment) {
+  Rational value(0);
   EXPECT_EQ(std::to_string(++value), "1");
   EXPECT_EQ(std::to_string(++value), "2");
   EXPECT_EQ(std::to_string(++value), "3");
@@ -285,46 +284,46 @@ TEST(Numbers_Number, Increment) {
   EXPECT_EQ(std::to_string(++value), "11");
 }
 
-TEST(Numbers_Number, Comparison_LessThan) {
-  EXPECT_TRUE(Number(0) < Number(1));
-  EXPECT_TRUE(Number(9) < Number(10));
-  EXPECT_TRUE(Number("18446744073709551615") < Number("18446744073709551616"));
-  EXPECT_TRUE(Number(-500) < Number(0));
-  EXPECT_TRUE(Number(-500) < Number(1));
-  EXPECT_TRUE(Number(-500) < Number(-499));
+TEST(Numbers_Rational, Comparison_LessThan) {
+  EXPECT_TRUE(Rational(0) < Rational(1));
+  EXPECT_TRUE(Rational(9) < Rational(10));
+  EXPECT_TRUE(Rational("18446744073709551615") < Rational("18446744073709551616"));
+  EXPECT_TRUE(Rational(-500) < Rational(0));
+  EXPECT_TRUE(Rational(-500) < Rational(1));
+  EXPECT_TRUE(Rational(-500) < Rational(-499));
 
-  EXPECT_FALSE(Number(0) < Number(0));
-  EXPECT_FALSE(Number(1) < Number(0));
-  EXPECT_FALSE(Number(10) < Number(9));
-  EXPECT_FALSE(Number("18446744073709551616") < Number("18446744073709551616"));
-  EXPECT_FALSE(Number(0) < Number(-500));
-  EXPECT_FALSE(Number(1) < Number(-500));
-  EXPECT_FALSE(Number(-499) < Number(-500));
-  EXPECT_FALSE(Number(-500) < Number(-500));
+  EXPECT_FALSE(Rational(0) < Rational(0));
+  EXPECT_FALSE(Rational(1) < Rational(0));
+  EXPECT_FALSE(Rational(10) < Rational(9));
+  EXPECT_FALSE(Rational("18446744073709551616") < Rational("18446744073709551616"));
+  EXPECT_FALSE(Rational(0) < Rational(-500));
+  EXPECT_FALSE(Rational(1) < Rational(-500));
+  EXPECT_FALSE(Rational(-499) < Rational(-500));
+  EXPECT_FALSE(Rational(-500) < Rational(-500));
 }
 
-TEST(Numbers_Number, Comparison_EqualToNumber) {
-  EXPECT_TRUE(Number(-1) == Number(-1));
-  EXPECT_TRUE(Number(0) == Number(0));
-  EXPECT_TRUE(Number(1) == Number(1));
+TEST(Numbers_Rational, Comparison_EqualToRational) {
+  EXPECT_TRUE(Rational(-1) == Rational(-1));
+  EXPECT_TRUE(Rational(0) == Rational(0));
+  EXPECT_TRUE(Rational(1) == Rational(1));
 
-  EXPECT_FALSE(Number(-1) == Number(0));
-  EXPECT_FALSE(Number(-1) == Number(1));
-  EXPECT_FALSE(Number(0) == Number(-1));
-  EXPECT_FALSE(Number(0) == Number(1));
-  EXPECT_FALSE(Number(1) == Number(-1));
-  EXPECT_FALSE(Number(1) == Number(0));
+  EXPECT_FALSE(Rational(-1) == Rational(0));
+  EXPECT_FALSE(Rational(-1) == Rational(1));
+  EXPECT_FALSE(Rational(0) == Rational(-1));
+  EXPECT_FALSE(Rational(0) == Rational(1));
+  EXPECT_FALSE(Rational(1) == Rational(-1));
+  EXPECT_FALSE(Rational(1) == Rational(0));
 }
 
-TEST(Numbers_Number, Comparison_EqualToInt) {
-  EXPECT_TRUE(Number(-1) == -1);
-  EXPECT_TRUE(Number(0) == 0);
-  EXPECT_TRUE(Number(1) == 1);
+TEST(Numbers_Rational, Comparison_EqualToInt) {
+  EXPECT_TRUE(Rational(-1) == -1);
+  EXPECT_TRUE(Rational(0) == 0);
+  EXPECT_TRUE(Rational(1) == 1);
 
-  EXPECT_FALSE(Number(-1) == 0);
-  EXPECT_FALSE(Number(-1) == 1);
-  EXPECT_FALSE(Number(0) == -1);
-  EXPECT_FALSE(Number(0) == 1);
-  EXPECT_FALSE(Number(1) == -1);
-  EXPECT_FALSE(Number(1) == 0);
+  EXPECT_FALSE(Rational(-1) == 0);
+  EXPECT_FALSE(Rational(-1) == 1);
+  EXPECT_FALSE(Rational(0) == -1);
+  EXPECT_FALSE(Rational(0) == 1);
+  EXPECT_FALSE(Rational(1) == -1);
+  EXPECT_FALSE(Rational(1) == 0);
 }

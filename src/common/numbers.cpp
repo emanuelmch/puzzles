@@ -40,19 +40,19 @@ inline std::string_view fitNumerator(const std::string_view &original) {
   return Puzzles::trimLeadingView(value, '0');
 }
 
-Number::Number(const std::string &value)
+Rational::Rational(const std::string &value)
     : numerator(fitNumerator(value)), denominator("1"), positive(value.empty() || value[0] != '-') {
   ensure(numerator.find_first_not_of("0123456789") == numerator.npos);
 }
 
-Number::Number(intmax_t value) : Number(std::to_string(value)) {}
+Rational::Rational(intmax_t value) : Rational(std::to_string(value)) {}
 
-Number::Number(intmax_t _n, uintmax_t _d) : Number(static_cast<uintmax_t>(std::abs(_n)), _d, _n >= 0) {}
+Rational::Rational(intmax_t _n, uintmax_t _d) : Rational(static_cast<uintmax_t>(std::abs(_n)), _d, _n >= 0) {}
 
-Number::Number(uintmax_t numerator, uintmax_t denominator, bool positive)
-    : Number(std::to_string(numerator), std::to_string(denominator), positive) {}
+Rational::Rational(uintmax_t numerator, uintmax_t denominator, bool positive)
+    : Rational(std::to_string(numerator), std::to_string(denominator), positive) {}
 
-Number::Number(const std::string &_numerator, std::string _denominator, bool positive)
+Rational::Rational(const std::string &_numerator, std::string _denominator, bool positive)
     : numerator(trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
   ensure(numerator.find_first_not_of("0123456789") == numerator.npos);
   ensure(denominator.find_first_not_of("0123456789") == denominator.npos);
@@ -109,7 +109,7 @@ compat::strong_ordering compareIntegers(const std::string &left, const std::stri
   return compat::strong_ordering::equal;
 }
 
-Number Number::operator+(const Number &o) const {
+Rational Rational::operator+(const Rational &o) const {
   auto [left, right] = normalizeDenominatorWith(o);
   auto sameSign = left.positive == right.positive;
   auto finalSign = left.positive;
@@ -152,30 +152,30 @@ Number Number::operator+(const Number &o) const {
 
   std::reverse(finalSum.begin(), finalSum.end());
 
-  Number result(finalSum, left.denominator, finalSign);
+  Rational result(finalSum, left.denominator, finalSign);
   result.simplify();
 
   return result;
 }
 
-Number Number::operator-(const Number &o) const {
-  Number negatedOther(o.numerator, o.denominator, !o.positive);
+Rational Rational::operator-(const Rational &o) const {
+  Rational negatedOther(o.numerator, o.denominator, !o.positive);
   return *this + negatedOther;
 }
 
-inline Number multiply(const std::string &_min, const std::string &_max) {
-  const Number min(_min);
-  const Number max(_max);
+inline Rational multiply(const std::string &_min, const std::string &_max) {
+  const Rational min(_min);
+  const Rational max(_max);
 
-  Number result(0);
-  for (Number i(0); i < min; ++i) {
+  Rational result(0);
+  for (Rational i(0); i < min; ++i) {
     result += max;
   }
 
   return result;
 }
 
-Number Number::operator*(const Number &o) const {
+Rational Rational::operator*(const Rational &o) const {
   auto finalSign = this->positive == o.positive;
 
   auto [us, them] = normalizeDenominatorWith(o);
@@ -183,38 +183,38 @@ Number Number::operator*(const Number &o) const {
   auto [min, max] = (absCmp == compat::strong_ordering::less) ? std::pair(us, them) : std::pair(them, us);
 
   if (min == 1) {
-    return Number(max.numerator, max.denominator, finalSign);
+    return Rational(max.numerator, max.denominator, finalSign);
   }
 
   auto num = multiply(min.numerator, max.numerator).numerator;
   auto den = multiply(min.denominator, max.denominator).numerator;
 
-  Number result(num, den, finalSign);
+  Rational result(num, den, finalSign);
   result.simplify();
   return result;
 }
 
-Number Number::operator/(const Number &o) const {
+Rational Rational::operator/(const Rational &o) const {
   ensure(o != 0); // division by zero is undefined
   if (numerator == "0") {
-    return Number(0);
+    return Rational(0);
   }
 
   auto sameSign = this->positive == o.positive;
   if (o.numerator == "1" && o.denominator == "1") {
-    return Number(numerator, denominator, sameSign);
+    return Rational(numerator, denominator, sameSign);
   }
 
   ensure(this->denominator == "1" && o.denominator == "1"); // Haven't implemented this yet
 
   auto result = division(this->numerator, o.numerator);
-  return Number(result.numerator, result.denominator, sameSign);
+  return Rational(result.numerator, result.denominator, sameSign);
 }
 
-Number Number::division(const std::string &_numerator, const std::string &_denominator) {
-  Number remainder(_numerator);
-  Number factor(_denominator);
-  Number integer(0);
+Rational Rational::division(const std::string &_numerator, const std::string &_denominator) {
+  Rational remainder(_numerator);
+  Rational factor(_denominator);
+  Rational integer(0);
 
   while (remainder >= factor) {
     remainder -= factor;
@@ -224,29 +224,29 @@ Number Number::division(const std::string &_numerator, const std::string &_denom
   if (remainder == 0) {
     return integer;
   } else {
-    Number rational(remainder.numerator, _denominator, true);
+    Rational rational(remainder.numerator, _denominator, true);
     return integer + rational;
   }
 }
 
-Number Number::power(const Number &exp) const {
+Rational Rational::power(const Rational &exp) const {
   ensure(*this != 0 || exp != 0); // zero ^ zero is undefined
   ensure(exp.positive);           // Haven't implemented this yet;
-  Number result(1);
+  Rational result(1);
 
-  for (Number i(0); i < exp; ++i) {
+  for (Rational i(0); i < exp; ++i) {
     result *= *this;
   }
 
   return result;
 }
 
-Number &Number::operator++() {
-  copy(*this + Number(1));
+Rational &Rational::operator++() {
+  copy(*this + Rational(1));
   return *this;
 }
 
-bool Number::operator<(const Number &o) const {
+bool Rational::operator<(const Rational &o) const {
   if (this->positive != o.positive) {
     return o.positive;
   }
@@ -260,17 +260,17 @@ bool Number::operator<(const Number &o) const {
   }
 }
 
-bool Number::operator==(const Number &o) const {
+bool Rational::operator==(const Rational &o) const {
   return this->positive == o.positive && this->denominator == o.denominator && this->numerator == o.numerator;
 }
 
-bool Number::operator==(intmax_t o) const {
+bool Rational::operator==(intmax_t o) const {
   if (o == 0) return numerator.empty();
 
   return this->denominator == "1" && this->positive == (o >= 0) && this->numerator == std::to_string(std::abs(o));
 }
 
-std::string Number::toString() const {
+std::string Rational::toString() const {
   if (numerator.empty()) return "0";
 
   auto result = numerator;
@@ -286,12 +286,12 @@ std::string Number::toString() const {
   return result;
 }
 
-std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) const {
+std::pair<Rational, Rational> Rational::normalizeDenominatorWith(const Rational &o) const {
   if (denominator == o.denominator) return std::pair(*this, o);
 
-  // FIXME: Use numbers here after we've implemented operator* and remove these two ensures
-  ensure(Number(denominator) < Number(std::numeric_limits<uint32_t>::max()));
-  ensure(Number(o.denominator) < Number(std::numeric_limits<uint32_t>::max()));
+  // FIXME: Use rationals here after we've implemented operator* and remove these two ensures
+  ensure(Rational(denominator) < Rational(std::numeric_limits<uint32_t>::max()));
+  ensure(Rational(o.denominator) < Rational(std::numeric_limits<uint32_t>::max()));
 
   uint32_t leftDenominator = strtoumax(this->denominator.c_str(), nullptr, 10);
   uint32_t leftNumerator = strtoumax(this->numerator.c_str(), nullptr, 10);
@@ -302,17 +302,17 @@ std::pair<Number, Number> Number::normalizeDenominatorWith(const Number &o) cons
   auto left = newDenominator / leftDenominator * leftNumerator;
   auto right = newDenominator / rightDenominator * rightNumerator;
 
-  return std::pair(Number(left, newDenominator, this->positive), Number(right, newDenominator, o.positive));
+  return std::pair(Rational(left, newDenominator, this->positive), Rational(right, newDenominator, o.positive));
 }
 
-void Number::simplify() {
+void Rational::simplify() {
   if (numerator.empty()) denominator = "1";
   if (denominator == "1") return;
 
   // Haven't implemented these two yet
-  ensure_m(Number(numerator) <= Number(std::to_string(std::numeric_limits<uintmax_t>::max())),
+  ensure_m(Rational(numerator) <= Rational(std::to_string(std::numeric_limits<uintmax_t>::max())),
            numerator << " > " << std::numeric_limits<uintmax_t>::max());
-  ensure_m(Number(denominator) <= Number(std::to_string(std::numeric_limits<uintmax_t>::max())),
+  ensure_m(Rational(denominator) <= Rational(std::to_string(std::numeric_limits<uintmax_t>::max())),
            denominator << " > " << std::numeric_limits<uintmax_t>::max());
   auto num = std::strtoumax(numerator.c_str(), nullptr, 10);
   auto den = std::strtoumax(denominator.c_str(), nullptr, 10);

@@ -32,7 +32,7 @@
 
 using namespace Maths;
 
-using Puzzles::Numbers::Number;
+using Puzzles::Numbers::Rational;
 
 using std::stack;
 using std::string;
@@ -43,21 +43,21 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
   vector<Token> tokens;
 
   bool isReadingNumber = false;
-  Number currentNumber(0);
+  Rational currentNumber(0);
 
   for (const auto token : expression) {
     if (token >= '0' && token <= '9') {
       isReadingNumber = true;
       // TODO: operator*=(int) and operator+=(int)
-      currentNumber *= Number(10);
-      currentNumber += Number(token - '0');
+      currentNumber *= Rational(10);
+      currentNumber += Rational(token - '0');
       continue;
     }
 
     if (currentNumber != 0) {
       tokens.emplace_back(currentNumber);
       isReadingNumber = false;
-      currentNumber = Number(0);
+      currentNumber = Rational(0);
     }
 
     tokens.emplace_back(token);
@@ -80,7 +80,7 @@ inline uint_fast8_t getPrecedence(char operation) {
   return 0;
 }
 
-void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
+void reduceOnce(stack<Rational> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
 
@@ -105,7 +105,7 @@ void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
   }
 }
 
-inline void reduceToParenthesis(stack<Number> *numbers, stack<char> *operators) {
+inline void reduceToParenthesis(stack<Rational> *numbers, stack<char> *operators) {
   ensure(!operators->empty());
   while (operators->top() != '(') {
     reduceOnce(numbers, operators);
@@ -114,7 +114,7 @@ inline void reduceToParenthesis(stack<Number> *numbers, stack<char> *operators) 
   operators->pop();
 }
 
-inline void reduceToPrecedence(stack<Number> *numbers, stack<char> *operators, uint_fast8_t precedence) {
+inline void reduceToPrecedence(stack<Rational> *numbers, stack<char> *operators, uint_fast8_t precedence) {
   while (!operators->empty() && getPrecedence(operators->top()) >= precedence) {
     reduceOnce(numbers, operators);
   }
@@ -126,12 +126,12 @@ inline void replace_all(std::string *expression, const std::string &before, cons
   }
 }
 
-Number Maths::evaluateExpression(std::string expression) {
+Rational Maths::evaluateExpression(std::string expression) {
   expression.erase(std::remove_if(expression.begin(), expression.end(), isspace), expression.end());
   replace_all(&expression, "--", "+");
   replace_all(&expression, "++", "+");
 
-  stack<Number> numbers;
+  stack<Rational> numbers;
   stack<char> operators;
   int parenthesisCount = 0;
   bool isLastTokenAnOperator = false;
@@ -151,7 +151,7 @@ Number Maths::evaluateExpression(std::string expression) {
     } else if (token == '^') {
       operators.push('^');
     } else if (token == '-' && (numbers.empty() || isLastTokenAnOperator)) {
-      numbers.push(Number(-1));
+      numbers.push(Rational(-1));
       operators.push('*');
     } else {
       reduceToPrecedence(&numbers, &operators, getPrecedence(token.asOperator));

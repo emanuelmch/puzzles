@@ -67,29 +67,29 @@ constexpr uintmax_t lowestCommonMultiple(uintmax_t lhs, uintmax_t rhs) {
   return lhs * rhs / gcd;
 }
 
-struct Number {
+struct Rational {
 
-  explicit Number(const std::string &);
-  explicit Number(intmax_t);
-  Number(intmax_t, uintmax_t);
+  explicit Rational(const std::string &);
+  explicit Rational(intmax_t);
+  Rational(intmax_t, uintmax_t);
 
-  [[nodiscard]] Number operator+(const Number &) const;
-  [[nodiscard]] Number operator-(const Number &) const;
-  [[nodiscard]] Number operator*(const Number &) const;
-  [[nodiscard]] Number operator/(const Number &) const;
+  [[nodiscard]] Rational operator+(const Rational &) const;
+  [[nodiscard]] Rational operator-(const Rational &) const;
+  [[nodiscard]] Rational operator*(const Rational &) const;
+  [[nodiscard]] Rational operator/(const Rational &) const;
 
-  [[nodiscard]] Number power(const Number &exponent) const;
+  [[nodiscard]] Rational power(const Rational &exponent) const;
 
-  void operator+=(const Number &o) { copy(*this + o); }
-  void operator-=(const Number &o) { copy(*this - o); }
-  void operator*=(const Number &o) { copy(*this * o); }
-  Number &operator++();
+  void operator+=(const Rational &o) { copy(*this + o); }
+  void operator-=(const Rational &o) { copy(*this - o); }
+  void operator*=(const Rational &o) { copy(*this * o); }
+  Rational &operator++();
 
-  [[nodiscard]] bool operator<(const Number &) const;
+  [[nodiscard]] bool operator<(const Rational &) const;
   // TODO: <= Could be more efficient
-  [[nodiscard]] inline bool operator<=(const Number &o) const { return *this < o || *this == o; }
-  [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
-  [[nodiscard]] bool operator==(const Number &) const;
+  [[nodiscard]] inline bool operator<=(const Rational &o) const { return *this < o || *this == o; }
+  [[nodiscard]] inline bool operator>=(const Rational &o) const { return o < *this; }
+  [[nodiscard]] bool operator==(const Rational &) const;
   [[nodiscard]] bool operator==(intmax_t) const;
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
 
@@ -100,17 +100,17 @@ private:
   std::string denominator;
   bool positive;
 
-  Number(uintmax_t, uintmax_t, bool);
-  Number(const std::string &, std::string, bool);
+  Rational(uintmax_t, uintmax_t, bool);
+  Rational(const std::string &, std::string, bool);
 
-  inline void copy(const Number &o) {
+  inline void copy(const Rational &o) {
     this->numerator = o.numerator;
     this->denominator = o.denominator;
     this->positive = o.positive;
   }
 
-  [[nodiscard]] static Number division(const std::string &, const std::string &);
-  [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
+  [[nodiscard]] static Rational division(const std::string &, const std::string &);
+  [[nodiscard]] std::pair<Rational, Rational> normalizeDenominatorWith(const Rational &) const;
 
   void simplify();
 };
@@ -118,17 +118,18 @@ private:
 
 namespace std { // NOLINT(cert-dcl58-cpp)
 
-inline Puzzles::Numbers::Number pow(const Puzzles::Numbers::Number &base, const Puzzles::Numbers::Number &exponent) {
+inline Puzzles::Numbers::Rational pow(const Puzzles::Numbers::Rational &base,
+                                      const Puzzles::Numbers::Rational &exponent) {
   return base.power(exponent);
 }
 
-inline string to_string(const Puzzles::Numbers::Number &number) {
-  return number.toString();
+inline string to_string(const Puzzles::Numbers::Rational &rational) {
+  return rational.toString();
 }
 
 // This doesn't have to be in std, but it must come after to_string, so...
-inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Number &number) {
-  s << std::to_string(number);
+inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Rational &rational) {
+  s << std::to_string(rational);
   return s;
 }
 }

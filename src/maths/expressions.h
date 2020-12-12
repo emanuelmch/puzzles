@@ -33,9 +33,9 @@ namespace Maths {
 struct Token {
   bool isNumber;
   char asOperator;
-  Puzzles::Numbers::Number asNumber;
+  Puzzles::Numbers::Rational asNumber;
 
-  explicit Token(Puzzles::Numbers::Number number) : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
+  explicit Token(Puzzles::Numbers::Rational number) : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
 
   explicit Token(char anOperator) : isNumber(false), asOperator(anOperator), asNumber(0) {}
 
@@ -52,13 +52,13 @@ struct Token {
   }
 
 private:
-  inline Token(bool isNumber, char asOperator, Puzzles::Numbers::Number asNumber)
+  inline Token(bool isNumber, char asOperator, Puzzles::Numbers::Rational asNumber)
       : isNumber(isNumber), asOperator(asOperator), asNumber(std::move(asNumber)) {}
 };
 
 std::vector<Token> tokenizeExpression(const std::string &);
 
-Puzzles::Numbers::Number evaluateExpression(std::string);
+Puzzles::Numbers::Rational evaluateExpression(std::string);
 }
 
 namespace std { // NOLINT(cert-dcl58-cpp)
