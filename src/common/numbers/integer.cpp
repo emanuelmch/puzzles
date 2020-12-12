@@ -210,8 +210,7 @@ Integer Integer::operator*(const Integer &o) const {
   }
 
   Integer result{0};
-  // TODO: Replace with ++i
-  for (Integer i{0}; i < min; i = i + Integer{1}) {
+  for (Integer i{0}; i < min; ++i) {
     // TODO: Replace with result += max
     result = result + max;
   }
@@ -237,8 +236,7 @@ Integer Integer::operator/(const Integer &o) const {
   while (!remainder.slices.empty()) {
     // TODO: Replace with remainder -= o
     remainder = remainder - o;
-    // TODO: Replace with ++result
-    result = result + Integer{1};
+    ++result;
     ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
   }
 
@@ -253,8 +251,7 @@ Integer Integer::power(const Integer &exponent) const {
 
   Integer result{1};
 
-  // TODO: Replace with ++i
-  for (Integer i{0}; i < exponent; i = i + Integer{1}) {
+  for (Integer i{0}; i < exponent; ++i) {
     // TODO: Replace with result *= *this
     result = result * *this;
   }
@@ -286,4 +283,53 @@ bool Integer::operator<=(const Integer &o) const {
   } else {
     return bitComparison != compat::strong_ordering::less;
   }
+}
+
+Integer &Integer::operator++() {
+  if (slices.empty()) {
+    slices.push_back(1);
+    return *this;
+  }
+
+  if (positive()) {
+    auto it = slices.begin();
+
+    while (it != slices.end()) {
+      if (*it == SLICE_MAX) {
+        *it = 0;
+        ++it;
+      } else {
+        ++(*it);
+        return *this;
+      }
+    }
+
+    slices.push_back(1);
+    return *this;
+  }
+
+  if (slices[0] > 1) {
+    --slices[0];
+    return *this;
+  }
+
+  if (slices.size() == 1) {
+    slices.clear();
+    _positive = true;
+    return *this;
+  }
+
+  auto it = slices.begin();
+  while (it != slices.end()) {
+    if (*it == 0) {
+      *it = SLICE_MAX;
+      ++it;
+    } else {
+      --(*it);
+      return *this;
+    }
+  }
+
+  slices.pop_back();
+  return *this;
 }

@@ -62,6 +62,8 @@ struct Integer {
   [[nodiscard]] bool operator<(const Integer &) const;
   [[nodiscard]] bool operator<=(const Integer &) const;
 
+  Integer &operator++();
+
 private:
   Integer(std::vector<value_t> slices, bool positive)
       : slices(std::move(slices)), _positive(positive || this->slices.empty()) {}

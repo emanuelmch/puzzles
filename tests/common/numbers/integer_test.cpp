@@ -268,3 +268,38 @@ TEST(Integer, Comparison_LessThanOrEqualTo) {
   EXPECT_FALSE(Integer{1} <= Integer{-500});
   EXPECT_FALSE(Integer{-499} <= Integer{-500});
 }
+
+TEST(Integer, Increment) {
+  Integer value{-10};
+  EXPECT_EQ(std::to_string(++value), "-9");
+  EXPECT_EQ(std::to_string(++value), "-8");
+  EXPECT_EQ(std::to_string(++value), "-7");
+  EXPECT_EQ(std::to_string(++value), "-6");
+  EXPECT_EQ(std::to_string(++value), "-5");
+  EXPECT_EQ(std::to_string(++value), "-4");
+  EXPECT_EQ(std::to_string(++value), "-3");
+  EXPECT_EQ(std::to_string(++value), "-2");
+  EXPECT_EQ(std::to_string(++value), "-1");
+  EXPECT_EQ(std::to_string(++value), "0");
+  EXPECT_EQ(std::to_string(++value), "1");
+  EXPECT_EQ(std::to_string(++value), "2");
+  EXPECT_EQ(std::to_string(++value), "3");
+  EXPECT_EQ(std::to_string(++value), "4");
+  EXPECT_EQ(std::to_string(++value), "5");
+  EXPECT_EQ(std::to_string(++value), "6");
+  EXPECT_EQ(std::to_string(++value), "7");
+  EXPECT_EQ(std::to_string(++value), "8");
+  EXPECT_EQ(std::to_string(++value), "9");
+  EXPECT_EQ(std::to_string(++value), "10");
+  EXPECT_EQ(std::to_string(++value), "11");
+
+  Integer bigPositive{999999998};
+  EXPECT_EQ(std::to_string(++bigPositive), "999999999");
+  EXPECT_EQ(std::to_string(++bigPositive), "1000000000");
+  EXPECT_EQ(std::to_string(++bigPositive), "1000000001");
+
+  Integer bigNegative{-1000000002};
+  EXPECT_EQ(std::to_string(++bigNegative), "-1000000001");
+  EXPECT_EQ(std::to_string(++bigNegative), "-1000000000");
+  EXPECT_EQ(std::to_string(++bigNegative), "-999999999");
+}
