@@ -127,6 +127,41 @@ TEST(Integer, Subtraction) {
   EXPECT_EQ(std::to_string(one - five), "-4");
 }
 
+TEST(Integer, Multiplication) {
+  Integer negativeFour{-4};
+  Integer negativeOne{-1};
+  Integer zero{0};
+  Integer one{1};
+  Integer two{2};
+  Integer four{4};
+  Integer bigInteger{"18446744073709551616"};
+
+  EXPECT_EQ(std::to_string(zero * zero), "0");
+  EXPECT_EQ(std::to_string(zero * one), "0");
+  EXPECT_EQ(std::to_string(one * zero), "0");
+  EXPECT_EQ(std::to_string(one * one), "1");
+  EXPECT_EQ(std::to_string(one * two), "2");
+  EXPECT_EQ(std::to_string(two * one), "2");
+  EXPECT_EQ(std::to_string(two * four), "8");
+  EXPECT_EQ(std::to_string(four * two), "8");
+  EXPECT_EQ(std::to_string(bigInteger * zero), "0");
+  EXPECT_EQ(std::to_string(zero * bigInteger), "0");
+  EXPECT_EQ(std::to_string(bigInteger * one), "18446744073709551616");
+  EXPECT_EQ(std::to_string(one * bigInteger), "18446744073709551616");
+  EXPECT_EQ(std::to_string(two * bigInteger), "36893488147419103232");
+
+  EXPECT_EQ(std::to_string(negativeFour * negativeOne), "4");
+  EXPECT_EQ(std::to_string(negativeOne * negativeFour), "4");
+  EXPECT_EQ(std::to_string(negativeFour * one), "-4");
+  EXPECT_EQ(std::to_string(one * negativeFour), "-4");
+  EXPECT_EQ(std::to_string(negativeFour * two), "-8");
+  EXPECT_EQ(std::to_string(two * negativeFour), "-8");
+  EXPECT_EQ(std::to_string(negativeOne * one), "-1");
+  EXPECT_EQ(std::to_string(one * negativeOne), "-1");
+  EXPECT_EQ(std::to_string(negativeOne * two), "-2");
+  EXPECT_EQ(std::to_string(two * negativeOne), "-2");
+}
+
 TEST(Integer, Comparison_EqualTo) {
   EXPECT_TRUE(Integer{-1} == Integer{-1});
   EXPECT_TRUE(Integer{0} == Integer{0});
@@ -138,4 +173,22 @@ TEST(Integer, Comparison_EqualTo) {
   EXPECT_FALSE(Integer{0} == Integer{1});
   EXPECT_FALSE(Integer{1} == Integer{-1});
   EXPECT_FALSE(Integer{1} == Integer{0});
+}
+
+TEST(Integer, Comparison_LessThan) {
+  EXPECT_TRUE(Integer{0} < Integer{1});
+  EXPECT_TRUE(Integer{9} < Integer{10});
+  EXPECT_TRUE(Integer{"18446744073709551615"} < Integer{"18446744073709551616"});
+  EXPECT_TRUE(Integer{-500} < Integer{0});
+  EXPECT_TRUE(Integer{-500} < Integer{1});
+  EXPECT_TRUE(Integer{-500} < Integer{-499});
+
+  EXPECT_FALSE(Integer{0} < Integer{0});
+  EXPECT_FALSE(Integer{1} < Integer{0});
+  EXPECT_FALSE(Integer{10} < Integer{9});
+  EXPECT_FALSE(Integer{"18446744073709551616"} < Integer{"18446744073709551616"});
+  EXPECT_FALSE(Integer{0} < Integer{-500});
+  EXPECT_FALSE(Integer{1} < Integer{-500});
+  EXPECT_FALSE(Integer{-499} < Integer{-500});
+  EXPECT_FALSE(Integer{-500} < Integer{-500});
 }

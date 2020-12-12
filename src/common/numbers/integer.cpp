@@ -200,3 +200,35 @@ Integer Integer::operator-(const Integer &o) const {
 
   return *this + Integer{o.slices, !o._positive};
 }
+
+Integer Integer::operator*(const Integer &o) const {
+  auto min = this->absolute();
+  auto max = o.absolute();
+
+  if (compareSlices(this->slices, o.slices) == compat::strong_ordering::greater) {
+    std::swap(min, max);
+  }
+
+  Integer result{0};
+  // TODO: Replace with ++i
+  for (Integer i{0}; i < min; i = i + Integer{1}) {
+    // TODO: Replace with result += max
+    result = result + max;
+  }
+
+  result._positive = this->positive() == o.positive();
+  return result;
+}
+
+bool Integer::operator<(const Integer &o) const {
+  if (this->positive() != o.positive()) {
+    return this->positive() < o.positive();
+  }
+
+  auto sliceComparison = compareSlices(this->slices, o.slices);
+  if (this->positive()) {
+    return sliceComparison == compat::strong_ordering::less;
+  } else {
+    return sliceComparison == compat::strong_ordering::greater;
+  }
+}

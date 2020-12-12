@@ -42,6 +42,7 @@ struct Integer {
 
   [[nodiscard]] Integer operator+(const Integer &) const;
   [[nodiscard]] Integer operator-(const Integer &) const;
+  [[nodiscard]] Integer operator*(const Integer &) const;
 
 #ifdef __cpp_lib_three_way_comparison
   [[nodiscard]] inline bool operator==(const Integer &) const = default;
@@ -51,9 +52,13 @@ struct Integer {
   }
 #endif
 
+  [[nodiscard]] bool operator<(const Integer &) const;
+
 private:
   Integer(std::vector<value_t> slices, bool positive)
       : slices(std::move(slices)), _positive(positive || this->slices.empty()) {}
+
+  [[nodiscard]] inline Integer absolute() const { return Integer(slices, true); }
 
   std::vector<value_t> slices; // Low-endian base-10 storage
   bool _positive;
