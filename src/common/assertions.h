@@ -22,12 +22,10 @@
 
 #pragma once
 
-#include <cassert>
-
 #if defined(NDEBUG)
 
-#define ensure(condition) static_cast<void>(0)
-#define ensure_m(condition, message) static_cast<void>(0)
+#define ensure(condition) (static_cast<void>(0))
+#define ensure_m(condition, message) (static_cast<void>(0))
 
 #else // defined(NDEBUG)
 
@@ -43,9 +41,9 @@
   (static_cast<bool>(condition)                                                                                        \
        ? static_cast<void>(0)                                                                                          \
        : throw std::logic_error(                                                                                       \
-             static_cast<std::stringstream &>(std::stringstream().flush()                                              \
-                                              << std::string(__FILE__) << ":" << std::to_string(__LINE__)              \
-                                              << ": Assertion failed: " << #condition << ", " << message)              \
-                 .str()));
+             dynamic_cast<std::stringstream &>(std::stringstream().flush()                                             \
+                                               << std::string(__FILE__) << ":" << std::to_string(__LINE__)             \
+                                               << ": Assertion failed: " << #condition << ", " << message)             \
+                 .str()))
 
 #endif // defined(NDEBUG)
