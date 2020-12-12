@@ -22,7 +22,7 @@
 
 #include "board.h"
 
-#include <cassert>
+#include "common/assertions.h"
 
 using namespace CPic;
 
@@ -42,7 +42,7 @@ const Clue Board::clueForColumn(uint8_t column, Color color) const {
     }
   }
 
-  assert(!"Asked for a clue for a non-existing color");
+  ensure_never("Asked for a clue for a non-existing color");
   return Clue(Blank, 0, false);
 }
 
@@ -53,7 +53,7 @@ const Clue Board::clueForRow(uint8_t row, Color color) const {
     }
   }
 
-  assert(!"Asked for a clue for a non-existing color");
+  ensure_never("Asked for a clue for a non-existing color");
   return Clue(Blank, 0, false);
 }
 

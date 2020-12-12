@@ -22,7 +22,8 @@
 
 #include "expressions.h"
 
-#include <cassert>
+#include "common/assertions.h"
+
 #include <cmath>
 #include <cstdint>
 #include <stack>
@@ -74,7 +75,7 @@ inline uint_fast8_t getPrecedence(char operation) {
   if (operation == '*' || operation == '/') return 2;
   if (operation == '^') return 3;
 
-  assert(!"Unknown token");
+  ensure_never("Unknown token");
   return 0;
 }
 
@@ -82,9 +83,9 @@ void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
 
-  assert(next == '+' || next == '-' || next == '*' || next == '/' || next == '^');
+  ensure(next == '+' || next == '-' || next == '*' || next == '/' || next == '^');
 
-  assert(numbers->size() >= 2);
+  ensure(numbers->size() >= 2);
   auto right = numbers->top();
   numbers->pop();
   auto left = numbers->top();
@@ -104,10 +105,10 @@ void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
 }
 
 inline void reduceToParenthesis(stack<Number> *numbers, stack<char> *operators) {
-  assert(!operators->empty());
+  ensure(!operators->empty());
   while (operators->top() != '(') {
     reduceOnce(numbers, operators);
-    assert(!operators->empty());
+    ensure(!operators->empty());
   }
   operators->pop();
 }
@@ -132,7 +133,7 @@ Number Maths::evaluateExpression(const std::string &expression) {
       operators.push('(');
       parenthesisCount++;
     } else if (token == ')') {
-      assert(parenthesisCount > 0);
+      ensure(parenthesisCount > 0);
       parenthesisCount--;
       reduceToParenthesis(&numbers, &operators);
     } else if (token == '^') {
@@ -147,6 +148,6 @@ Number Maths::evaluateExpression(const std::string &expression) {
     reduceOnce(&numbers, &operators);
   }
 
-  assert(numbers.size() == 1);
+  ensure(numbers.size() == 1);
   return numbers.top();
 }
