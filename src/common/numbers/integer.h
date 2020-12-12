@@ -65,6 +65,9 @@ struct Integer {
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return *this != Integer{o}; }
 
   Integer &operator++();
+  inline void operator+=(const Integer &o) { *this = *this + o; }
+  inline void operator-=(const Integer &o) { *this = *this - o; }
+  inline void operator*=(const Integer &o) { *this = *this * o; }
 
 private:
   Integer(std::vector<value_t> slices, bool positive)

@@ -211,8 +211,7 @@ Integer Integer::operator*(const Integer &o) const {
 
   Integer result{0};
   for (Integer i{0}; i < min; ++i) {
-    // TODO: Replace with result += max
-    result = result + max;
+    result += max;
   }
 
   result._positive = this->positive() == o.positive();
@@ -233,8 +232,7 @@ Integer Integer::operator/(const Integer &o) const {
   Integer result{0};
 
   while (!remainder.slices.empty()) {
-    // TODO: Replace with remainder -= o
-    remainder = remainder - o;
+    remainder -= o;
     ++result;
     ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
   }
@@ -250,8 +248,7 @@ Integer Integer::power(const Integer &exponent) const {
   Integer result{1};
 
   for (Integer i{0}; i < exponent; ++i) {
-    // TODO: Replace with result *= *this
-    result = result * *this;
+    result *= *this;
   }
 
   return result;
