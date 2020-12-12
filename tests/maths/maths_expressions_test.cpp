@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 
 using namespace Maths;
-using Puzzles::Numbers::Rational;
+using pzl::Rational;
 
 TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("1 +2"), 3);

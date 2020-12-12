@@ -77,7 +77,7 @@ endif ()
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
-        src/common/numbers.cpp
+        src/common/numbers/rational.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
@@ -129,6 +129,7 @@ set(test_sources
         tests/common/arbitrary_container_test.cpp
         tests/common/numbers_test.cpp
         tests/common/strings_test.cpp
+        tests/common/numbers/rational_test.cpp
         tests/cpic/model/cpic_board_builder_test.cpp
         tests/cpic/model/cpic_board_solver_test.cpp
         tests/cpic/model/cpic_board_state_test.cpp

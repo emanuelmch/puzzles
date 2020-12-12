@@ -24,10 +24,8 @@
 
 #include "common/assertions.h"
 
-#include <algorithm>
-#include <cstdint>
-#include <limits>
-#include <string>
+#include <cstdint> // uint8_t, uintmax_t
+#include <limits>  // std::numeric_limits
 
 namespace Puzzles::Numbers {
 
@@ -65,71 +63,5 @@ constexpr uintmax_t lowestCommonMultiple(uintmax_t lhs, uintmax_t rhs) {
   ensure(lhs != 0 && rhs != 0); // This is undefined
   auto gcd = greatestCommonDivisor(lhs, rhs);
   return lhs * rhs / gcd;
-}
-
-struct Rational {
-
-  explicit Rational(const std::string &);
-  explicit Rational(intmax_t);
-  Rational(intmax_t, uintmax_t);
-
-  [[nodiscard]] Rational operator+(const Rational &) const;
-  [[nodiscard]] Rational operator-(const Rational &) const;
-  [[nodiscard]] Rational operator*(const Rational &) const;
-  [[nodiscard]] Rational operator/(const Rational &) const;
-
-  [[nodiscard]] Rational power(const Rational &exponent) const;
-
-  void operator+=(const Rational &o) { copy(*this + o); }
-  void operator-=(const Rational &o) { copy(*this - o); }
-  void operator*=(const Rational &o) { copy(*this * o); }
-  Rational &operator++();
-
-  [[nodiscard]] bool operator<(const Rational &) const;
-  // TODO: <= Could be more efficient
-  [[nodiscard]] inline bool operator<=(const Rational &o) const { return *this < o || *this == o; }
-  [[nodiscard]] inline bool operator>=(const Rational &o) const { return o < *this; }
-  [[nodiscard]] bool operator==(const Rational &) const;
-  [[nodiscard]] bool operator==(intmax_t) const;
-  [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
-
-  [[nodiscard]] std::string toString() const;
-
-private:
-  std::string numerator;
-  std::string denominator;
-  bool positive;
-
-  Rational(uintmax_t, uintmax_t, bool);
-  Rational(const std::string &, std::string, bool);
-
-  inline void copy(const Rational &o) {
-    this->numerator = o.numerator;
-    this->denominator = o.denominator;
-    this->positive = o.positive;
-  }
-
-  [[nodiscard]] static Rational division(const std::string &, const std::string &);
-  [[nodiscard]] std::pair<Rational, Rational> normalizeDenominatorWith(const Rational &) const;
-
-  void simplify();
-};
-}
-
-namespace std { // NOLINT(cert-dcl58-cpp)
-
-inline Puzzles::Numbers::Rational pow(const Puzzles::Numbers::Rational &base,
-                                      const Puzzles::Numbers::Rational &exponent) {
-  return base.power(exponent);
-}
-
-inline string to_string(const Puzzles::Numbers::Rational &rational) {
-  return rational.toString();
-}
-
-// This doesn't have to be in std, but it must come after to_string, so...
-inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Rational &rational) {
-  s << std::to_string(rational);
-  return s;
 }
 }

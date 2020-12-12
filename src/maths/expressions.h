@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "common/numbers.h"
+#include "common/numbers/rational.h"
 
 #include <string>
 #include <utility>
@@ -33,9 +33,9 @@ namespace Maths {
 struct Token {
   bool isNumber;
   char asOperator;
-  Puzzles::Numbers::Rational asNumber;
+  pzl::Rational asNumber;
 
-  explicit Token(Puzzles::Numbers::Rational number) : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
+  explicit Token(pzl::Rational number) : isNumber(true), asOperator(0), asNumber(std::move(number)) {}
 
   explicit Token(char anOperator) : isNumber(false), asOperator(anOperator), asNumber(0) {}
 
@@ -52,13 +52,13 @@ struct Token {
   }
 
 private:
-  inline Token(bool isNumber, char asOperator, Puzzles::Numbers::Rational asNumber)
+  inline Token(bool isNumber, char asOperator, pzl::Rational asNumber)
       : isNumber(isNumber), asOperator(asOperator), asNumber(std::move(asNumber)) {}
 };
 
 std::vector<Token> tokenizeExpression(const std::string &);
 
-Puzzles::Numbers::Rational evaluateExpression(std::string);
+pzl::Rational evaluateExpression(std::string);
 }
 
 namespace std { // NOLINT(cert-dcl58-cpp)

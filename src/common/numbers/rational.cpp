@@ -20,16 +20,19 @@
  * SOFTWARE.
  */
 
-#include "numbers.h"
+#include "rational.h"
 
 #include "common/assertions.h"
+#include "common/numbers.h"
 #include "common/strings.h"
 #include "compat/compare.h"
 #include "compat/defs.h"
 
-#include <algorithm>
-#include <cinttypes>
-#include <utility>
+#include <algorithm> // std::reverse
+#include <cinttypes> // strtoumax
+#include <utility>   // std::move
+
+using pzl::Rational;
 
 using namespace Puzzles::Numbers;
 
@@ -53,7 +56,7 @@ Rational::Rational(uintmax_t numerator, uintmax_t denominator, bool positive)
     : Rational(std::to_string(numerator), std::to_string(denominator), positive) {}
 
 Rational::Rational(const std::string &_numerator, std::string _denominator, bool positive)
-    : numerator(trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
+    : numerator(Puzzles::trimLeadingView(_numerator, '0')), denominator(std::move(_denominator)), positive(positive) {
   ensure(numerator.find_first_not_of("0123456789") == numerator.npos);
   ensure(denominator.find_first_not_of("0123456789") == denominator.npos);
 }

@@ -23,6 +23,7 @@
 #include "expressions.h"
 
 #include "common/assertions.h"
+#include "common/numbers/rational.h"
 
 #include <algorithm> // std::remove_if
 #include <cmath>     // std::pow
@@ -32,7 +33,7 @@
 
 using namespace Maths;
 
-using Puzzles::Numbers::Rational;
+using pzl::Rational;
 
 using std::stack;
 using std::string;
