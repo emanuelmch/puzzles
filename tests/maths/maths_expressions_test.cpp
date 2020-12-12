@@ -27,8 +27,6 @@
 using namespace Maths;
 using Puzzles::Numbers::Number;
 
-using std::vector;
-
 TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("1 +2"), 3);
   EXPECT_EQ(evaluateExpression("1 + 1"), 2);
@@ -69,9 +67,9 @@ TEST(Expressions, Tokenizer) {
   Token hundredTwentyThree(Number(123));
   Token thousand(Number(1000));
 
-  EXPECT_EQ(std::to_string(tokenizeExpression("1+2")), std::to_string(vector({one, plus, two})));
+  EXPECT_EQ(std::to_string(tokenizeExpression("1+2")), std::to_string(std::vector{one, plus, two}));
   EXPECT_EQ(std::to_string(tokenizeExpression("1000/123")),
-            std::to_string(vector({thousand, divided, hundredTwentyThree})));
-  EXPECT_EQ(std::to_string(tokenizeExpression("0")), std::to_string(vector({zero})));
-  EXPECT_EQ(std::to_string(tokenizeExpression("-12+13")), std::to_string(vector({minusTwelve, plus, thirteen})));
+            std::to_string(std::vector{thousand, divided, hundredTwentyThree}));
+  EXPECT_EQ(std::to_string(tokenizeExpression("0")), std::to_string(std::vector{zero}));
+  EXPECT_EQ(std::to_string(tokenizeExpression("-12+13")), std::to_string(std::vector{minusTwelve, plus, thirteen}));
 }
