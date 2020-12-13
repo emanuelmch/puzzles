@@ -156,6 +156,7 @@ TEST(Integer, Addition_Int) {
 }
 
 TEST(Integer, Subtraction) {
+  Integer negativeFive{-5};
   Integer zero{0};
   Integer one{1};
   Integer two{2};
@@ -176,6 +177,8 @@ TEST(Integer, Subtraction) {
   EXPECT_EQ(std::to_string(zero - one), "-1");
   EXPECT_EQ(std::to_string(zero - five), "-5");
   EXPECT_EQ(std::to_string(one - five), "-4");
+
+  EXPECT_EQ(std::to_string(negativeFive - negativeFive), "0");
 }
 
 TEST(Integer, Multiplication) {
@@ -214,6 +217,7 @@ TEST(Integer, Multiplication) {
 }
 
 TEST(Integer, Division) {
+  Integer negativeOne{-1};
   Integer one{1};
   Integer two{2};
   Integer five{5};
@@ -230,9 +234,11 @@ TEST(Integer, Division) {
   EXPECT_EQ(std::to_string(fifty / ten), "5");
   EXPECT_EQ(std::to_string(thousandTwentyFour / sixteen), "64");
   EXPECT_EQ(std::to_string(bigInteger / sixteen), "512");
+  EXPECT_EQ(std::to_string(two / negativeOne), "-2");
 }
 
 TEST(Integer, Modulo) {
+  Integer negativeFifty{-50};
   Integer five{5};
   Integer fifty{50};
   Integer fiftyTwo{52};
@@ -248,6 +254,8 @@ TEST(Integer, Modulo) {
   EXPECT_EQ(std::to_string(five % fiftyTwo), "5");
   EXPECT_EQ(std::to_string(fifty % fiftyTwo), "50");
   EXPECT_EQ(std::to_string(fiftyTwo % fiftyTwo), "0");
+
+  EXPECT_EQ(std::to_string(negativeFifty % five), "0");
 }
 
 TEST(Integer, Power) {
@@ -362,6 +370,59 @@ TEST(Integer, Comparison_LessThanOrEqualTo) {
   EXPECT_FALSE(Integer{0} <= Integer{-500});
   EXPECT_FALSE(Integer{1} <= Integer{-500});
   EXPECT_FALSE(Integer{-499} <= Integer{-500});
+}
+
+TEST(Integer, Comparison_GreaterThan) {
+  EXPECT_TRUE(Integer{1} > Integer{0});
+  EXPECT_TRUE(Integer{10} > Integer{9});
+  EXPECT_TRUE(Integer{0} > Integer{-500});
+  EXPECT_TRUE(Integer{1} > Integer{-500});
+  EXPECT_TRUE(Integer{-499} > Integer{-500});
+
+  EXPECT_FALSE(Integer{0} > Integer{0});
+  EXPECT_FALSE(Integer{"18446744073709551616"} > Integer{"18446744073709551616"});
+  EXPECT_FALSE(Integer{-500} > Integer{-500});
+  EXPECT_FALSE(Integer{0} > Integer{1});
+  EXPECT_FALSE(Integer{9} > Integer{10});
+  EXPECT_FALSE(Integer{"18446744073709551615"} > Integer{"18446744073709551616"});
+  EXPECT_FALSE(Integer{-500} > Integer{0});
+  EXPECT_FALSE(Integer{-500} > Integer{1});
+  EXPECT_FALSE(Integer{-500} > Integer{-499});
+}
+
+TEST(Integer, Comparison_GreaterThanInt) {
+  EXPECT_TRUE(Integer{1} > 0);
+  EXPECT_TRUE(Integer{10} > 9);
+  EXPECT_TRUE(Integer{0} > -500);
+  EXPECT_TRUE(Integer{1} > -500);
+  EXPECT_TRUE(Integer{-499} > -500);
+
+  EXPECT_FALSE(Integer{0} > 0);
+  EXPECT_FALSE(Integer{-500} > -500);
+  EXPECT_FALSE(Integer{0} > 1);
+  EXPECT_FALSE(Integer{9} > 10);
+  EXPECT_FALSE(Integer{-500} > 0);
+  EXPECT_FALSE(Integer{-500} > 1);
+  EXPECT_FALSE(Integer{-500} > -499);
+}
+
+TEST(Integer, Comparison_GreaterThanOrEqualTo) {
+  EXPECT_TRUE(Integer{1} >= Integer{0});
+  EXPECT_TRUE(Integer{10} >= Integer{9});
+  EXPECT_TRUE(Integer{0} >= Integer{-500});
+  EXPECT_TRUE(Integer{1} >= Integer{-500});
+  EXPECT_TRUE(Integer{-499} >= Integer{-500});
+
+  EXPECT_TRUE(Integer{0} >= Integer{0});
+  EXPECT_TRUE(Integer{"18446744073709551616"} >= Integer{"18446744073709551616"});
+  EXPECT_TRUE(Integer{-500} >= Integer{-500});
+
+  EXPECT_FALSE(Integer{0} >= Integer{1});
+  EXPECT_FALSE(Integer{9} >= Integer{10});
+  EXPECT_FALSE(Integer{"18446744073709551615"} >= Integer{"18446744073709551616"});
+  EXPECT_FALSE(Integer{-500} >= Integer{0});
+  EXPECT_FALSE(Integer{-500} >= Integer{1});
+  EXPECT_FALSE(Integer{-500} >= Integer{-499});
 }
 
 TEST(Integer, Increment) {

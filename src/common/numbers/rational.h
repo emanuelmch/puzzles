@@ -22,16 +22,24 @@
 
 #pragma once
 
-#include <cstdint> // intmax_t, uintmax_t
+#include "common/numbers/integer.h"
+
+#include <cstdint> // intmax_t
 #include <string>
+#include <tuple>
+#include <utility> // std::move
 
 namespace pzl {
 
 struct Rational {
 
-  explicit Rational(const std::string &);
-  explicit Rational(intmax_t);
-  Rational(intmax_t, uintmax_t);
+  explicit Rational(const std::string &value) : numerator{value}, denominator{1} {}
+
+  explicit Rational(intmax_t value) : numerator{value}, denominator{1} {}
+  Rational(intmax_t numerator, intmax_t denominator);
+
+  explicit Rational(pzl::Integer numerator) : numerator{std::move(numerator)}, denominator{1} {}
+  Rational(pzl::Integer numerator, const pzl::Integer &denominator);
 
   [[nodiscard]] Rational operator+(const Rational &) const;
   [[nodiscard]] Rational operator-(const Rational &) const;
@@ -40,39 +48,35 @@ struct Rational {
 
   [[nodiscard]] Rational power(const Rational &exponent) const;
 
-  void operator+=(const Rational &o) { copy(*this + o); }
-  void operator-=(const Rational &o) { copy(*this - o); }
-  void operator*=(const Rational &o) { copy(*this * o); }
-  Rational &operator++();
+  void operator+=(const Rational &o) { *this = *this + o; }
+  void operator-=(const Rational &o) { *this = *this - o; }
+  void operator*=(const Rational &o) { *this = *this * o; }
 
   [[nodiscard]] bool operator<(const Rational &) const;
   // TODO: <= Could be more efficient
   [[nodiscard]] inline bool operator<=(const Rational &o) const { return *this < o || *this == o; }
   [[nodiscard]] inline bool operator>=(const Rational &o) const { return o < *this; }
   [[nodiscard]] bool operator==(const Rational &) const;
-  [[nodiscard]] bool operator==(intmax_t) const;
+
+  [[nodiscard]] inline bool operator==(intmax_t o) const { return this->denominator == 1 && this->numerator == o; }
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
 
   [[nodiscard]] std::string toString() const;
 
 private:
-  std::string numerator;
-  std::string denominator;
-  bool positive;
+  pzl::Integer numerator;
+  pzl::Integer denominator;
 
-  Rational(uintmax_t, uintmax_t, bool);
-  Rational(const std::string &, std::string, bool);
-
-  inline void copy(const Rational &o) {
+  inline Rational &copy(const Rational &o) {
     this->numerator = o.numerator;
     this->denominator = o.denominator;
-    this->positive = o.positive;
+    return *this;
   }
 
-  [[nodiscard]] static Rational division(const std::string &, const std::string &);
-  [[nodiscard]] std::pair<Rational, Rational> normalizeDenominatorWith(const Rational &) const;
+  [[nodiscard]] std::tuple<pzl::Integer, pzl::Integer, pzl::Integer> normalizeDenominatorWith(const Rational &) const;
+  [[nodiscard]] inline bool positive() const { return numerator.positive(); }
 
-  void simplify();
+  Rational &simplify();
 };
 }
 

@@ -22,6 +22,8 @@
 
 #pragma once
 
+#define UNUSED(x) ((void)x)
+
 #if defined(NDEBUG)
 
 #define ensure(condition) (static_cast<void>(0))

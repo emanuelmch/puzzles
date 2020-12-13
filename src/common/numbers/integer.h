@@ -37,6 +37,7 @@ struct Integer {
   explicit Integer(const std::string &);
   explicit Integer(intmax_t value);
 
+  [[nodiscard]] inline Integer absolute() const { return Integer{slices, true}; }
   [[nodiscard]] inline bool positive() const { return _positive; }
   [[nodiscard]] std::string toString() const;
 
@@ -47,6 +48,7 @@ struct Integer {
   [[nodiscard]] Integer operator%(const Integer &) const;
 
   [[nodiscard]] Integer operator+(intmax_t) const;
+  [[nodiscard]] Integer operator*(intmax_t) const;
 
   [[nodiscard]] Integer power(const Integer &) const;
 
@@ -64,21 +66,26 @@ struct Integer {
 
   [[nodiscard]] bool operator<(const Integer &) const;
   [[nodiscard]] bool operator<=(const Integer &) const;
+  [[nodiscard]] inline bool operator>(const Integer &o) const { return o < *this; }
+  [[nodiscard]] inline bool operator>=(const Integer &o) const { return o <= *this; }
 
   [[nodiscard]] inline bool operator==(intmax_t o) const { return *this == Integer{o}; }
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return *this != Integer{o}; }
+  [[nodiscard]] inline bool operator<(intmax_t o) const { return *this < Integer{o}; }
+  [[nodiscard]] inline bool operator>(intmax_t o) const { return *this > Integer{o}; }
 
   Integer &operator++();
   inline void operator+=(const Integer &o) { *this = *this + o; }
   inline void operator-=(const Integer &o) { *this = *this - o; }
   inline void operator*=(const Integer &o) { *this = *this * o; }
+  inline void operator/=(const Integer &o) { *this = *this / o; }
   inline void operator%=(const Integer &o) { *this = *this % o; }
+
+  inline void operator*=(intmax_t o) { *this = *this * o; }
 
 private:
   Integer(std::vector<value_t> slices, bool positive)
       : slices(std::move(slices)), _positive(positive || this->slices.empty()) {}
-
-  [[nodiscard]] inline Integer absolute() const { return Integer(slices, true); }
 
   std::vector<value_t> slices; // Low-endian base-10 storage
   bool _positive;
@@ -86,6 +93,10 @@ private:
 }
 
 namespace std { // NOLINT(cert-dcl58-cpp)
+
+inline pzl::Integer abs(const pzl::Integer &integer) {
+  return integer.absolute();
+}
 
 inline pzl::Integer pow(const pzl::Integer &base, const pzl::Integer &exponent) {
   return base.power(exponent);

@@ -27,18 +27,22 @@
 
 namespace pzl {
 
-Integer greatestCommonDivisor(Integer lhs, Integer rhs) {
+inline Integer greatestCommonDivisor(Integer left, Integer right) {
   // This is the Euclidean algorithm
-  if (lhs == 0) return rhs;
+  if (left == 0) return right;
+
+  left = left.absolute();
+  right = right.absolute();
+
   while (true) {
-    if (rhs == 0) return lhs;
-    lhs %= rhs;
-    if (lhs == 0) return rhs;
-    rhs %= lhs;
+    if (right == 0) return left;
+    left %= right;
+    if (left == 0) return right;
+    right %= left;
   }
 }
 
-Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
+inline Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
   ensure(lhs != 0 && rhs != 0); // This is undefined
   auto gcd = greatestCommonDivisor(lhs, rhs);
   return lhs * rhs / gcd;

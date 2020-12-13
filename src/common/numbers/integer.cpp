@@ -202,6 +202,8 @@ Integer Integer::operator-(const Integer &o) const {
 }
 
 Integer Integer::operator*(const Integer &o) const {
+  if (slices.empty() || o.slices.empty()) return Integer{0};
+
   auto min = this->absolute();
   auto max = o.absolute();
 
@@ -225,19 +227,22 @@ Integer Integer::operator/(const Integer &o) const {
     return *this;
   }
 
-  ensure(o <= *this); // if (this < o) then (this / o) will be a fraction, which we don't support
+  // if (this < o) then (this / o) will be a fraction, which we don't support
+  ensure_m(o.absolute() <= this->absolute(),
+           "this is [" << std::to_string(*this) << "], o is [" << std::to_string(o) << "]");
 
   // Now for the actual division implementation
   Integer remainder{this->slices, true};
   Integer result{0};
+  auto step = o.absolute();
 
   while (!remainder.slices.empty()) {
-    remainder -= o;
+    remainder -= step;
     ++result;
     ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
   }
 
-  result._positive = this->positive() == o.positive();
+  result._positive = this->positive() == o.positive() || result.slices.empty();
   return result;
 }
 
@@ -248,10 +253,12 @@ Integer Integer::operator%(const Integer &o) const {
     return *this;
   }
 
+  auto step = o.absolute();
   Integer remainder{this->slices, true};
-  while (o <= remainder) {
-    remainder -= o;
+  while (step <= remainder) {
+    remainder -= step;
   }
+  remainder._positive = this->positive() == o.positive() || remainder.slices.empty();
   return remainder;
 }
 
@@ -268,6 +275,19 @@ Integer Integer::operator+(intmax_t value) const {
   }
 
   return *this + Integer{value};
+}
+
+Integer Integer::operator*(intmax_t value) const {
+  switch (value) {
+  case 0:
+    return Integer{0};
+  case 1:
+    return *this;
+  case -1:
+    return Integer{slices, !_positive};
+  default:
+    return *this * Integer(value);
+  }
 }
 
 Integer Integer::power(const Integer &exponent) const {

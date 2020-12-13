@@ -56,9 +56,19 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(std::to_string(evaluateExpression("9 - 80 - 11 * -10 - -100 / 60 - 28")), "38/3");
   EXPECT_EQ(std::to_string(evaluateExpression("-(1) - (2)")), "-3");
   EXPECT_EQ(std::to_string(evaluateExpression("-(-2)")), "2");
-  EXPECT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (60 + (((-(50 * 52)))) / 16)")),
+}
+
+TEST(Expressions, Evaluator_ComplexExpressionOne) {
+  ASSERT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (-205 / 2)")), "66497/138");
+  ASSERT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (60 + -325 / 2)")), "66497/138");
+  ASSERT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (60 + -2600 / 16)")), "66497/138");
+  ASSERT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (60 + (((-2600))) / 16)")), "66497/138");
+  ASSERT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (60 + (((-(50 * 52)))) / 16)")),
             "66497/138");
-  EXPECT_EQ(std::to_string(evaluateExpression("(-71) + (2 * 100 / -(60)) + (-46 + -(((-(-29 + -35)))) + 15)")),
+}
+
+TEST(Expressions, Evaluator_ComplexExpressionTwo) {
+  ASSERT_EQ(std::to_string(evaluateExpression("(-71) + (2 * 100 / -(60)) + (-46 + -(((-(-29 + -35)))) + 15)")),
             "-508/3");
 }
 
