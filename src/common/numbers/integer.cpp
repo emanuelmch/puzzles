@@ -234,12 +234,35 @@ Integer Integer::operator/(const Integer &o) const {
   // Now for the actual division implementation
   Integer remainder{this->slices, true};
   Integer result{0};
-  auto step = o.absolute();
 
-  while (!remainder.slices.empty()) {
-    remainder -= step;
-    ++result;
-    ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
+  if (o.slices.size() == 1) {
+    // Optimizing this common scenario
+    auto base = o.slices[0];
+    std::vector<std::pair<intmax_t, intmax_t>> stepSizes;
+    stepSizes.emplace_back(1, base);
+
+    constexpr auto max = std::numeric_limits<intmax_t>::max() / 2;
+    for (intmax_t i = 2; i <= max && (*this > stepSizes.back().second); i *= 2) {
+      stepSizes.emplace_back(i, i * base);
+    }
+
+    for (auto it = stepSizes.crbegin(); it != stepSizes.crend(); ++it) {
+      auto [i, stepSize] = *it;
+      Integer step{stepSize};
+      while (step <= remainder) {
+        remainder -= step;
+        result = result + i;
+        ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
+      }
+    }
+  } else {
+    auto step = o.absolute();
+
+    while (!remainder.slices.empty()) {
+      remainder -= step;
+      ++result;
+      ensure(remainder.positive()); // We don't support fractions, to we should always stop exactly at 0
+    }
   }
 
   result._positive = this->positive() == o.positive() || result.slices.empty();
@@ -253,11 +276,33 @@ Integer Integer::operator%(const Integer &o) const {
     return *this;
   }
 
-  auto step = o.absolute();
   Integer remainder{this->slices, true};
-  while (step <= remainder) {
-    remainder -= step;
+
+  if (o.slices.size() == 1) {
+    // Optimizing this common scenario
+    auto base = o.slices[0];
+    std::vector<intmax_t> stepSizes;
+    stepSizes.push_back(base);
+
+    constexpr auto max = std::numeric_limits<intmax_t>::max() / 2;
+    for (intmax_t i = 2; i <= max && (*this > stepSizes.back()); i *= 2) {
+      stepSizes.push_back(i * base);
+    }
+
+    for (auto it = stepSizes.crbegin(); it != stepSizes.crend(); ++it) {
+      auto stepSize = *it;
+      Integer step{stepSize};
+      while (step <= remainder) {
+        remainder -= stepSize;
+      }
+    }
+  } else {
+    auto step = o.absolute();
+    while (step <= remainder) {
+      remainder -= step;
+    }
   }
+
   remainder._positive = this->positive() == o.positive() || remainder.slices.empty();
   return remainder;
 }

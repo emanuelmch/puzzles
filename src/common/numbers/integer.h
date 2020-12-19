@@ -48,6 +48,7 @@ struct Integer {
   [[nodiscard]] Integer operator%(const Integer &) const;
 
   [[nodiscard]] Integer operator+(intmax_t) const;
+  [[nodiscard]] inline Integer operator-(intmax_t o) const { return *this + -o; }
   [[nodiscard]] Integer operator*(intmax_t) const;
 
   [[nodiscard]] Integer power(const Integer &) const;
@@ -81,6 +82,7 @@ struct Integer {
   inline void operator/=(const Integer &o) { *this = *this / o; }
   inline void operator%=(const Integer &o) { *this = *this % o; }
 
+  inline void operator-=(intmax_t &o) { *this = *this - o; }
   inline void operator*=(intmax_t o) { *this = *this * o; }
 
 private:
