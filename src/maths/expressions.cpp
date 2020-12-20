@@ -23,12 +23,12 @@
 #include "expressions.h"
 
 #include "common/assertions.h"
-#include "common/strings.h"
 
-#include <cmath>   // std::pow
-#include <cstdint> // uint_fast8_t
-#include <stack>   // std::stack
-#include <vector>  // std::vector
+#include <algorithm> // std::remove_if
+#include <cmath>     // std::pow
+#include <cstdint>   // uint_fast8_t
+#include <stack>     // std::stack
+#include <vector>    // std::vector
 
 using namespace Maths;
 
@@ -127,7 +127,7 @@ inline void replace_all(std::string *expression, const std::string &before, cons
 }
 
 Number Maths::evaluateExpression(std::string expression) {
-  expression.erase(remove_if(expression.begin(), expression.end(), isspace), expression.end());
+  expression.erase(std::remove_if(expression.begin(), expression.end(), isspace), expression.end());
   replace_all(&expression, "--", "+");
   replace_all(&expression, "++", "+");
 
