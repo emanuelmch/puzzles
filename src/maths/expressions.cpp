@@ -22,10 +22,13 @@
 
 #include "expressions.h"
 
-#include <cassert>
-#include <cmath>
-#include <cstdint>
-#include <stack>
+#include "common/assertions.h"
+#include "common/strings.h"
+
+#include <cmath>   // std::pow
+#include <cstdint> // uint_fast8_t
+#include <stack>   // std::stack
+#include <vector>  // std::vector
 
 using namespace Maths;
 
@@ -36,12 +39,13 @@ using std::string;
 using std::vector;
 
 vector<Token> Maths::tokenizeExpression(const string &expression) {
+  ensure(expression.find(' ') == expression.npos);
   vector<Token> tokens;
 
   bool isReadingNumber = false;
   Number currentNumber(0);
 
-  for (auto token : expression) {
+  for (const auto token : expression) {
     if (token >= '0' && token <= '9') {
       isReadingNumber = true;
       // TODO: operator*=(int) and operator+=(int)
@@ -56,9 +60,7 @@ vector<Token> Maths::tokenizeExpression(const string &expression) {
       currentNumber = Number(0);
     }
 
-    if (token != ' ') {
-      tokens.emplace_back(token);
-    }
+    tokens.emplace_back(token);
   }
 
   if (isReadingNumber) {
@@ -74,7 +76,7 @@ inline uint_fast8_t getPrecedence(char operation) {
   if (operation == '*' || operation == '/') return 2;
   if (operation == '^') return 3;
 
-  assert(!"Unknown token");
+  ensure_never("Unknown token");
   return 0;
 }
 
@@ -82,9 +84,9 @@ void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
   auto next = operators->top();
   operators->pop();
 
-  assert(next == '+' || next == '-' || next == '*' || next == '/' || next == '^');
+  ensure(std::string("+-*/^").find(next) != std::string::npos);
 
-  assert(numbers->size() >= 2);
+  ensure(numbers->size() >= 2);
   auto right = numbers->top();
   numbers->pop();
   auto left = numbers->top();
@@ -104,10 +106,10 @@ void reduceOnce(stack<Number> *numbers, stack<char> *operators) {
 }
 
 inline void reduceToParenthesis(stack<Number> *numbers, stack<char> *operators) {
-  assert(!operators->empty());
+  ensure(!operators->empty());
   while (operators->top() != '(') {
     reduceOnce(numbers, operators);
-    assert(!operators->empty());
+    ensure(!operators->empty());
   }
   operators->pop();
 }
@@ -118,13 +120,24 @@ inline void reduceToPrecedence(stack<Number> *numbers, stack<char> *operators, u
   }
 }
 
-Number Maths::evaluateExpression(const std::string &expression) {
+inline void replace_all(std::string *expression, const std::string &before, const std::string &after) {
+  for (size_t pos = expression->find(before); pos != std::string::npos; pos = expression->find(before, pos)) {
+    expression->replace(pos, before.length(), after);
+  }
+}
+
+Number Maths::evaluateExpression(std::string expression) {
+  expression.erase(remove_if(expression.begin(), expression.end(), isspace), expression.end());
+  replace_all(&expression, "--", "+");
+  replace_all(&expression, "++", "+");
+
   stack<Number> numbers;
   stack<char> operators;
   int parenthesisCount = 0;
+  bool isLastTokenAnOperator = false;
 
   for (const auto &token : tokenizeExpression(expression)) {
-    if (token == ' ') continue;
+    ensure(token != ' ');
 
     if (token.isNumber) {
       numbers.push(token.asNumber);
@@ -132,21 +145,26 @@ Number Maths::evaluateExpression(const std::string &expression) {
       operators.push('(');
       parenthesisCount++;
     } else if (token == ')') {
-      assert(parenthesisCount > 0);
+      ensure(parenthesisCount > 0);
       parenthesisCount--;
       reduceToParenthesis(&numbers, &operators);
     } else if (token == '^') {
       operators.push('^');
+    } else if (token == '-' && (numbers.empty() || isLastTokenAnOperator)) {
+      numbers.push(Number(-1));
+      operators.push('*');
     } else {
       reduceToPrecedence(&numbers, &operators, getPrecedence(token.asOperator));
       operators.push(token.asOperator);
     }
+
+    isLastTokenAnOperator = !token.isNumber && token.asOperator != ')';
   }
 
   while (!operators.empty()) {
     reduceOnce(&numbers, &operators);
   }
 
-  assert(numbers.size() == 1);
+  ensure(numbers.size() == 1);
   return numbers.top();
 }

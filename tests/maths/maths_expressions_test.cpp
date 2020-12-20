@@ -27,9 +27,8 @@
 using namespace Maths;
 using Puzzles::Numbers::Number;
 
-using std::vector;
-
 TEST(Expressions, Evaluator) {
+  EXPECT_EQ(evaluateExpression("1 +2"), 3);
   EXPECT_EQ(evaluateExpression("1 + 1"), 2);
   EXPECT_EQ(evaluateExpression("2 + 3"), 5);
   EXPECT_EQ(evaluateExpression("2+3 "), 5);
@@ -49,21 +48,44 @@ TEST(Expressions, Evaluator) {
   EXPECT_EQ(evaluateExpression("3 + 4 * (2 ^ 2) ^ 3 / ( 1 - 5 ) ^ 2"), 19);
   EXPECT_EQ(evaluateExpression("3 + 4 * 2 ^ 2 ^ 3 / ( 1 - 5 ) ^ 2"), 67);
   EXPECT_EQ(evaluateExpression(" 3 + (4 * 2) ^ 2 ^ 3 ^ 1 ^ 1 / ( 1 - 5 ) ^ 2 ^ 3"), 259);
+  EXPECT_EQ(evaluateExpression("-12 + 13"), 1);
+  EXPECT_EQ(evaluateExpression("-(5 + 7) + 13"), 1);
+
   EXPECT_EQ(std::to_string(evaluateExpression("3 + ((4 * 2) ^ 2 ^ 3/ ( 1 - 5 ) ^ 2 ^ 3 ) * 15/154")), "2151/77");
+  EXPECT_EQ(std::to_string(evaluateExpression("11 * -10")), "-110");
+  EXPECT_EQ(std::to_string(evaluateExpression("9 - 80 - 11 * -10 - -100 / 60 - 28")), "38/3");
+  EXPECT_EQ(std::to_string(evaluateExpression("-(1) - (2)")), "-3");
+  EXPECT_EQ(std::to_string(evaluateExpression("-(-2)")), "2");
+  EXPECT_EQ(std::to_string(evaluateExpression("-(-32) * (79 / -69 - -(13)) - (60 + (((-(50 * 52)))) / 16)")),
+            "66497/138");
+  EXPECT_EQ(std::to_string(evaluateExpression("(-71) + (2 * 100 / -(60)) + (-46 + -(((-(-29 + -35)))) + 15)")),
+            "-508/3");
 }
 
 TEST(Expressions, Tokenizer) {
   Token plus('+');
+  Token minus('-');
+  Token times('*');
   Token divided('/');
+
+  Token open('(');
+  Token close(')');
 
   Token zero(Number(0));
   Token one(Number(1));
   Token two(Number(2));
+  Token twelve(Number(12));
+  Token thirteen(Number(13));
   Token hundredTwentyThree(Number(123));
   Token thousand(Number(1000));
 
-  EXPECT_EQ(std::to_string(tokenizeExpression("1 +2")), std::to_string(vector({one, plus, two})));
+  EXPECT_EQ(std::to_string(tokenizeExpression("1+2")), std::to_string(std::vector{one, plus, two}));
   EXPECT_EQ(std::to_string(tokenizeExpression("1000/123")),
-            std::to_string(vector({thousand, divided, hundredTwentyThree})));
-  EXPECT_EQ(std::to_string(tokenizeExpression("0")), std::to_string(vector({zero})));
+            std::to_string(std::vector{thousand, divided, hundredTwentyThree}));
+  EXPECT_EQ(std::to_string(tokenizeExpression("0")), std::to_string(std::vector{zero}));
+
+  EXPECT_EQ(std::to_string(tokenizeExpression("-12+13")), std::to_string(std::vector{minus, twelve, plus, thirteen}));
+  EXPECT_EQ(std::to_string(tokenizeExpression("-(-1)")), std::to_string(std::vector{minus, open, minus, one, close}));
+  EXPECT_EQ(std::to_string(tokenizeExpression("-(1)-1*(2)")),
+            std::to_string(std::vector{minus, open, one, close, minus, one, times, open, two, close}));
 }

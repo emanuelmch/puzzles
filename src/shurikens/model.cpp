@@ -22,7 +22,7 @@
 
 #include "model.h"
 
-#include <cassert>
+#include "common/assertions.h"
 
 using namespace Shurikens;
 
@@ -105,7 +105,7 @@ Shuriken Shuriken::apply(Shurikens::Move move) const {
   case reverse_b:
     return Shuriken(doReverseB(this->cells));
   default:
-    assert(!"Tried to apply an invalid move!");
+    ensure_never("Tried to apply an invalid move!");
     return *this;
   }
 }

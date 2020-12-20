@@ -109,7 +109,7 @@ private:
     this->positive = o.positive;
   }
 
-  [[nodiscard]] inline Number absolute() const { return Number(numerator, denominator, true); }
+  [[nodiscard]] static Number division(const std::string &, const std::string &);
   [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
 
   void simplify();
