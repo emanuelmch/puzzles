@@ -24,6 +24,11 @@ cmake_minimum_required(VERSION 3.9) # CMP0069
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
+find_program(CCACHE_PROGRAM ccache)
+if (CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif ()
+
 include(CheckCXXCompilerFlag)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
