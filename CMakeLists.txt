@@ -117,8 +117,6 @@ add_executable(puzzles
         src/shurikens/runner.cpp
         src/sudoku/runner.cpp
         $<TARGET_OBJECTS:puzzles_lib>)
-add_custom_target(run "./puzzles" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_dependencies(run puzzles)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supportsIPO)
