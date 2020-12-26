@@ -17,7 +17,7 @@ clang_debug: build/clang-debug/Makefile
 clang_release: build/clang-release/Makefile
 
 check_run check_run_release gcc_debug gcc_release clang_debug clang_release:
-	${MAKE} -C $(abspath $(addsuffix /..,$<)) check run --no-print-directory
+	${MAKE} -C $(abspath $(addsuffix /..,$<)) all test run --no-print-directory
 
 # Debug targets
 debug: build/debug/Makefile
@@ -27,7 +27,7 @@ debug_all: build/debug/Makefile
 	${MAKE} -C build/debug all --no-print-directory
 
 check: build/debug/Makefile
-	${MAKE} -C build/debug check --no-print-directory
+	${MAKE} -C build/debug all test --no-print-directory
 
 run: debug
 	./build/debug/puzzles
@@ -41,7 +41,7 @@ release: build/release/Makefile
 	${MAKE} -C build/release puzzles --no-print-directory
 
 check_release: build/release/Makefile
-	${MAKE} -C build/release check --no-print-directory
+	${MAKE} -C build/release all test --no-print-directory
 
 run_release: build/release/Makefile
 	${MAKE} -C build/release run --no-print-directory
