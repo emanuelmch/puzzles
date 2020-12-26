@@ -128,7 +128,6 @@ endif ()
 
 # Testing
 enable_testing()
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
 set(test_sources
@@ -157,5 +156,4 @@ foreach (testfile ${test_sources})
     target_link_libraries(${test_name} gtest gtest_main pthread)
 
     add_test(${test_name} ${test_name})
-    add_dependencies(check ${test_name})
 endforeach (testfile)
