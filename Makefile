@@ -21,13 +21,13 @@ check_run check_run_release gcc_debug gcc_release clang_debug clang_release:
 
 # Debug targets
 debug: build/debug/Makefile
-	cmake --build build/debug --target puzzles -- --no-print-directory
+	${MAKE} -C build/debug puzzles --no-print-directory
 
 debug_all: build/debug/Makefile
-	cmake --build build/debug -- --no-print-directory
+	${MAKE} -C build/debug all --no-print-directory
 
 check: build/debug/Makefile
-	cmake --build build/debug --target check -- --no-print-directory
+	${MAKE} -C build/debug check --no-print-directory
 
 run: debug
 	./build/debug/puzzles
@@ -38,10 +38,10 @@ run_full: debug
 
 # Release targets
 release: build/release/Makefile
-	cmake --build build/release --target puzzles -- --no-print-directory
+	${MAKE} -C build/release puzzles --no-print-directory
 
 check_release: build/release/Makefile
-	cmake --build build/release --target check -- --no-print-directory
+	${MAKE} -C build/release check --no-print-directory
 
 run_release: build/release/Makefile
 	${MAKE} -C build/release run --no-print-directory
