@@ -32,7 +32,7 @@ namespace Puzzles {
 
 typedef size_t value_t;
 
-static constexpr inline size_t calculateValueBitLength(size_t value) {
+constexpr size_t calculateValueBitLength(size_t value) {
   assert(value > 0);
   assert(value <= 0b11111111); // No real reason to stop there, I just haven't tested any further
 
