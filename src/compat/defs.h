@@ -22,6 +22,10 @@
 
 #pragma once
 
+#if __has_include(<version>)
+#include <version>
+#endif
+
 #if __has_cpp_attribute(likely) && __has_cpp_attribute(unlikely)
 
 #define pzl_likely likely

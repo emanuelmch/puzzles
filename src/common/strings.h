@@ -26,12 +26,26 @@
 
 namespace Puzzles {
 
-inline constexpr std::string_view trimLeadingView(const std::string_view &original, char c) {
+inline std::string padLeading(const std::string_view &original, unsigned int howMany, char c) {
+  if (howMany <= original.size()) return std::string{original};
+
+  auto padLength = howMany - original.size();
+
+  std::string result{original};
+  result.insert(0, padLength, c);
+  return result;
+}
+
+constexpr std::string_view trimLeadingView(const std::string_view &original, char c) {
   auto start = original.find_first_not_of(c);
 
   if (start == 0) return original;
   if (start == std::string::npos) return original.substr(original.length());
 
   return original.substr(start);
-};
+}
+
+inline std::string trimLeading(const std::string_view &original, char c) {
+  return std::string{trimLeadingView(original, c)};
+}
 }

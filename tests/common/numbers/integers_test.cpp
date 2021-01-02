@@ -20,33 +20,20 @@
  * SOFTWARE.
  */
 
-#include "common/strings.h"
+#include "common/numbers/integers.h"
 
 #include <gtest/gtest.h>
 
-using namespace Puzzles;
+using namespace pzl;
 
-TEST(Strings, PadLeading) {
-  EXPECT_EQ(padLeading("", 8, '0'), "00000000");
-  EXPECT_EQ(padLeading("1234", 8, '0'), "00001234");
-  EXPECT_EQ(padLeading("12345678", 8, '0'), "12345678");
-  EXPECT_EQ(padLeading("123456789", 8, '0'), "123456789");
+TEST(Numbers, GreatestCommonDivisor) {
+  EXPECT_EQ(greatestCommonDivisor(Integer{1}, Integer{3}), 1);
+  EXPECT_EQ(greatestCommonDivisor(Integer{17}, Integer{19}), Integer{1});
+  EXPECT_EQ(greatestCommonDivisor(Integer{10}, Integer{25}), Integer{5});
+  EXPECT_EQ(greatestCommonDivisor(Integer{3154}, Integer{4522}), Integer{38});
 }
 
-TEST(Strings, TrimLeading) {
-  EXPECT_EQ(trimLeadingView(" test", ' '), "test");
-  EXPECT_EQ(trimLeadingView(" test", 't'), " test");
-
-  EXPECT_EQ(trimLeadingView("rrr", 'r'), "");
-  EXPECT_EQ(trimLeadingView("rrr", ' '), "rrr");
-}
-
-TEST(Strings, TrimLeadingView) {
-  std::string simple = " test";
-  EXPECT_EQ(trimLeadingView(simple, ' '), "test");
-  EXPECT_EQ(trimLeadingView(simple, 't'), " test");
-
-  std::string repeat = "rrr";
-  EXPECT_EQ(trimLeadingView(repeat, 'r'), "");
-  EXPECT_EQ(trimLeadingView(repeat, ' '), "rrr");
+TEST(Numbers, LowestCommonMultiple) {
+  EXPECT_EQ(lowestCommonMultiple(Integer{1}, Integer{30}), Integer{30});
+  EXPECT_EQ(lowestCommonMultiple(Integer{10}, Integer{25}), Integer{50});
 }

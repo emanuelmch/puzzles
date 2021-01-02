@@ -20,33 +20,28 @@
  * SOFTWARE.
  */
 
-#include "common/strings.h"
+#include "compat/compare.h"
 
 #include <gtest/gtest.h>
 
-using namespace Puzzles;
+using namespace compat;
 
-TEST(Strings, PadLeading) {
-  EXPECT_EQ(padLeading("", 8, '0'), "00000000");
-  EXPECT_EQ(padLeading("1234", 8, '0'), "00001234");
-  EXPECT_EQ(padLeading("12345678", 8, '0'), "12345678");
-  EXPECT_EQ(padLeading("123456789", 8, '0'), "123456789");
-}
+TEST(Compare, CompareInts) {
+  EXPECT_EQ(compare(-1, -2), strong_ordering::greater);
+  EXPECT_EQ(compare(-1, -1), strong_ordering::equal);
+  EXPECT_EQ(compare(-1, 0), strong_ordering::less);
+  EXPECT_EQ(compare(-1, 1), strong_ordering::less);
+  EXPECT_EQ(compare(-1, 2), strong_ordering::less);
 
-TEST(Strings, TrimLeading) {
-  EXPECT_EQ(trimLeadingView(" test", ' '), "test");
-  EXPECT_EQ(trimLeadingView(" test", 't'), " test");
+  EXPECT_EQ(compare(0, -2), strong_ordering::greater);
+  EXPECT_EQ(compare(0, -1), strong_ordering::greater);
+  EXPECT_EQ(compare(0, 0), strong_ordering::equal);
+  EXPECT_EQ(compare(0, 1), strong_ordering::less);
+  EXPECT_EQ(compare(0, 2), strong_ordering::less);
 
-  EXPECT_EQ(trimLeadingView("rrr", 'r'), "");
-  EXPECT_EQ(trimLeadingView("rrr", ' '), "rrr");
-}
-
-TEST(Strings, TrimLeadingView) {
-  std::string simple = " test";
-  EXPECT_EQ(trimLeadingView(simple, ' '), "test");
-  EXPECT_EQ(trimLeadingView(simple, 't'), " test");
-
-  std::string repeat = "rrr";
-  EXPECT_EQ(trimLeadingView(repeat, 'r'), "");
-  EXPECT_EQ(trimLeadingView(repeat, ' '), "rrr");
+  EXPECT_EQ(compare(1, -2), strong_ordering::greater);
+  EXPECT_EQ(compare(1, -1), strong_ordering::greater);
+  EXPECT_EQ(compare(1, 0), strong_ordering::greater);
+  EXPECT_EQ(compare(1, 1), strong_ordering::equal);
+  EXPECT_EQ(compare(1, 2), strong_ordering::less);
 }

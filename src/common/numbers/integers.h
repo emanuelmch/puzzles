@@ -20,33 +20,31 @@
  * SOFTWARE.
  */
 
-#include "common/strings.h"
+#pragma once
 
-#include <gtest/gtest.h>
+#include "common/assertions.h"
+#include "common/numbers/integer.h"
 
-using namespace Puzzles;
+namespace pzl {
 
-TEST(Strings, PadLeading) {
-  EXPECT_EQ(padLeading("", 8, '0'), "00000000");
-  EXPECT_EQ(padLeading("1234", 8, '0'), "00001234");
-  EXPECT_EQ(padLeading("12345678", 8, '0'), "12345678");
-  EXPECT_EQ(padLeading("123456789", 8, '0'), "123456789");
+inline Integer greatestCommonDivisor(Integer left, Integer right) {
+  // This is the Euclidean algorithm
+  if (left == 0) return right;
+
+  left = left.absolute();
+  right = right.absolute();
+
+  while (true) {
+    if (right == 0) return left;
+    left %= right;
+    if (left == 0) return right;
+    right %= left;
+  }
 }
 
-TEST(Strings, TrimLeading) {
-  EXPECT_EQ(trimLeadingView(" test", ' '), "test");
-  EXPECT_EQ(trimLeadingView(" test", 't'), " test");
-
-  EXPECT_EQ(trimLeadingView("rrr", 'r'), "");
-  EXPECT_EQ(trimLeadingView("rrr", ' '), "rrr");
+inline Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
+  ensure(lhs != 0 && rhs != 0); // This is undefined
+  auto gcd = greatestCommonDivisor(lhs, rhs);
+  return lhs * rhs / gcd;
 }
-
-TEST(Strings, TrimLeadingView) {
-  std::string simple = " test";
-  EXPECT_EQ(trimLeadingView(simple, ' '), "test");
-  EXPECT_EQ(trimLeadingView(simple, 't'), " test");
-
-  std::string repeat = "rrr";
-  EXPECT_EQ(trimLeadingView(repeat, 'r'), "");
-  EXPECT_EQ(trimLeadingView(repeat, ' '), "rrr");
 }

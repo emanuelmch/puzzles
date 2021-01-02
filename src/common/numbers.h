@@ -24,10 +24,8 @@
 
 #include "common/assertions.h"
 
-#include <algorithm>
-#include <cstdint>
-#include <limits>
-#include <string>
+#include <cstdint> // uint8_t, uintmax_t
+#include <limits>  // std::numeric_limits
 
 namespace Puzzles::Numbers {
 
@@ -65,70 +63,5 @@ constexpr uintmax_t lowestCommonMultiple(uintmax_t lhs, uintmax_t rhs) {
   ensure(lhs != 0 && rhs != 0); // This is undefined
   auto gcd = greatestCommonDivisor(lhs, rhs);
   return lhs * rhs / gcd;
-}
-
-struct Number {
-
-  explicit Number(const std::string &);
-  explicit Number(intmax_t);
-  Number(intmax_t, uintmax_t);
-
-  [[nodiscard]] Number operator+(const Number &) const;
-  [[nodiscard]] Number operator-(const Number &) const;
-  [[nodiscard]] Number operator*(const Number &) const;
-  [[nodiscard]] Number operator/(const Number &) const;
-
-  [[nodiscard]] Number power(const Number &exponent) const;
-
-  void operator+=(const Number &o) { copy(*this + o); }
-  void operator-=(const Number &o) { copy(*this - o); }
-  void operator*=(const Number &o) { copy(*this * o); }
-  Number &operator++();
-
-  [[nodiscard]] bool operator<(const Number &) const;
-  // TODO: <= Could be more efficient
-  [[nodiscard]] inline bool operator<=(const Number &o) const { return *this < o || *this == o; }
-  [[nodiscard]] inline bool operator>=(const Number &o) const { return o < *this; }
-  [[nodiscard]] bool operator==(const Number &) const;
-  [[nodiscard]] bool operator==(intmax_t) const;
-  [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
-
-  [[nodiscard]] std::string toString() const;
-
-private:
-  std::string numerator;
-  std::string denominator;
-  bool positive;
-
-  Number(uintmax_t, uintmax_t, bool);
-  Number(const std::string &, std::string, bool);
-
-  inline void copy(const Number &o) {
-    this->numerator = o.numerator;
-    this->denominator = o.denominator;
-    this->positive = o.positive;
-  }
-
-  [[nodiscard]] static Number division(const std::string &, const std::string &);
-  [[nodiscard]] std::pair<Number, Number> normalizeDenominatorWith(const Number &) const;
-
-  void simplify();
-};
-}
-
-namespace std { // NOLINT(cert-dcl58-cpp)
-
-inline Puzzles::Numbers::Number pow(const Puzzles::Numbers::Number &base, const Puzzles::Numbers::Number &exponent) {
-  return base.power(exponent);
-}
-
-inline string to_string(const Puzzles::Numbers::Number &number) {
-  return number.toString();
-}
-
-// This doesn't have to be in std, but it must come after to_string, so...
-inline std::ostream &operator<<(std::ostream &s, const Puzzles::Numbers::Number &number) {
-  s << std::to_string(number);
-  return s;
 }
 }
