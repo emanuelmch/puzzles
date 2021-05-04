@@ -1,0 +1,49 @@
+name: Check
+
+on: [ push, pull_request ]
+
+jobs:
+  check_run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04, macos-10.15]
+        build_type: [Debug, Release]
+        include:
+          - os: ubuntu-20.04
+            extra-packages: gcc-11 g++-11
+            CC: gcc-11
+            CXX: g++-11
+          - os: ubuntu-18.04 # Comes pre-packaged with GCC 7.5.0
+            CC: gcc-7
+            CXX: g++-7
+
+    env:
+      CC: ${{ matrix.CC }}
+      CXX: ${{ matrix.CXX }}
+
+    steps:
+    - name: Install the latest compilers
+      if: matrix.extra-packages
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt-get update
+        sudo apt-get install -y ${{ matrix.extra-packages }}
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }}
+
+    - name: Unit Tests
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C Debug
+
+    - name: Run puzzles
+      working-directory: ${{github.workspace}}/build
+      run: ./puzzles

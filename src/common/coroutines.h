@@ -45,11 +45,11 @@ struct LazySequence {
   struct promise_type {
     T lastYieldedValue;
 
-    constexpr auto initial_suspend() { return std::suspend_always(); }
-    constexpr auto final_suspend() { return std::suspend_always(); }
-    constexpr auto get_return_object() { return LazySequence(*this); }
-    constexpr auto unhandled_exception() { std::exit(1); }
-    constexpr auto yield_value(const T value) {
+    constexpr auto initial_suspend() noexcept { return std::suspend_always(); }
+    constexpr auto final_suspend() noexcept { return std::suspend_always(); }
+    constexpr auto get_return_object() noexcept { return LazySequence(*this); }
+    constexpr auto unhandled_exception() noexcept { std::exit(1); }
+    constexpr auto yield_value(const T value) noexcept {
       lastYieldedValue = value;
       return std::suspend_always();
     }
