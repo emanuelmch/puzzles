@@ -36,6 +36,7 @@
 #include <cinttypes>
 #include <execution>
 #include <string>
+#include <ranges>
 
 using namespace Maths;
 

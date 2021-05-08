@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/emanuelmch/puzzles.svg?branch=master)](https://travis-ci.org/emanuelmch/puzzles)
+[![Build Status](https://github.com/emanuelmch/puzzles/actions/workflows/check.yml/badge.svg?branch=master)](https://github.com/emanuelmch/puzzles/actions/workflows/check.yml)
 
 # Puzzles
 
