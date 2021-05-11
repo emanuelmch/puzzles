@@ -35,8 +35,8 @@
 #include <algorithm>
 #include <cinttypes>
 #include <execution>
-#include <string>
 #include <ranges>
+#include <string>
 
 using namespace Maths;
 

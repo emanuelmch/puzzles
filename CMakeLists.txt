@@ -24,11 +24,16 @@ cmake_minimum_required(VERSION 3.9) # CMP0069
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
+find_program(CCACHE_PROGRAM ccache)
+if (CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif ()
+
 include(CheckCXXCompilerFlag)
 
 project(Puzzles VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -fno-rtti")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fomit-frame-pointer -fno-exceptions")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
 if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
@@ -112,8 +117,6 @@ add_executable(puzzles
         src/shurikens/runner.cpp
         src/sudoku/runner.cpp
         $<TARGET_OBJECTS:puzzles_lib>)
-add_custom_target(run "./puzzles" WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_dependencies(run puzzles)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supportsIPO)
@@ -123,7 +126,6 @@ endif ()
 
 # Testing
 enable_testing()
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_subdirectory(libs/googletest)
 
 set(test_sources
@@ -152,5 +154,4 @@ foreach (testfile ${test_sources})
     target_link_libraries(${test_name} gtest gtest_main pthread)
 
     add_test(${test_name} ${test_name})
-    add_dependencies(check ${test_name})
 endforeach (testfile)
