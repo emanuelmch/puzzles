@@ -80,7 +80,7 @@ bool runInfiniteSequence(const string &name, const list &, const Puzzles::LazySe
   cout << "Maths: Skipping " << name << " due to lack of compiler support\n";
   return true;
 }
-#else // !defined(__cpp_impl_coroutine)
+#else  // !defined(__cpp_impl_coroutine)
 template <typename list>
 bool runInfiniteSequence(const string &name, const list &expectedSequence,
                          const Puzzles::LazySequence<uintmax_t> &actualSequence) {

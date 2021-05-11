@@ -94,6 +94,7 @@ add_library(puzzles_lib OBJECT
         src/cpic/view/board_logger.cpp
         src/maths/expressions.cpp
         src/maths/sequences.cpp
+        src/maths/josephus/arithmetic_solver.cpp
         src/shurikens/logger.cpp
         src/shurikens/model.cpp
         src/shurikens/data/easy.cpp
@@ -141,6 +142,7 @@ set(test_sources
         tests/cpic/model/cpic_board_state_test.cpp
         tests/cpic/model/cpic_board_test.cpp
         tests/maths/maths_expressions_test.cpp
+        tests/maths/maths_josephus_test.cpp
         tests/maths/maths_primes_test.cpp
         tests/maths/maths_sequences_test.cpp
         tests/shurikens/shurikens_model_test.cpp
