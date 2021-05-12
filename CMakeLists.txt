@@ -95,6 +95,7 @@ add_library(puzzles_lib OBJECT
         src/maths/expressions.cpp
         src/maths/sequences.cpp
         src/maths/josephus/arithmetic_solver.cpp
+        src/maths/josephus/simulation_solver.cpp
         src/shurikens/logger.cpp
         src/shurikens/model.cpp
         src/shurikens/data/easy.cpp

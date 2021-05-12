@@ -28,3 +28,8 @@ namespace Maths::Josephus::ArithmeticSolver {
 
 pzl::Integer solve(const pzl::Integer &initialCircleSize);
 }
+
+namespace Maths::Josephus::SimulationSolver {
+
+pzl::Integer solve(const pzl::Integer &initialCircleSize);
+}

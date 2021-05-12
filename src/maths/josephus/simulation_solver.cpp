@@ -20,37 +20,53 @@
  * SOFTWARE.
  */
 
-#include "maths/josephus/solver.h"
+#include "solver.h"
 
-#include <gtest/gtest.h>
+#include "common/assertions.h"
+
+#include <memory>
+#include <utility>
 
 using namespace Maths::Josephus;
 using pzl::Integer;
 
-TEST(Maths, ArithmeticSolver) {
-  auto solve = ArithmeticSolver::solve;
-  EXPECT_EQ(solve(Integer{1}), 1);
-  EXPECT_EQ(solve(Integer{2}), 1);
-  EXPECT_EQ(solve(Integer{3}), 3);
-  EXPECT_EQ(solve(Integer{4}), 1);
-  EXPECT_EQ(solve(Integer{5}), 3);
-  EXPECT_EQ(solve(Integer{6}), 5);
-  EXPECT_EQ(solve(Integer{7}), 7);
-  EXPECT_EQ(solve(Integer{8}), 1);
-  EXPECT_EQ(solve(Integer{9}), 3);
-  EXPECT_EQ(solve(Integer{10}), 5);
+namespace {
+struct CircleItem {
+  const Integer value;
+  std::shared_ptr<CircleItem> next;
+
+  explicit CircleItem(Integer value) : value(std::move(value)), next(nullptr) {}
+};
 }
 
-TEST(Maths, SimulationSolver) {
-  auto solve = SimulationSolver::solve;
-  EXPECT_EQ(solve(Integer{1}), 1);
-  EXPECT_EQ(solve(Integer{2}), 1);
-  EXPECT_EQ(solve(Integer{3}), 3);
-  EXPECT_EQ(solve(Integer{4}), 1);
-  EXPECT_EQ(solve(Integer{5}), 3);
-  EXPECT_EQ(solve(Integer{6}), 5);
-  EXPECT_EQ(solve(Integer{7}), 7);
-  EXPECT_EQ(solve(Integer{8}), 1);
-  EXPECT_EQ(solve(Integer{9}), 3);
-  EXPECT_EQ(solve(Integer{10}), 5);
+inline std::shared_ptr<CircleItem> makeCircle(const Integer &size) {
+  auto first = std::make_shared<CircleItem>(Integer{1});
+
+  auto circle = first;
+  for (auto i = Integer{2}; i <= size; ++i) {
+    circle->next = std::make_shared<CircleItem>(i);
+    circle = circle->next;
+  }
+
+  ensure(circle->next == nullptr);
+  circle->next = first;
+
+  return first;
+}
+
+Integer SimulationSolver::solve(const Integer &initialSize) {
+  ensure(initialSize > 0);
+
+  auto item = makeCircle(initialSize);
+  ensure(item->value == 1);
+
+  while (item->next != item) {
+    auto victim = item->next;
+    item->next = item->next->next;
+    item = item->next;
+  }
+
+  item->next.reset(); // To avoid a cyclical reference
+
+  return item->value;
 }
