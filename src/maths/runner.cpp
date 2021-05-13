@@ -23,6 +23,7 @@
 #include "runner.h"
 
 #include "expressions.h"
+#include "josephus/solver.h"
 #include "primes.h"
 #include "sequences.h"
 
@@ -72,6 +73,28 @@ bool runEvaluateExpression(const string &expression, long expected) {
          << expected << "\n";
     return false;
   }
+}
+
+bool runJosephusProblem(const intmax_t circleSize, const intmax_t expected) {
+  pzl::Integer circle{circleSize};
+  auto [arithmeticResult, arithmeticDuration] =
+      runningTime([&circle] { return Maths::Josephus::ArithmeticSolver::solve(circle); });
+  if (arithmeticResult != expected) {
+    cout << "Maths: Failure! Arithmetic calculated a Josephus Circle of size " << circleSize
+         << " to have a survivor on position " << std::to_string(arithmeticResult);
+    return false;
+  }
+  auto [simulationResult, simulationDuration] =
+      runningTime([&circle] { return Maths::Josephus::SimulationSolver::solve(circle); });
+  if (simulationResult != expected) {
+    cout << "Maths: Failure! Simulation calculated a Josephus Circle of size " << circleSize
+         << " to have a survivor on position " << std::to_string(simulationResult);
+    return false;
+  }
+
+  cout << "Maths: Success! Both Josephus solvers had the same correct result, arithmetic took " << arithmeticDuration
+       << " µs, and simulation took " << simulationDuration << " µs\n";
+  return true;
 }
 
 #if !defined(__cpp_impl_coroutine)
@@ -142,5 +165,5 @@ bool runEmirpsSequence() {
 
 bool Maths::run() {
   return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
-         runHighlyCompositeNumberSequence() && runEmirpsSequence();
+         runJosephusProblem(139562, 16981) && runHighlyCompositeNumberSequence() && runEmirpsSequence();
 }
