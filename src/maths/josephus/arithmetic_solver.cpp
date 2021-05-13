@@ -23,20 +23,14 @@
 #include "solver.h"
 
 #include "common/assertions.h"
+#include "common/numbers/integers.h"
 
 using namespace Maths::Josephus;
 using pzl::Integer;
 
 Integer ArithmeticSolver::solve(const Integer &initialSize) {
   ensure(initialSize > 0);
-  ensure(initialSize <= 10);
-  if (initialSize == 3 || initialSize == 5 || initialSize == 9) {
-    return Integer{3};
-  } else if (initialSize == 6 || initialSize == 10) {
-    return Integer{5};
-  } else if (initialSize == 7) {
-    return Integer{7};
-  } else {
-    return Integer{1};
-  }
+  auto n = pzl::greatestPowerOfTwo(initialSize);
+  auto l = initialSize - n;
+  return l * 2 + 1;
 }

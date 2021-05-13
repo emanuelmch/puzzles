@@ -26,14 +26,25 @@
 
 using namespace pzl;
 
-TEST(Numbers, GreatestCommonDivisor) {
+TEST(Integers, GreatestCommonDivisor) {
   EXPECT_EQ(greatestCommonDivisor(Integer{1}, Integer{3}), 1);
   EXPECT_EQ(greatestCommonDivisor(Integer{17}, Integer{19}), Integer{1});
   EXPECT_EQ(greatestCommonDivisor(Integer{10}, Integer{25}), Integer{5});
   EXPECT_EQ(greatestCommonDivisor(Integer{3154}, Integer{4522}), Integer{38});
 }
 
-TEST(Numbers, LowestCommonMultiple) {
+TEST(Integers, LowestCommonMultiple) {
   EXPECT_EQ(lowestCommonMultiple(Integer{1}, Integer{30}), Integer{30});
   EXPECT_EQ(lowestCommonMultiple(Integer{10}, Integer{25}), Integer{50});
+}
+
+TEST(Integers, GreatestPowerOfTwo) {
+  EXPECT_EQ(greatestPowerOfTwo(Integer{1}), Integer{1});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{2}), Integer{2});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{3}), Integer{2});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{4}), Integer{4});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{5}), Integer{4});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{8}), Integer{8});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{9}), Integer{8});
+  EXPECT_EQ(greatestPowerOfTwo(Integer{127}), Integer{64});
 }

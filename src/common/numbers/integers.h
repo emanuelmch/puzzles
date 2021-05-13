@@ -47,4 +47,19 @@ inline Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
   auto gcd = greatestCommonDivisor(lhs, rhs);
   return lhs * rhs / gcd;
 }
+
+inline Integer greatestPowerOfTwo(const Integer &integer) {
+  ensure(integer > 0);
+
+  if (integer == 1 || integer == 2) return integer;
+
+  Integer candidate{1};
+  Integer next{2};
+  while (integer >= next) {
+    candidate = next;
+    next = next * 2;
+  }
+
+  return candidate;
+}
 }
