@@ -73,6 +73,7 @@ struct Integer {
   [[nodiscard]] inline bool operator==(intmax_t o) const { return *this == Integer{o}; }
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return *this != Integer{o}; }
   [[nodiscard]] inline bool operator<(intmax_t o) const { return *this < Integer{o}; }
+  [[nodiscard]] inline bool operator<=(intmax_t o) const { return *this <= Integer{o}; }
   [[nodiscard]] inline bool operator>(intmax_t o) const { return *this > Integer{o}; }
 
   Integer &operator++();

@@ -372,6 +372,22 @@ TEST(Integer, Comparison_LessThanOrEqualTo) {
   EXPECT_FALSE(Integer{-499} <= Integer{-500});
 }
 
+TEST(Integer, Comparison_LessThanOrEqualToInt) {
+  EXPECT_TRUE(Integer{0} <= 1);
+  EXPECT_TRUE(Integer{0} <= 0);
+  EXPECT_TRUE(Integer{9} <= 10);
+  EXPECT_TRUE(Integer{-500} <= 0);
+  EXPECT_TRUE(Integer{-500} <= 1);
+  EXPECT_TRUE(Integer{-500} <= -499);
+  EXPECT_TRUE(Integer{-500} <= -500);
+
+  EXPECT_FALSE(Integer{1} <= 0);
+  EXPECT_FALSE(Integer{10} <= 9);
+  EXPECT_FALSE(Integer{0} <= -500);
+  EXPECT_FALSE(Integer{1} <= -500);
+  EXPECT_FALSE(Integer{-499} <= -500);
+}
+
 TEST(Integer, Comparison_GreaterThan) {
   EXPECT_TRUE(Integer{1} > Integer{0});
   EXPECT_TRUE(Integer{10} > Integer{9});

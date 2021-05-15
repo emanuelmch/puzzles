@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,46 +20,53 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "solver.h"
 
 #include "common/assertions.h"
-#include "common/numbers/integer.h"
 
-namespace pzl {
+#include <memory>
+#include <utility>
 
-inline Integer greatestCommonDivisor(Integer left, Integer right) {
-  // This is the Euclidean algorithm
-  if (left == 0) return right;
+using namespace Maths::Josephus;
+using pzl::Integer;
 
-  left = left.absolute();
-  right = right.absolute();
+namespace {
+struct CircleItem {
+  const Integer value;
+  std::shared_ptr<CircleItem> next;
 
-  while (true) {
-    if (right == 0) return left;
-    left %= right;
-    if (left == 0) return right;
-    right %= left;
-  }
+  explicit CircleItem(Integer value) : value(std::move(value)), next(nullptr) {}
+};
 }
 
-inline Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
-  ensure(lhs != 0 && rhs != 0); // This is undefined
-  auto gcd = greatestCommonDivisor(lhs, rhs);
-  return lhs * rhs / gcd;
-}
+inline std::shared_ptr<CircleItem> makeCircle(const Integer &size) {
+  auto first = std::make_shared<CircleItem>(Integer{1});
 
-inline Integer greatestPowerOfTwo(const Integer &integer) {
-  ensure(integer > 0);
-
-  if (integer == 1 || integer == 2) return integer;
-
-  Integer candidate{1};
-  Integer next{2};
-  while (integer >= next) {
-    candidate = next;
-    next = next * 2;
+  auto circle = first;
+  for (auto i = Integer{2}; i <= size; ++i) {
+    circle->next = std::make_shared<CircleItem>(i);
+    circle = circle->next;
   }
 
-  return candidate;
+  ensure(circle->next == nullptr);
+  circle->next = first;
+
+  return first;
 }
+
+Integer SimulationSolver::solve(const Integer &initialSize) {
+  ensure(initialSize > 0);
+
+  auto item = makeCircle(initialSize);
+  ensure(item->value == 1);
+
+  while (item->next != item) {
+    auto victim = item->next;
+    item->next = item->next->next;
+    item = item->next;
+  }
+
+  item->next.reset(); // To avoid a cyclical reference
+
+  return item->value;
 }

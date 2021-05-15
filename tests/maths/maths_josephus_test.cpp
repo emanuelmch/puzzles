@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,46 +20,37 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "maths/josephus/solver.h"
 
-#include "common/assertions.h"
-#include "common/numbers/integer.h"
+#include <gtest/gtest.h>
 
-namespace pzl {
+using namespace Maths::Josephus;
+using pzl::Integer;
 
-inline Integer greatestCommonDivisor(Integer left, Integer right) {
-  // This is the Euclidean algorithm
-  if (left == 0) return right;
-
-  left = left.absolute();
-  right = right.absolute();
-
-  while (true) {
-    if (right == 0) return left;
-    left %= right;
-    if (left == 0) return right;
-    right %= left;
-  }
+TEST(Maths, ArithmeticSolver) {
+  auto solve = ArithmeticSolver::solve;
+  EXPECT_EQ(solve(Integer{1}), 1);
+  EXPECT_EQ(solve(Integer{2}), 1);
+  EXPECT_EQ(solve(Integer{3}), 3);
+  EXPECT_EQ(solve(Integer{4}), 1);
+  EXPECT_EQ(solve(Integer{5}), 3);
+  EXPECT_EQ(solve(Integer{6}), 5);
+  EXPECT_EQ(solve(Integer{7}), 7);
+  EXPECT_EQ(solve(Integer{8}), 1);
+  EXPECT_EQ(solve(Integer{9}), 3);
+  EXPECT_EQ(solve(Integer{10}), 5);
 }
 
-inline Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
-  ensure(lhs != 0 && rhs != 0); // This is undefined
-  auto gcd = greatestCommonDivisor(lhs, rhs);
-  return lhs * rhs / gcd;
-}
-
-inline Integer greatestPowerOfTwo(const Integer &integer) {
-  ensure(integer > 0);
-
-  if (integer == 1 || integer == 2) return integer;
-
-  Integer candidate{1};
-  Integer next{2};
-  while (integer >= next) {
-    candidate = next;
-    next = next * 2;
-  }
-
-  return candidate;
-}
+TEST(Maths, SimulationSolver) {
+  auto solve = SimulationSolver::solve;
+  EXPECT_EQ(solve(Integer{1}), 1);
+  EXPECT_EQ(solve(Integer{2}), 1);
+  EXPECT_EQ(solve(Integer{3}), 3);
+  EXPECT_EQ(solve(Integer{4}), 1);
+  EXPECT_EQ(solve(Integer{5}), 3);
+  EXPECT_EQ(solve(Integer{6}), 5);
+  EXPECT_EQ(solve(Integer{7}), 7);
+  EXPECT_EQ(solve(Integer{8}), 1);
+  EXPECT_EQ(solve(Integer{9}), 3);
+  EXPECT_EQ(solve(Integer{10}), 5);
 }

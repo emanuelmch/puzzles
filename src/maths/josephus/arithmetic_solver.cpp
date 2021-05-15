@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,46 +20,17 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "solver.h"
 
 #include "common/assertions.h"
-#include "common/numbers/integer.h"
+#include "common/numbers/integers.h"
 
-namespace pzl {
+using namespace Maths::Josephus;
+using pzl::Integer;
 
-inline Integer greatestCommonDivisor(Integer left, Integer right) {
-  // This is the Euclidean algorithm
-  if (left == 0) return right;
-
-  left = left.absolute();
-  right = right.absolute();
-
-  while (true) {
-    if (right == 0) return left;
-    left %= right;
-    if (left == 0) return right;
-    right %= left;
-  }
-}
-
-inline Integer lowestCommonMultiple(const Integer &lhs, const Integer &rhs) {
-  ensure(lhs != 0 && rhs != 0); // This is undefined
-  auto gcd = greatestCommonDivisor(lhs, rhs);
-  return lhs * rhs / gcd;
-}
-
-inline Integer greatestPowerOfTwo(const Integer &integer) {
-  ensure(integer > 0);
-
-  if (integer == 1 || integer == 2) return integer;
-
-  Integer candidate{1};
-  Integer next{2};
-  while (integer >= next) {
-    candidate = next;
-    next = next * 2;
-  }
-
-  return candidate;
-}
+Integer ArithmeticSolver::solve(const Integer &initialSize) {
+  ensure(initialSize > 0);
+  auto n = pzl::greatestPowerOfTwo(initialSize);
+  auto l = initialSize - n;
+  return l * 2 + 1;
 }
