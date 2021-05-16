@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,11 @@
  * SOFTWARE.
  */
 
-#include "comsci/runner.h"
-#include "cpic/runner.h"
-#include "maths/runner.h"
-#include "shurikens/runner.h"
-#include "sudoku/runner.h"
+#pragma once
 
-#include "common/runners.h"
+#include "travelling_salesman.h"
 
-#include <iostream>
-#include <string>
+namespace ComSci {
 
-using std::cout;
-using std::string;
-
-using Puzzles::runningTime;
-
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
-
-  auto [success, duration] = runningTime(
-      [=] { return ComSci::run() && CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run(); });
-
-  if (!success) return 1;
-  cout << "All good, we took roughly " << duration << " microseconds!\n";
+bool run();
 }

@@ -78,6 +78,8 @@ include_directories(src)
 add_library(puzzles_lib OBJECT
         src/common/numbers/integer.cpp
         src/common/numbers/rational.cpp
+        src/comsci/runner.cpp
+        src/comsci/travelling_salesman.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
