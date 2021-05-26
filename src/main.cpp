@@ -35,13 +35,9 @@ using std::string;
 
 using Puzzles::runningTime;
 
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
-
+int main() {
   auto [success, duration] =
-      runningTime([=] { return CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run(); });
+      runningTime([=] { return Maths::run(); });
 
   if (!success) return 1;
   cout << "All good, we took roughly " << duration << " microseconds!\n";

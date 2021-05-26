@@ -164,6 +164,5 @@ bool runEmirpsSequence() {
 }
 
 bool Maths::run() {
-  return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
-         runJosephusProblem(139562, 16981) && runHighlyCompositeNumberSequence() && runEmirpsSequence();
+  return runJosephusProblem(139562, 16981);
 }

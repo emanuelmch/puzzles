@@ -20,54 +20,58 @@
  * SOFTWARE.
  */
 
-#include "solver.h"
-
 #include "common/assertions.h"
-#include "common/memory.h"
 
-#include <utility>
+#include <atomic>
 
-using namespace Maths::Josephus;
-using pzl::Integer;
+namespace pzl {
 
-namespace {
-struct CircleItem {
-  const Integer value;
-  pzl::shared_ptr<CircleItem> next;
+template <typename T>
+struct shared_ptr {
+  explicit shared_ptr(T *object) : raw{object}, counter{raw ? new std::atomic_size_t{1} : nullptr} {}
+  shared_ptr(const shared_ptr<T> &o) : raw{o.raw}, counter{o.counter} {
+    if (counter) ++*counter;
+  }
+  ~shared_ptr() { decreaseCounter(); }
 
-  explicit CircleItem(Integer value) : value{std::move(value)}, next{nullptr} {}
+  inline void reset() {
+    decreaseCounter();
+    this->raw = nullptr;
+    this->counter = nullptr;
+  }
+
+  inline shared_ptr<T> &operator=(const shared_ptr<T> &o) {
+    if (this == &o || this->raw == o.raw) return *this;
+
+    auto otherRaw = o.raw;
+    auto otherCounter = o.counter;
+    ++*otherCounter;
+
+    decreaseCounter(); // This might delete `o` in some edge cases
+
+    this->raw = otherRaw;
+    this->counter = otherCounter;
+
+    return *this;
+  }
+
+  explicit inline operator bool() const { return raw != nullptr; }
+  inline bool operator!=(const shared_ptr &o) const { return raw != o.raw; }
+
+  inline T *operator->() const { return raw; }
+
+private:
+  T *raw;
+  std::atomic_size_t *counter;
+
+  inline void decreaseCounter() {
+    if (!raw) return;
+
+    ensure(counter);
+    if (--*counter == 0) {
+      delete counter;
+      delete raw;
+    }
+  }
 };
-}
-
-inline pzl::shared_ptr<CircleItem> makeCircle(const Integer &size) {
-  //  auto first = pzl::make_shared<CircleItem>(Integer{1});
-  auto first = pzl::shared_ptr(new CircleItem{Integer{1}});
-
-  auto circle = first;
-  for (auto i = Integer{2}; i <= size; ++i) {
-    // circle->next = pzl::make_shared<CircleItem>(i);
-    circle->next = pzl::shared_ptr<CircleItem>{new CircleItem{i}};
-    circle = circle->next;
-  }
-
-  ensure(!circle->next);
-  circle->next = first;
-
-  return first;
-}
-
-Integer SimulationSolver::solve(const Integer &initialSize) {
-  ensure(initialSize > 0);
-
-  auto item = makeCircle(initialSize);
-  ensure(item->value == 1);
-
-  while (item->next != item) {
-    item->next = item->next->next;
-    item = item->next;
-  }
-
-  item->next.reset(); // To avoid a cyclical reference
-
-  return item->value;
 }
