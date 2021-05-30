@@ -40,13 +40,11 @@ struct CircleItem {
 }
 
 inline pzl::shared_ptr<CircleItem> makeCircle(const Integer &size) {
-  //  auto first = pzl::make_shared<CircleItem>(Integer{1});
-  auto first = pzl::shared_ptr(new CircleItem{Integer{1}});
+  auto first = pzl::make_shared<CircleItem>(Integer{1});
 
   auto circle = first;
   for (auto i = Integer{2}; i <= size; ++i) {
-    // circle->next = pzl::make_shared<CircleItem>(i);
-    circle->next = pzl::shared_ptr<CircleItem>{new CircleItem{i}};
+    circle->next = pzl::make_shared<CircleItem>(i);
     circle = circle->next;
   }
 
