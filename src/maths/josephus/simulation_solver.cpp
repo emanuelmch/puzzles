@@ -60,12 +60,20 @@ Integer SimulationSolver::solve(const Integer &initialSize) {
   auto item = makeCircle(initialSize);
   ensure(item->value == 1);
 
+  pzl::weak_ptr<CircleItem> weak = item;
+  ensure(!weak.expired());
+
   while (item->next != item) {
     item->next = item->next->next;
     item = item->next;
   }
 
+  if (initialSize == 524288) ensure(!weak.expired()); // Just for debugging
   item->next.reset(); // To avoid a cyclical reference
+  if (initialSize == 524288) ensure(!weak.expired()); // Just for debugging
 
-  return item->value;
+  auto final = item->value;
+  item.reset();
+  ensure(weak.expired());
+  return final;
 }

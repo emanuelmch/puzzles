@@ -164,5 +164,6 @@ bool runEmirpsSequence() {
 }
 
 bool Maths::run() {
-  return runJosephusProblem(139562, 16981);
+  //return runJosephusProblem(139562, 16981);
+  return runJosephusProblem(524288, 1);
 }
