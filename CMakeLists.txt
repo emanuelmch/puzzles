@@ -126,6 +126,7 @@ add_subdirectory(libs/googletest)
 
 set(test_sources
         tests/common/arbitrary_container_test.cpp
+        tests/common/containers_test.cpp
         tests/common/numbers_test.cpp
         tests/common/strings_test.cpp
         tests/common/numbers/integer_test.cpp
