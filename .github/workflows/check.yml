@@ -32,9 +32,9 @@ jobs:
             CXX: clang++-12
           - os: macos-10.15
             compiler: gcc
-            CC: gcc-8
-            CXX: g++-8
-          # macos-10.15's default compiler is Apple Clang 12.0.0, so it doesn't need an 'include' entry
+            CC: gcc-11
+            CXX: g++-11
+          # macos-10.15's default compiler is Apple Clang 12.0.0, so mac+clang doesn't need an 'include' entry
 
     env:
       CC: ${{ matrix.CC }}
