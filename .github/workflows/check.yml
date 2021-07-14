@@ -7,19 +7,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04, macos-10.15]
+        os: [ubuntu-20.04, macos-10.15]
         compiler: [gcc, clang]
         build_type: [Debug, Release]
         include:
-          - os: ubuntu-18.04
-            compiler: gcc
-            CC: gcc-7
-            CXX: g++-7
-          - os: ubuntu-18.04
-            compiler: clang
-            extra-packages: clang-7 libc++-7-dev libc++abi-7-dev
-            CC: clang-7
-            CXX: clang++-7
           - os: ubuntu-20.04
             compiler: gcc
             extra-packages: gcc-11 g++-11
