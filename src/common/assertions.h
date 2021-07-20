@@ -32,8 +32,9 @@
 
 #else // defined(NDEBUG)
 
-#include <sstream>
-#include <stdexcept>
+#include <sstream>   // std::stringstream
+#include <stdexcept> // std::logic_error
+#include <string>    // std::string
 
 #define ensure(condition)                                                                                              \
   (static_cast<bool>(condition) ? static_cast<void>(0)                                                                 \
