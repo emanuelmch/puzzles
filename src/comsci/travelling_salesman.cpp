@@ -27,18 +27,23 @@
 #include "common/containers.h"
 #include "common/ranges.h"
 #include "common/runners.h"
-#include "comsci/genetic/genetic_algorithm.h"
 
-#include <algorithm> // std::find_if, std::shuffle, std::swap
-#include <array>     // std::array
-#include <limits>    // std::numeric_limits
-#include <random>    // std::rand
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <cstdlib>
+#include <ctime>
+#include <numeric>
+#include <random>
 
-using pzl::comsci::GeneticAlgorithm;
-
-constexpr auto POPULATION_SIZE = 40;
-constexpr auto ELITE_SIZE = 6;
-constexpr auto MUTATION_CHANCE = 5;
+static const uint8_t POPULATION_SIZE = 40;
+static const uint8_t ELITE_SIZE = 6;
+static const uint8_t MUTATION_CHANCE = 5;
+// TODO: These next two values should be randomly calculated
+static const uint8_t CROSSOVER_CUTPOINT_LEFT = 1;
+static const uint8_t CROSSOVER_CUTPOINT_RIGHT = 3;
+static_assert(CROSSOVER_CUTPOINT_LEFT < CROSSOVER_CUTPOINT_RIGHT);
+static_assert(CROSSOVER_CUTPOINT_RIGHT < CITY_COUNT);
 
 namespace {
 
@@ -48,19 +53,12 @@ struct Chromosome {
   GeneArray genes;
   mutable uint8_t _fitness;
 
-  Chromosome() : genes{pzl::generate_array_iota<CITY_COUNT, uint8_t>()}, _fitness{0} {
-    std::shuffle(genes.begin(), genes.end(), std::random_device{});
-    ensure(isValid());
-  }
+  explicit Chromosome(GeneArray genes) : genes(genes), _fitness(0) { ensure(isValid()); }
 
-  explicit Chromosome(GeneArray genes) : genes{genes}, _fitness{0} { ensure(isValid()); }
+  [[nodiscard]] inline bool isValid() const {
+    constexpr GeneArray base = pzl::generate_array_iota<CITY_COUNT, uint8_t>();
 
-  [[nodiscard]] constexpr bool isValid() const {
-    bool valid = true;
-    for (auto i = 0u; valid && i < CITY_COUNT; ++i) {
-      valid = pzl::ranges::contains(genes, i);
-    }
-    return valid;
+    return std::all_of(base.begin(), base.end(), [&](auto i) { return pzl::ranges::contains(genes, i); });
   }
 
   constexpr uint8_t fitness() const {
@@ -84,17 +82,44 @@ struct Chromosome {
     return _fitness;
   }
 
-  constexpr bool operator<(const Chromosome &other) const { return this->fitness() < other.fitness(); }
+  constexpr bool operator<(const Chromosome &other) const { return this->fitness() > other.fitness(); }
 };
+
+inline Chromosome make_chromosome() {
+  GeneArray genes = pzl::generate_array_iota<CITY_COUNT, uint8_t>();
+  std::shuffle(genes.begin(), genes.end(), std::random_device{});
+  return Chromosome(genes);
+}
+}
+
+template <size_t Count>
+inline std::array<Chromosome, Count> selectParents(const std::array<Chromosome, POPULATION_SIZE> &population) {
+  std::vector<Chromosome> candidates{population.cbegin(), population.cend()};
+
+  auto next = [&candidates]() {
+    ensure(!candidates.empty());
+    auto begin = candidates.cbegin();
+    auto end = candidates.cend();
+
+    auto sum = std::accumulate(begin, end, 0, [](const auto &sum, const auto &next) { return sum + next.fitness(); });
+    auto rnd = std::rand() % sum;
+    auto it = begin;
+
+    while (true) {
+      ensure(it != end);
+      rnd -= it->fitness();
+      if (rnd <= 0) {
+        auto result = *it;
+        candidates.erase(it);
+        return result;
+      }
+    }
+  };
+
+  return pzl::generate_array<Count>(next);
 }
 
 inline Chromosome crossover(const Chromosome &left, const Chromosome &right) {
-  // TODO: These next two values should be randomly calculated
-  static const uint8_t CROSSOVER_CUTPOINT_LEFT = 1;
-  static const uint8_t CROSSOVER_CUTPOINT_RIGHT = 3;
-  static_assert(CROSSOVER_CUTPOINT_LEFT < CROSSOVER_CUTPOINT_RIGHT);
-  static_assert(CROSSOVER_CUTPOINT_RIGHT < CITY_COUNT);
-
   GeneArray genes;
   genes.fill(std::numeric_limits<GeneArray::value_type>::max());
 
@@ -117,23 +142,55 @@ inline Chromosome crossover(const Chromosome &left, const Chromosome &right) {
   return Chromosome(genes);
 }
 
-inline void mutate(Chromosome *chromosome) {
-  auto index1 = static_cast<size_t>(std::rand()) % CITY_COUNT;
-  auto index2 = static_cast<size_t>(std::rand()) % CITY_COUNT;
-  std::swap(chromosome->genes[index1], chromosome->genes[index2]);
+inline void mutate(Chromosome *begin, Chromosome *end) {
+  for (auto it = begin; it != end; ++it) {
+    static_assert(MUTATION_CHANCE <= 100);
+    if (static_cast<uint8_t>(std::rand() % 100) < MUTATION_CHANCE) {
+      auto index1 = static_cast<unsigned long>(std::rand()) % it->genes.size();
+      auto index2 = static_cast<unsigned long>(std::rand()) % it->genes.size();
+      std::swap(it->genes[index1], it->genes[index2]);
 
-  ensure(chromosome->isValid());
-  // We should always be called on new Chromosomes, due to the way the crossover code works;
-  // Otherwise we would have to set it to 0 manually
-  ensure(chromosome->_fitness == 0);
+      ensure(it->isValid());
+      it->_fitness = 0;
+    }
+  }
 }
 
 ComSci::TravellingSalesman::Solution ComSci::TravellingSalesman::run() {
-  auto geneticAlgorithm = GeneticAlgorithm<Chromosome, POPULATION_SIZE, LambdaCrossoverStrategy<Chromosome>,
-                                           LambdaMutationStrategy<Chromosome, MUTATION_CHANCE>>{
-      ELITE_SIZE, LambdaCrossoverStrategy<Chromosome>{crossover},
-      LambdaMutationStrategy<Chromosome, MUTATION_CHANCE>{mutate}};
-  auto [solution, generations] = geneticAlgorithm.runUntilGenerationsSinceLastImprovement(100000);
+  auto population = pzl::generate_array<POPULATION_SIZE>(make_chromosome);
+  std::sort(population.begin(), population.end());
+
+  Chromosome solution = population[0];
+
+  uint64_t generations = 0;
+  uint16_t generationsSinceLastImprovement = 0;
+
+  do {
+    std::array<Chromosome, POPULATION_SIZE> next = population;
+    // By copying the current population, we already get our elite Chromosomes
+
+    constexpr auto parentCount = POPULATION_SIZE - ELITE_SIZE;
+    static_assert(parentCount % 2 == 0);
+    auto parents = selectParents<parentCount>(population);
+    for (size_t i = 0; i < parentCount; i += 2) {
+      next[i + ELITE_SIZE] = crossover(parents[i], parents[i + 1]);
+      next[i + ELITE_SIZE + 1] = crossover(parents[i + 1], parents[i]);
+    }
+
+    mutate(next.begin(), next.end());
+
+    std::sort(next.begin(), next.end());
+    ensure(next[0].fitness() >= population[0].fitness()); // Due to elites, this must be true
+    population = next;
+
+    if (population[0].fitness() > solution.fitness()) {
+      solution = population[0];
+      generationsSinceLastImprovement = 0;
+    }
+
+    ++generations;
+    ++generationsSinceLastImprovement;
+  } while (generationsSinceLastImprovement < 10000);
 
   std::vector<uint8_t> shortestPath{solution.genes.begin(), solution.genes.end()};
   return {shortestPath, static_cast<uint8_t>(MAX_DISTANCE - solution.fitness())};
