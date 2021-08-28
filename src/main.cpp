@@ -28,10 +28,12 @@
 
 #include "common/runners.h"
 
-#include <iostream>
-#include <string>
+#include <functional> // std::function
+#include <iostream>   // std::cout
+#include <string>     // std::string
 
 using std::cout;
+using std::function;
 using std::string;
 
 using Puzzles::runningTime;
@@ -41,8 +43,16 @@ int main(int argc, char *argv[]) {
   string arg = argc >= 2 ? argv[1] : "";
   auto fullRun = arg == "full";
 
-  auto [success, duration] = runningTime(
-      [=] { return ComSci::run() && CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run(); });
+  function<bool()> execution;
+  if (arg == "comsci") {
+    execution = [=] { return ComSci::run(); };
+  } else {
+    execution = [=] {
+      return ComSci::run() && CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run();
+    };
+  }
+
+  auto [success, duration] = runningTime(execution);
 
   if (!success) return 1;
   cout << "All good, we took roughly " << duration << " microseconds!\n";
