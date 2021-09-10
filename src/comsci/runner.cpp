@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,30 @@
  * SOFTWARE.
  */
 
-#include "comsci/runner.h"
-#include "cpic/runner.h"
-#include "maths/runner.h"
-#include "shurikens/runner.h"
-#include "sudoku/runner.h"
+#include "runner.h"
 
 #include "common/runners.h"
+#include "travelling_salesman.h"
+#include "travelling_salesman_data.h"
 
-#include <functional> // std::function
-#include <iostream>   // std::cout
-#include <string>     // std::string
-
-using std::cout;
-using std::function;
-using std::string;
+#include <iostream>
 
 using Puzzles::runningTime;
 
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
-
-  function<bool()> execution;
-  if (arg == "comsci") {
-    execution = [=] { return ComSci::run(); };
+bool ComSci::run() {
+  auto [results, duration] = runningTime([] { return ComSci::TravellingSalesman::run(); });
+  if (results.distance == KNOWN_SHORTEST_DISTANCE) {
+    std::cout << "ComSci: Travelling Salesman found a correct path"
+              << ", it took about " << duration << " µs!\n";
+    return true;
   } else {
-    execution = [=] {
-      return ComSci::run() && CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run();
-    };
+    std::cout << "ComSci: Travelling Salesman didn't find the shortest path, was expecting " << KNOWN_SHORTEST_DISTANCE
+              << ", but got this: (";
+    std::cout << results.distance << ")[";
+    for (auto i : results.shortestPath) {
+      std::cout << i << ", ";
+    }
+    std::cout << "]\n";
+    return false;
   }
-
-  auto [success, duration] = runningTime(execution);
-
-  if (!success) return 1;
-  cout << "All good, we took roughly " << duration << " microseconds!\n";
 }

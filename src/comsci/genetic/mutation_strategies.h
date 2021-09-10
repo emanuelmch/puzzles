@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,32 @@
  * SOFTWARE.
  */
 
-#include "comsci/runner.h"
-#include "cpic/runner.h"
-#include "maths/runner.h"
-#include "shurikens/runner.h"
-#include "sudoku/runner.h"
+#pragma once
 
-#include "common/runners.h"
+#include "genetic_algorithm.h"
 
+#include <cstdint>    // uint8_t
 #include <functional> // std::function
-#include <iostream>   // std::cout
-#include <string>     // std::string
 
-using std::cout;
-using std::function;
-using std::string;
+namespace pzl::comsci {
 
-using Puzzles::runningTime;
+// TODO: Create a MutationStrategy concept
+template <typename Chromosome, uint8_t MutationChance>
+struct LambdaMutationStrategy : public MutationStrategy<Chromosome> {
 
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
+  using Iterator = Chromosome *;
 
-  function<bool()> execution;
-  if (arg == "comsci") {
-    execution = [=] { return ComSci::run(); };
-  } else {
-    execution = [=] {
-      return ComSci::run() && CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run();
-    };
+  const std::function<void(Chromosome *)> mutationFunction;
+
+  explicit LambdaMutationStrategy(const std::function<void(Chromosome *)> &mutationFunction)
+      : mutationFunction(mutationFunction) {}
+
+  void mutate(Iterator begin, Iterator end) const override {
+    for (auto it = begin; it != end; ++it) {
+      if (std::rand() % 100 < MutationChance) {
+        mutationFunction(it);
+      }
+    }
   }
-
-  auto [success, duration] = runningTime(execution);
-
-  if (!success) return 1;
-  cout << "All good, we took roughly " << duration << " microseconds!\n";
+};
 }

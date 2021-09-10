@@ -78,6 +78,8 @@ include_directories(src)
 add_library(puzzles_lib OBJECT
         src/common/numbers/integer.cpp
         src/common/numbers/rational.cpp
+        src/comsci/runner.cpp
+        src/comsci/travelling_salesman.cpp
         src/cpic/data/easy.cpp
         src/cpic/data/trivial.cpp
         src/cpic/model/board.cpp
@@ -126,6 +128,7 @@ add_subdirectory(libs/googletest)
 
 set(test_sources
         tests/common/arbitrary_container_test.cpp
+        tests/common/containers_test.cpp
         tests/common/numbers_test.cpp
         tests/common/strings_test.cpp
         tests/common/numbers/integer_test.cpp

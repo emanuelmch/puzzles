@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Emanuel Machado da Silva
+ * Copyright (c) 2021 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,15 @@
  * SOFTWARE.
  */
 
-#include "comsci/runner.h"
-#include "cpic/runner.h"
-#include "maths/runner.h"
-#include "shurikens/runner.h"
-#include "sudoku/runner.h"
+#pragma once
 
-#include "common/runners.h"
+#include <cstdint>
 
-#include <functional> // std::function
-#include <iostream>   // std::cout
-#include <string>     // std::string
-
-using std::cout;
-using std::function;
-using std::string;
-
-using Puzzles::runningTime;
-
-int main(int argc, char *argv[]) {
-  // TODO Maybe creating a parsing unit?
-  string arg = argc >= 2 ? argv[1] : "";
-  auto fullRun = arg == "full";
-
-  function<bool()> execution;
-  if (arg == "comsci") {
-    execution = [=] { return ComSci::run(); };
-  } else {
-    execution = [=] {
-      return ComSci::run() && CPic::run() && Maths::run() && Shurikens::run(fullRun) && Sudoku::run();
-    };
-  }
-
-  auto [success, duration] = runningTime(execution);
-
-  if (!success) return 1;
-  cout << "All good, we took roughly " << duration << " microseconds!\n";
-}
+static constexpr uint8_t CITY_COUNT = 5;
+static constexpr uint8_t MAX_DISTANCE = 7 + 6 + 8 + 6 + 8 + 8;
+static constexpr uint8_t DISTANCE_TABLE[5][5] = {{0, 3, 4, 2, 7}, //
+                                                 {3, 0, 4, 6, 3}, //
+                                                 {4, 4, 0, 5, 8}, //
+                                                 {2, 6, 5, 0, 6}, //
+                                                 {7, 3, 8, 6, 0}};
+static constexpr uint8_t KNOWN_SHORTEST_DISTANCE = 19;
