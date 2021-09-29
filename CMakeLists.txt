@@ -24,6 +24,9 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
+project(Puzzles VERSION 0.1 LANGUAGES CXX)
+
+# Dependencies
 find_program(CCACHE_PROGRAM ccache)
 if (CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
@@ -31,17 +34,25 @@ endif ()
 
 include(CheckCXXCompilerFlag)
 
-project(Puzzles VERSION 0.1 LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -fno-rtti")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fomit-frame-pointer -fno-exceptions")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
-
 # Force clang to use libc++ instead of libstdc++. Trust me, clang, it's fine :)
 if (CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
     add_compile_options(-stdlib=libc++)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
 endif ()
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest
+        GIT_TAG f5e592d8ee5ffb1d9af5be7f715ce3576b8bf9c4
+)
+FetchContent_MakeAvailable(googletest)
+
+# Basic compilation options
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -fno-rtti")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fomit-frame-pointer -fno-exceptions")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -Werror -Wall -Wextra -Wno-missing-braces -Wsign-conversion")
 
 # Pre-requisites
 try_compile(supportsCTAD ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/check_ctad.cpp)
@@ -124,15 +135,6 @@ endif ()
 
 # Testing
 enable_testing()
-
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest
-        GIT_TAG f5e592d8ee5ffb1d9af5be7f715ce3576b8bf9c4
-)
-FetchContent_MakeAvailable(googletest)
-
 set(test_sources
         tests/common/arbitrary_container_test.cpp
         tests/common/containers_test.cpp
