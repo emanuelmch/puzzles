@@ -20,7 +20,7 @@
 # SOFTWARE.
 #
 
-cmake_minimum_required(VERSION 3.9) # CMP0069
+cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0069 NEW)
 
@@ -124,7 +124,14 @@ endif ()
 
 # Testing
 enable_testing()
-add_subdirectory(libs/googletest)
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest
+        GIT_TAG f5e592d8ee5ffb1d9af5be7f715ce3576b8bf9c4
+)
+FetchContent_MakeAvailable(googletest)
 
 set(test_sources
         tests/common/arbitrary_container_test.cpp
