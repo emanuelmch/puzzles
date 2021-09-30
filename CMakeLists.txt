@@ -44,7 +44,7 @@ include(FetchContent)
 FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest
-        GIT_TAG f5e592d8ee5ffb1d9af5be7f715ce3576b8bf9c4
+        GIT_TAG ab36804e42d4cb85b7e7fe9946928597840684db
 )
 FetchContent_MakeAvailable(googletest)
 
