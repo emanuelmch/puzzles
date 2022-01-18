@@ -90,6 +90,7 @@ add_library(puzzles_lib OBJECT
         src/cpic/view/board_logger.cpp
         src/maths/expressions.cpp
         src/maths/sequences.cpp
+        src/maths/stepping_stones.cpp
         src/maths/josephus/arithmetic_solver.cpp
         src/maths/josephus/simulation_solver.cpp
         src/shurikens/logger.cpp
@@ -143,6 +144,7 @@ set(test_sources
         tests/maths/maths_josephus_test.cpp
         tests/maths/maths_primes_test.cpp
         tests/maths/maths_sequences_test.cpp
+        tests/maths/maths_stepping_stones_test.cpp
         tests/shurikens/shurikens_model_test.cpp
         tests/sudoku/model/sudoku_board_test.cpp
         tests/sudoku/model/sudoku_board_validity_test.cpp
