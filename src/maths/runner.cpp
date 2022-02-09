@@ -166,9 +166,9 @@ bool runEmirpsSequence() {
 }
 
 bool runSteppingStonesPuzzle() {
-  constexpr std::array<uintmax_t, 7> expectedResults{0, 1, 16, 28, 38, 49, 60};
+  constexpr std::array<uintmax_t, 3> expectedResults{0, 1, 16};
 
-  struct result_type {
+  struct resultType {
     bool success;
     uintmax_t index = 0;
     uintmax_t actualValue = 0;
@@ -179,11 +179,11 @@ bool runSteppingStonesPuzzle() {
       auto expected = expectedResults[i];
       auto actual = Maths::steppingStones(i);
       if (actual != expected) {
-        return result_type{.success = false, .index = i, .actualValue = actual};
+        return resultType{.success = false, .index = i, .actualValue = actual};
       }
     }
 
-    return result_type{.success = true};
+    return resultType{.success = true};
   });
 
   if (result.success) {
