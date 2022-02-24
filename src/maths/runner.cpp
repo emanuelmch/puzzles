@@ -26,10 +26,12 @@
 #include "josephus/solver.h"
 #include "primes.h"
 #include "sequences.h"
+#include "stepping_stones.h"
 
 #include "common/runners.h"
 #include "common/views.h"
 
+#include <array> // std::array
 #include <iostream>
 #include <string>
 
@@ -163,7 +165,41 @@ bool runEmirpsSequence() {
   return runInfiniteSequence("Emirps", expectedSequence, actualSequence);
 }
 
+bool runSteppingStonesPuzzle() {
+  constexpr std::array<uintmax_t, 3> expectedResults{0, 1, 16};
+
+  struct resultType {
+    bool success;
+    uintmax_t index = 0;
+    uintmax_t actualValue = 0;
+  };
+
+  auto [result, duration] = runningTime([&expectedResults] {
+    for (uintmax_t i = 1u; i < expectedResults.size(); ++i) {
+      auto expected = expectedResults[i];
+      auto actual = Maths::steppingStones(i);
+      if (actual != expected) {
+        return resultType{.success = false, .index = i, .actualValue = actual};
+      }
+    }
+
+    return resultType{.success = true};
+  });
+
+  if (result.success) {
+    cout << "Maths: Success! Calculated the maximum \"height\" one can achieve with up to "
+         << expectedResults.size() - 1 << " stones, it took " << duration << " microseconds!\n";
+  } else {
+    cout << "Maths: Failure! Calculated the maximum \"height\" one can achieve with " << result.index
+         << " stones to be " << result.actualValue << ", but it should've been " << expectedResults[result.index]
+         << "\n";
+  }
+
+  return result.success;
+}
+
 bool Maths::run() {
   return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
-         runJosephusProblem(139562, 16981) && runHighlyCompositeNumberSequence() && runEmirpsSequence();
+         runJosephusProblem(139562, 16981) && runHighlyCompositeNumberSequence() && runEmirpsSequence() &&
+         runSteppingStonesPuzzle();
 }
