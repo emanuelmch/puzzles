@@ -20,33 +20,63 @@
  * SOFTWARE.
  */
 
-import React from 'react'
+import KeyboardReader from './KeyboardReader'
+
+import React, { useState } from 'react'
 
 import './GuessesGrid.css'
 
-const LetterSquare = () => (
-    <div className='LetterSquare'>A</div>
+const LetterSquare = ({ letter }: { letter: String }) => (
+    <div className='LetterSquare'>{letter}</div>
 )
 
-const GridRow = () => (
+type GridRowProps = {
+    currentGuess: String
+}
+
+const GridRow = (props: GridRowProps) => (
     <div className='GridRow'>
-        <LetterSquare />
-        <LetterSquare />
-        <LetterSquare />
-        <LetterSquare />
-        <LetterSquare />
+        <LetterSquare letter={props.currentGuess.charAt(0)} />
+        <LetterSquare letter={props.currentGuess.charAt(1)} />
+        <LetterSquare letter={props.currentGuess.charAt(2)} />
+        <LetterSquare letter={props.currentGuess.charAt(3)} />
+        <LetterSquare letter={props.currentGuess.charAt(4)} />
     </div>
 )
 
-const Grid = () => {
+function Grid() {
+  const [currentGuess, setCurrentGuess] = useState('')
+
+  const onChar = (char: String) => {
+    if (currentGuess.length < 5) {
+      setCurrentGuess(currentGuess + char)
+    }
+  }
+
+  const onBackspace = () => {
+    if (currentGuess.length > 0) {
+      const newWord = currentGuess.slice(0, -1)
+      setCurrentGuess(newWord)
+    }
+  }
+
+  const onEnter = () => {
+
+  }
+
   return (
         <div>
-            <GridRow />
-            <GridRow />
-            <GridRow />
-            <GridRow />
-            <GridRow />
-            <GridRow />
+            <KeyboardReader
+                onChar={onChar}
+                onBackspace={onBackspace}
+                onEnter={onEnter}
+            />
+            <GridRow currentGuess={currentGuess} />
+            <GridRow currentGuess={currentGuess} />
+            <GridRow currentGuess={currentGuess} />
+            <GridRow currentGuess={currentGuess} />
+            <GridRow currentGuess={currentGuess} />
+            <GridRow currentGuess={currentGuess} />
         </div>
   )
 }
