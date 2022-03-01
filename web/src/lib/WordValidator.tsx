@@ -20,42 +20,51 @@
  * SOFTWARE.
  */
 
-.GridRow {
-    display: flex;
+import assert from 'assert'
+
+enum ValidationState {
+    Incorrect,
+    Present,
+    Correct
 }
 
-.LetterSquare {
-    border-style: solid;
-    border-width: 2px;
-    display: flex;
-    font-size: 2.5rem;
-    width: 5rem;
-    height: 5rem;
-    align-items: center;
-    justify-content: center;
+type ValidatedLetter = {
+    letter: string
+    validationState: ValidationState
 }
 
-.LetterSquare-Active {
-    border-color: white;
-    background-color: red;
+function validateWord(word: String): Array<ValidatedLetter> {
+  assert(word.length === 5)
+  assert(word === word.toUpperCase())
+
+  const rightWord = 'BUNNY'
+
+  // TODO: Create a Bag type
+  const remainingLettersBucket = []
+  for (const letter of rightWord) {
+    remainingLettersBucket.push(letter)
+  }
+
+  const result: Array<ValidatedLetter> = []
+  for (let i = 0; i < word.length; ++i) {
+    const actual = word.charAt(i)
+    const index = remainingLettersBucket.indexOf(actual)
+
+    if (index === -1) {
+      result.push({ letter: actual, validationState: ValidationState.Incorrect })
+      continue
+    }
+
+    const expected = rightWord.charAt(i)
+    if (actual === expected) {
+      result.push({ letter: actual, validationState: ValidationState.Correct })
+    } else {
+      result.push({ letter: actual, validationState: ValidationState.Present })
+    }
+    remainingLettersBucket.splice(index, 1)
+  }
+
+  return result
 }
 
-.LetterSquare-Inactive {
-    border-color: white;
-    background-color: lightcoral;
-}
-
-.LetterSquare-Incorrect {
-    border-color: white;
-    background-color: gray;
-}
-
-.LetterSquare-Present {
-    border-color: white;
-    background-color: blue;
-}
-
-.LetterSquare-Correct {
-    border-color: white;
-    background-color: green;
-}
+export { ValidationState, validateWord }

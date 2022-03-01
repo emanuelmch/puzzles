@@ -21,18 +21,19 @@
  */
 
 import KeyboardReader from './KeyboardReader'
+import { ValidationState, validateWord } from '../lib/WordValidator'
 
 import React, { useState } from 'react'
 
 import './GuessesGrid.css'
-
 const MAX_GUESSES = 6
+const WORD_LENGTH = 5
 
 enum LetterState {
     Active,
     Inactive,
     Incorrect,
-    AnotherPlace,
+    Present,
     Correct
 }
 
@@ -44,48 +45,54 @@ function toClassName(state: LetterState) {
       return 'LetterSquare LetterSquare-Inactive'
     case LetterState.Incorrect:
       return 'LetterSquare LetterSquare-Incorrect'
-    case LetterState.AnotherPlace:
-      return 'LetterSquare LetterSquare-AnotherPlace'
+    case LetterState.Present:
+      return 'LetterSquare LetterSquare-Present'
     case LetterState.Correct:
       return 'LetterSquare LetterSquare-Correct'
   }
 }
 
-const LetterSquare = ({ letter, state }: { letter: String, state: LetterState }) => (
+const LetterSquare = ({ letter, state }: { letter: string, state: LetterState }) => (
     <div className={toClassName(state)}>{letter}</div>
 )
 
 type GridRowProps = {
-    guess: String,
+    guess: string,
     activeGuess?: Boolean
 }
 
 const GridRow = (props: GridRowProps) => {
-  const states = Array<{ letter: string, state: LetterState }>(0)
-  for (let i = 0; i < 5; ++i) {
-    const letter = props.guess.charAt(i)
-    let state: LetterState
+  const states = new Array<{ letter: string, state: LetterState }>(0)
 
-    if (props.activeGuess === true) {
-      state = LetterState.Active
-    } else if (letter === '') {
-      state = LetterState.Inactive
-    } else {
-      switch (i % 3) {
-        case 0:
-          state = LetterState.Incorrect
-          break
-        case 1:
-          state = LetterState.AnotherPlace
-          break
-        case 2:
-        default: // Will never help, but helps the compiler
+  if (props.activeGuess === true) {
+    const state = LetterState.Active
+    for (const letter of props.guess) {
+      states.push({ letter, state })
+    }
+    for (let i = props.guess.length; i < WORD_LENGTH; ++i) {
+      states.push({ letter: '', state })
+    }
+  } else if (props.guess.length === 0) {
+    const state = LetterState.Inactive
+    for (let i = 0; i < WORD_LENGTH; ++i) {
+      states.push({ letter: '', state })
+    }
+  } else {
+    for (const { letter, validationState } of validateWord(props.guess)) {
+      let state: LetterState
+      switch (validationState) {
+        case ValidationState.Correct:
           state = LetterState.Correct
           break
+        case ValidationState.Incorrect:
+          state = LetterState.Incorrect
+          break
+        case ValidationState.Present:
+          state = LetterState.Present
+          break
       }
+      states.push({ letter, state })
     }
-
-    states.push({ letter, state })
   }
 
   return (
