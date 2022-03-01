@@ -20,10 +20,35 @@
  * SOFTWARE.
  */
 
-.App {
-  display: flex;
-  height: 100vh;
+import React from 'react'
 
-  align-items: center;
-  justify-content: center;
+import './GuessesGrid.css'
+
+const LetterSquare = () => (
+    <div className='LetterSquare'>A</div>
+)
+
+const GridRow = () => (
+    <div className='GridRow'>
+        <LetterSquare />
+        <LetterSquare />
+        <LetterSquare />
+        <LetterSquare />
+        <LetterSquare />
+    </div>
+)
+
+const Grid = () => {
+  return (
+        <div>
+            <GridRow />
+            <GridRow />
+            <GridRow />
+            <GridRow />
+            <GridRow />
+            <GridRow />
+        </div>
+  )
 }
+
+export default Grid
