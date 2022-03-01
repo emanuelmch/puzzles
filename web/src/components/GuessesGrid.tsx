@@ -28,24 +28,78 @@ import './GuessesGrid.css'
 
 const MAX_GUESSES = 6
 
-const LetterSquare = ({ letter, active }: { letter: String, active: Boolean }) => (
-    <div className={active ? 'LetterSquare' : 'LetterSquare-inactive'}>{letter}</div>
+enum LetterState {
+    Active,
+    Inactive,
+    Incorrect,
+    AnotherPlace,
+    Correct
+}
+
+function toClassName(state: LetterState) {
+  switch (state) {
+    case LetterState.Active:
+      return 'LetterSquare LetterSquare-Active'
+    case LetterState.Inactive:
+      return 'LetterSquare LetterSquare-Inactive'
+    case LetterState.Incorrect:
+      return 'LetterSquare LetterSquare-Incorrect'
+    case LetterState.AnotherPlace:
+      return 'LetterSquare LetterSquare-AnotherPlace'
+    case LetterState.Correct:
+      return 'LetterSquare LetterSquare-Correct'
+  }
+}
+
+const LetterSquare = ({ letter, state }: { letter: String, state: LetterState }) => (
+    <div className={toClassName(state)}>{letter}</div>
 )
 
 type GridRowProps = {
     guess: String,
-    active: Boolean
+    activeGuess?: Boolean
 }
 
-const GridRow = (props: GridRowProps) => (
-    <div className='GridRow'>
-        {
-            [...Array(5)].map((_, i) =>
-                <LetterSquare key={i} letter={props.guess.charAt(i)} active={props.active} />
-            )
-        }
-    </div>
-)
+const GridRow = (props: GridRowProps) => {
+  const states = Array<{ letter: string, state: LetterState }>(0)
+  for (let i = 0; i < 5; ++i) {
+    const letter = props.guess.charAt(i)
+    let state: LetterState
+
+    if (props.activeGuess === true) {
+      state = LetterState.Active
+    } else if (letter === '') {
+      state = LetterState.Inactive
+    } else {
+      switch (i % 3) {
+        case 0:
+          state = LetterState.Incorrect
+          break
+        case 1:
+          state = LetterState.AnotherPlace
+          break
+        case 2:
+        default: // Will never help, but helps the compiler
+          state = LetterState.Correct
+          break
+      }
+    }
+
+    states.push({ letter, state })
+  }
+
+  return (
+        <div className='GridRow'>
+            {
+                states.map((state, index) =>
+                    <LetterSquare key={'letter_' + index}
+                        letter={state.letter}
+                        state={state.state} />
+                )
+            }
+        </div>
+  )
+}
 
 function Grid() {
   const [oldGuesses, setOldGuesses] = useState<string[]>([])
@@ -84,15 +138,15 @@ function Grid() {
             />
             {
                 oldGuesses.map(guess =>
-                    <GridRow key={'guess_' + guess} guess={guess} active={false} />
+                    <GridRow key={'guess_' + guess} guess={guess} />
                 )
             }
             {oldGuesses.length < MAX_GUESSES &&
-                <GridRow guess={currentGuess} active={true} />
+                <GridRow guess={currentGuess} activeGuess={true} />
             }
             {oldGuesses.length < MAX_GUESSES &&
                 [...Array(MAX_GUESSES - 1 - oldGuesses.length)].map((_, i) =>
-                    <GridRow key={'empty_' + i} active={false} guess={''} />
+                    <GridRow key={'empty_' + i} guess={''} />
                 )
             }
         </div>

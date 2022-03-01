@@ -20,12 +20,11 @@
  * SOFTWARE.
  */
 
- .GridRow {
-     display: flex;
- }
- 
+.GridRow {
+    display: flex;
+}
+
 .LetterSquare {
-    border-color: red;
     border-style: solid;
     border-width: 2px;
     display: flex;
@@ -36,14 +35,27 @@
     justify-content: center;
 }
 
-.LetterSquare-inactive {
-    border-color: lightcoral;
-    border-style: solid;
-    border-width: 2px;
-    display: flex;
-    font-size: 2.5rem;
-    width: 5rem;
-    height: 5rem;
-    align-items: center;
-    justify-content: center;
+.LetterSquare-Active {
+    border-color: white;
+    background-color: red;
+}
+
+.LetterSquare-Inactive {
+    border-color: white;
+    background-color: lightcoral;
+}
+
+.LetterSquare-Incorrect {
+    border-color: white;
+    background-color: gray;
+}
+
+.LetterSquare-AnotherPlace {
+    border-color: white;
+    background-color: blue;
+}
+
+.LetterSquare-Correct {
+    border-color: white;
+    background-color: green;
 }
