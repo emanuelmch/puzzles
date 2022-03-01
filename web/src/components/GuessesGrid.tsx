@@ -26,25 +26,29 @@ import React, { useState } from 'react'
 
 import './GuessesGrid.css'
 
-const LetterSquare = ({ letter }: { letter: String }) => (
-    <div className='LetterSquare'>{letter}</div>
+const MAX_GUESSES = 6
+
+const LetterSquare = ({ letter, active }: { letter: String, active: Boolean }) => (
+    <div className={active ? 'LetterSquare' : 'LetterSquare-inactive'}>{letter}</div>
 )
 
 type GridRowProps = {
-    currentGuess: String
+    guess: String,
+    active: Boolean
 }
 
 const GridRow = (props: GridRowProps) => (
     <div className='GridRow'>
-        <LetterSquare letter={props.currentGuess.charAt(0)} />
-        <LetterSquare letter={props.currentGuess.charAt(1)} />
-        <LetterSquare letter={props.currentGuess.charAt(2)} />
-        <LetterSquare letter={props.currentGuess.charAt(3)} />
-        <LetterSquare letter={props.currentGuess.charAt(4)} />
+        {
+            [...Array(5)].map((_, i) =>
+                <LetterSquare key={i} letter={props.guess.charAt(i)} active={props.active} />
+            )
+        }
     </div>
 )
 
 function Grid() {
+  const [oldGuesses, setOldGuesses] = useState<string[]>([])
   const [currentGuess, setCurrentGuess] = useState('')
 
   const onChar = (char: String) => {
@@ -61,7 +65,14 @@ function Grid() {
   }
 
   const onEnter = () => {
+    if (oldGuesses.length < MAX_GUESSES && currentGuess.length === 5) {
+      const guesses = oldGuesses
+      guesses.push(currentGuess)
 
+      setOldGuesses(guesses)
+      setCurrentGuess('')
+    }
+    console.log(`oldGuesses = ${oldGuesses}`)
   }
 
   return (
@@ -71,12 +82,19 @@ function Grid() {
                 onBackspace={onBackspace}
                 onEnter={onEnter}
             />
-            <GridRow currentGuess={currentGuess} />
-            <GridRow currentGuess={currentGuess} />
-            <GridRow currentGuess={currentGuess} />
-            <GridRow currentGuess={currentGuess} />
-            <GridRow currentGuess={currentGuess} />
-            <GridRow currentGuess={currentGuess} />
+            {
+                oldGuesses.map(guess =>
+                    <GridRow key={'guess_' + guess} guess={guess} active={false} />
+                )
+            }
+            {oldGuesses.length < MAX_GUESSES &&
+                <GridRow guess={currentGuess} active={true} />
+            }
+            {oldGuesses.length < MAX_GUESSES &&
+                [...Array(MAX_GUESSES - 1 - oldGuesses.length)].map((_, i) =>
+                    <GridRow key={'empty_' + i} active={false} guess={''} />
+                )
+            }
         </div>
   )
 }
