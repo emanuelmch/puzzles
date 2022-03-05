@@ -20,21 +20,21 @@
  * SOFTWARE.
  */
 
+import './GuessesGrid.css'
+
 import KeyboardReader from './KeyboardReader'
 import { ValidationState, validateWord } from '../lib/WordValidator'
 
 import React, { useState } from 'react'
 
-import './GuessesGrid.css'
-const MAX_GUESSES = 6
-const WORD_LENGTH = 5
+import { MAX_GUESSES, WORD_LENGTH } from '../lib/WordGuessingConstants'
 
 enum LetterState {
-    Active,
-    Inactive,
-    Incorrect,
-    Present,
-    Correct
+  Active,
+  Inactive,
+  Incorrect,
+  Present,
+  Correct
 }
 
 function toClassName(state: LetterState) {
@@ -53,12 +53,12 @@ function toClassName(state: LetterState) {
 }
 
 const LetterSquare = ({ letter, state }: { letter: string, state: LetterState }) => (
-    <div className={toClassName(state)}>{letter}</div>
+  <div className={toClassName(state)}>{letter}</div>
 )
 
 type GridRowProps = {
-    guess: string,
-    activeGuess?: Boolean
+  guess: string,
+  activeGuess?: Boolean
 }
 
 const GridRow = (props: GridRowProps) => {
@@ -96,20 +96,24 @@ const GridRow = (props: GridRowProps) => {
   }
 
   return (
-        <div className='GridRow'>
-            {
-                states.map((state, index) =>
-                    <LetterSquare key={'letter_' + index}
-                        letter={state.letter}
-                        state={state.state} />
-                )
-            }
-        </div>
+    <div className='GridRow'>
+      {
+        states.map((state, index) =>
+          <LetterSquare key={'letter_' + index}
+            letter={state.letter}
+            state={state.state} />
+        )
+      }
+    </div>
   )
 }
 
-function Grid() {
-  const [oldGuesses, setOldGuesses] = useState<string[]>([])
+type GuessesGridProps = {
+  oldGuesses: string[]
+  onNewGuess: (guess: string) => void
+}
+
+function GuessesGrid({ oldGuesses, onNewGuess }: GuessesGridProps) {
   const [currentGuess, setCurrentGuess] = useState('')
 
   const onChar = (char: String) => {
@@ -127,37 +131,34 @@ function Grid() {
 
   const onEnter = () => {
     if (oldGuesses.length < MAX_GUESSES && currentGuess.length === 5) {
-      const guesses = oldGuesses
-      guesses.push(currentGuess)
-
-      setOldGuesses(guesses)
+      onNewGuess(currentGuess)
       setCurrentGuess('')
     }
     console.log(`oldGuesses = ${oldGuesses}`)
   }
 
   return (
-        <div>
-            <KeyboardReader
-                onChar={onChar}
-                onBackspace={onBackspace}
-                onEnter={onEnter}
-            />
-            {
-                oldGuesses.map(guess =>
-                    <GridRow key={'guess_' + guess} guess={guess} />
-                )
-            }
-            {oldGuesses.length < MAX_GUESSES &&
-                <GridRow guess={currentGuess} activeGuess={true} />
-            }
-            {oldGuesses.length < MAX_GUESSES &&
-                [...Array(MAX_GUESSES - 1 - oldGuesses.length)].map((_, i) =>
-                    <GridRow key={'empty_' + i} guess={''} />
-                )
-            }
-        </div>
+    <div>
+      <KeyboardReader
+        onChar={onChar}
+        onBackspace={onBackspace}
+        onEnter={onEnter}
+      />
+      {
+        oldGuesses.map(guess =>
+          <GridRow key={'guess_' + guess} guess={guess} />
+        )
+      }
+      {oldGuesses.length < MAX_GUESSES &&
+        <GridRow guess={currentGuess} activeGuess={true} />
+      }
+      {oldGuesses.length < MAX_GUESSES &&
+        [...Array(MAX_GUESSES - 1 - oldGuesses.length)].map((_, i) =>
+          <GridRow key={'empty_' + i} guess={''} />
+        )
+      }
+    </div>
   )
 }
 
-export default Grid
+export default GuessesGrid

@@ -20,18 +20,30 @@
  * SOFTWARE.
  */
 
-import WordGuessingGame from './components/WordGuessingGame'
+import GuessesGrid from './GuessesGrid'
 
-import React from 'react'
+import assert from 'assert'
+import React, { useState } from 'react'
 
-import './App.css'
+import { MAX_GUESSES } from '../lib/WordGuessingConstants'
 
-function App() {
+function WordGuessingGame() {
+  const [oldGuesses, setOldGuesses] = useState<string[]>([])
+
+  function addNewGuess(newGuess: string) {
+    assert(newGuess.length === 5)
+    assert(oldGuesses.length < MAX_GUESSES)
+
+    oldGuesses.push(newGuess)
+    setOldGuesses(oldGuesses)
+  }
+
   return (
-    <div className="App">
-      <WordGuessingGame />
-    </div>
+    <GuessesGrid
+      oldGuesses={oldGuesses}
+      onNewGuess={addNewGuess}
+    />
   )
 }
 
-export default App
+export default WordGuessingGame

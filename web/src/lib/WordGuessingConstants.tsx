@@ -20,18 +20,8 @@
  * SOFTWARE.
  */
 
-import WordGuessingGame from './components/WordGuessingGame'
+const MAX_GUESSES = 6
+const WORD_LENGTH = 5
 
-import React from 'react'
-
-import './App.css'
-
-function App() {
-  return (
-    <div className="App">
-      <WordGuessingGame />
-    </div>
-  )
-}
-
-export default App
+// TODO: Can I avoid having to repeat every single constant here?
+export { MAX_GUESSES, WORD_LENGTH }
