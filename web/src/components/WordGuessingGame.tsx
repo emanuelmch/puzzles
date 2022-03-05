@@ -23,27 +23,40 @@
 import GuessesGrid from './GuessesGrid'
 
 import assert from 'assert'
-import React, { useState } from 'react'
+import React from 'react'
 
 import { MAX_GUESSES } from '../lib/WordGuessingConstants'
 
-function WordGuessingGame() {
-  const [oldGuesses, setOldGuesses] = useState<string[]>([])
+type WordGuessingGameProps = any
+type WordGuessingGameState = {
+  oldGuesses: string[]
+}
 
-  function addNewGuess(newGuess: string) {
-    assert(newGuess.length === 5)
-    assert(oldGuesses.length < MAX_GUESSES)
-
-    oldGuesses.push(newGuess)
-    setOldGuesses(oldGuesses)
+class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessingGameState> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      oldGuesses: [] as string[]
+    }
   }
 
-  return (
-    <GuessesGrid
-      oldGuesses={oldGuesses}
-      onNewGuess={addNewGuess}
-    />
-  )
+  render() {
+    return (
+      <GuessesGrid
+        oldGuesses={this.state.oldGuesses}
+        onNewGuess={this.addNewGuess}
+      />
+    )
+  }
+
+  addNewGuess = (newGuess: string) => {
+    assert(newGuess.length === 5)
+    assert(this.state.oldGuesses.length < MAX_GUESSES)
+
+    const oldGuesses = this.state.oldGuesses
+    oldGuesses.push(newGuess)
+    this.setState({ oldGuesses })
+  }
 }
 
 export default WordGuessingGame
