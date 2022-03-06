@@ -23,25 +23,29 @@
 import assert from 'assert'
 
 enum ValidationState {
-    Incorrect,
-    Present,
-    Correct
+  Incorrect,
+  Present,
+  Correct
 }
 
 type ValidatedLetter = {
-    letter: string
-    validationState: ValidationState
+  letter: string
+  validationState: ValidationState
 }
 
-function validateWord(word: String): Array<ValidatedLetter> {
+const TARGET_WORD = 'BUNNY'
+
+function isTargetWord(word: string): boolean {
+  return word === TARGET_WORD
+}
+
+function validateWord(word: string): Array<ValidatedLetter> {
   assert(word.length === 5)
   assert(word === word.toUpperCase())
 
-  const rightWord = 'BUNNY'
-
   // TODO: Create a Bag type
   const remainingLettersBucket = []
-  for (const letter of rightWord) {
+  for (const letter of TARGET_WORD) {
     remainingLettersBucket.push(letter)
   }
 
@@ -55,7 +59,7 @@ function validateWord(word: String): Array<ValidatedLetter> {
       continue
     }
 
-    const expected = rightWord.charAt(i)
+    const expected = TARGET_WORD.charAt(i)
     if (actual === expected) {
       result.push({ letter: actual, validationState: ValidationState.Correct })
     } else {
@@ -67,4 +71,4 @@ function validateWord(word: String): Array<ValidatedLetter> {
   return result
 }
 
-export { ValidationState, validateWord }
+export { ValidationState, isTargetWord, validateWord }

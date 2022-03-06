@@ -21,6 +21,7 @@
  */
 
 import GuessesGrid from './GuessesGrid'
+import { isTargetWord } from '../lib/WordValidator'
 
 import assert from 'assert'
 import React from 'react'
@@ -30,13 +31,23 @@ import { MAX_GUESSES } from '../lib/WordGuessingConstants'
 type WordGuessingGameProps = any
 type WordGuessingGameState = {
   oldGuesses: string[]
+  isGameOver: boolean
 }
 
 class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessingGameState> {
   constructor(props: any) {
     super(props)
     this.state = {
-      oldGuesses: [] as string[]
+      oldGuesses: [],
+      isGameOver: false
+    }
+  }
+
+  componentDidUpdate(_: any, prevState: WordGuessingGameState) {
+    // TODO: This doesn't feel like the best place for this check, check if there any actual performance issues of waiting until this lifecyle
+    // call to update isGameOver whenever we update oldGuesses
+    if (this.state.oldGuesses !== prevState.oldGuesses && this.isGameOver()) {
+      this.setState({ isGameOver: true })
     }
   }
 
@@ -44,6 +55,7 @@ class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessi
     return (
       <GuessesGrid
         oldGuesses={this.state.oldGuesses}
+        isGameOver={this.state.isGameOver}
         onNewGuess={this.addNewGuess}
       />
     )
@@ -53,9 +65,20 @@ class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessi
     assert(newGuess.length === 5)
     assert(this.state.oldGuesses.length < MAX_GUESSES)
 
-    const oldGuesses = this.state.oldGuesses
+    const oldGuesses = Array.from(this.state.oldGuesses)
     oldGuesses.push(newGuess)
     this.setState({ oldGuesses })
+  }
+
+  isGameOver = () => {
+    assert(this.state.isGameOver === false)
+
+    const { oldGuesses } = this.state
+    if (oldGuesses.length === 0) return false
+    if (oldGuesses.length === MAX_GUESSES) return true
+
+    const lastGuess = oldGuesses.at(oldGuesses.length - 1)!
+    return isTargetWord(lastGuess)
   }
 }
 
