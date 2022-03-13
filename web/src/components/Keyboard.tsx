@@ -28,6 +28,15 @@ type KeyboardProps = {
   onEnter: () => void
 }
 
+const BACKSPACE = '⌫'
+const ENTER = '☑'
+
+const letters = [
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', BACKSPACE],
+  ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ENTER]
+]
+
 function Keyboard(props: KeyboardProps) {
   const { onEnter, onBackspace, onChar } = props
   useEffect(() => {
@@ -50,8 +59,31 @@ function Keyboard(props: KeyboardProps) {
     }
   }, [onEnter, onBackspace, onChar])
 
-  // TODO: Remove this awful thing
-  return (<div></div>)
+  const handleClick = (character: string) => {
+    if (character === BACKSPACE) {
+      props.onBackspace()
+    } else if (character === ENTER) {
+      props.onEnter()
+    } else {
+      props.onChar(character)
+    }
+  }
+
+  return (
+    <div className='Keyboard'>
+      {letters.map((letterGroup, index) =>
+        <div key={'letter_group_' + index}>
+          {
+            letterGroup.map(letter =>
+              <button key={'key_' + letter} onClick={() => handleClick(letter)}>
+                {letter}
+              </button>
+            )
+          }
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default Keyboard
