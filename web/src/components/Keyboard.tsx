@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+import './Keyboard.css'
+
 import React, { useEffect } from 'react'
 
 type KeyboardProps = {
@@ -39,6 +41,7 @@ const letters = [
 
 function Keyboard(props: KeyboardProps) {
   const { onEnter, onBackspace, onChar } = props
+
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
       if (e.code === 'Enter') {
@@ -61,28 +64,31 @@ function Keyboard(props: KeyboardProps) {
 
   const handleClick = (character: string) => {
     if (character === BACKSPACE) {
-      props.onBackspace()
+      onBackspace()
     } else if (character === ENTER) {
-      props.onEnter()
+      onEnter()
     } else {
-      props.onChar(character)
+      onChar(character)
     }
   }
 
   return (
     <div className='Keyboard'>
       {letters.map((letterGroup, index) =>
-        <div key={'letter_group_' + index}>
+        <div className='KeyboardRow' key={'letter_group_' + index}>
           {
             letterGroup.map(letter =>
-              <button key={'key_' + letter} onClick={() => handleClick(letter)}>
+              <button key={'key_' + letter}
+                className={(letter === BACKSPACE || letter === ENTER) ? 'KeyboardButton KeyboardButton-SpecialButton' : 'KeyboardButton KeyboardButton-NormalButton'}
+                onClick={() => handleClick(letter)}>
                 {letter}
               </button>
             )
           }
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   )
 }
 

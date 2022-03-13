@@ -20,11 +20,35 @@
  * SOFTWARE.
  */
 
-.App {
-  display: flex;
-  height: 100vh;
+.Keyboard {
+    display: flex;
+    flex-direction: column;
+}
 
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.KeyboardRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.KeyboardButton {
+    margin-left: 1vmin;
+    margin-top: 2vmin;
+
+    font-size: 6vmin;
+    height: 12vmin;
+}
+
+/* TODO: Find an easier way of separating this "state" */
+.KeyboardButton-NormalButton {
+    width: 8.5vmin;
+}
+
+.KeyboardButton-SpecialButton {
+    width: 10vmin;
+}
+
+.KeyboardButton:first-of-type {
+    margin-left: 0;
 }
