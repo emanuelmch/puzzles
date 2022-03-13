@@ -22,13 +22,13 @@
 
 import React, { useEffect } from 'react'
 
-type KeyboardReaderProps = {
-    onChar: (value : string) => void,
-    onBackspace: () => void,
-    onEnter: () => void
+type KeyboardProps = {
+  onChar: (value: string) => void,
+  onBackspace: () => void,
+  onEnter: () => void
 }
 
-function KeyboardReader(props: KeyboardReaderProps) {
+function Keyboard(props: KeyboardProps) {
   const { onEnter, onBackspace, onChar } = props
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
@@ -54,4 +54,4 @@ function KeyboardReader(props: KeyboardReaderProps) {
   return (<div></div>)
 }
 
-export default KeyboardReader
+export default Keyboard

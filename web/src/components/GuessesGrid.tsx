@@ -20,51 +20,21 @@
  * SOFTWARE.
  */
 
-import KeyboardReader from './KeyboardReader'
 import { PastGuess, PresentGuess, FutureGuess } from './GuessesGridRows'
 
-import React, { useState } from 'react'
+import React from 'react'
 
 import { MAX_GUESSES } from '../lib/WordGuessingConstants'
 
 type GuessesGridProps = {
   oldGuesses: Array<string>
   isGameOver: boolean
-  onNewGuess: (guess: string) => void
+  currentGuess: string
 }
 
-function GuessesGrid({ oldGuesses, isGameOver, onNewGuess }: GuessesGridProps) {
-  const [currentGuess, setCurrentGuess] = useState('')
-
-  const onChar = (char: String) => {
-    if (currentGuess.length < 5) {
-      setCurrentGuess(currentGuess + char)
-    }
-  }
-
-  const onBackspace = () => {
-    if (currentGuess.length > 0) {
-      const newWord = currentGuess.slice(0, -1)
-      setCurrentGuess(newWord)
-    }
-  }
-
-  const onEnter = () => {
-    if (oldGuesses.length < MAX_GUESSES && currentGuess.length === 5) {
-      onNewGuess(currentGuess)
-      setCurrentGuess('')
-    }
-  }
-
+function GuessesGrid({ oldGuesses, isGameOver, currentGuess }: GuessesGridProps) {
   return (
     <div>
-      {!isGameOver &&
-        <KeyboardReader
-          onChar={onChar}
-          onBackspace={onBackspace}
-          onEnter={onEnter}
-        />
-      }
       {
         oldGuesses.map(guess =>
           <PastGuess key={'guess_' + guess} guess={guess} />

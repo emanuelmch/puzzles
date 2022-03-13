@@ -21,6 +21,7 @@
  */
 
 import GuessesGrid from './GuessesGrid'
+import Keyboard from './Keyboard'
 import { isTargetWord } from '../lib/WordValidator'
 
 import assert from 'assert'
@@ -31,7 +32,8 @@ import { MAX_GUESSES } from '../lib/WordGuessingConstants'
 type WordGuessingGameProps = any
 type WordGuessingGameState = {
   oldGuesses: string[]
-  isGameOver: boolean
+  isGameOver: boolean,
+  currentGuess: string
 }
 
 class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessingGameState> {
@@ -39,7 +41,8 @@ class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessi
     super(props)
     this.state = {
       oldGuesses: [],
-      isGameOver: false
+      isGameOver: false,
+      currentGuess: ''
     }
   }
 
@@ -53,21 +56,44 @@ class WordGuessingGame extends React.Component<WordGuessingGameProps, WordGuessi
 
   render() {
     return (
-      <GuessesGrid
-        oldGuesses={this.state.oldGuesses}
-        isGameOver={this.state.isGameOver}
-        onNewGuess={this.addNewGuess}
-      />
+      <>
+        <GuessesGrid
+          oldGuesses={this.state.oldGuesses}
+          isGameOver={this.state.isGameOver}
+          currentGuess={this.state.currentGuess}
+        />
+        {!this.state.isGameOver &&
+          <Keyboard
+            onChar={this.onChar}
+            onBackspace={this.onBackspace}
+            onEnter={this.onEnter} />
+        }
+      </>
     )
   }
 
-  addNewGuess = (newGuess: string) => {
-    assert(newGuess.length === 5)
-    assert(this.state.oldGuesses.length < MAX_GUESSES)
+  onChar = (char: String) => {
+    const currentGuess = this.state.currentGuess
+    if (currentGuess.length < 5) {
+      this.setState({ currentGuess: currentGuess + char })
+    }
+  }
 
-    const oldGuesses = Array.from(this.state.oldGuesses)
-    oldGuesses.push(newGuess)
-    this.setState({ oldGuesses })
+  onBackspace = () => {
+    const currentGuess = this.state.currentGuess
+    if (currentGuess.length > 0) {
+      this.setState({ currentGuess: currentGuess.slice(0, -1) })
+    }
+  }
+
+  onEnter = () => {
+    const { oldGuesses, currentGuess } = this.state
+    if (oldGuesses.length < MAX_GUESSES && currentGuess.length === 5) {
+      this.setState({
+        oldGuesses: oldGuesses.concat(currentGuess),
+        currentGuess: ''
+      })
+    }
   }
 
   isGameOver = () => {
