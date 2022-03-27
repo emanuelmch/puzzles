@@ -36,17 +36,43 @@
     margin-left: 1vmin;
     margin-top: 2vmin;
 
-    font-size: 6vmin;
-    height: 12vmin;
+    height: 2em;
 }
 
-/* TODO: Find an easier way of separating this "state" */
 .KeyboardButton-NormalButton {
-    width: 8.5vmin;
+    margin-left: 1vmin;
 }
 
 .KeyboardButton-SpecialButton {
-    width: 10vmin;
+    margin-left: 2vmin;
+}
+
+@media screen and (orientation:portrait) {
+    .KeyboardButton {
+        font-size: 6vmin;
+    }
+
+    .KeyboardButton-NormalButton {
+        width: 1.4em;
+    }
+
+    .KeyboardButton-SpecialButton {
+        width: 1.8em;
+    }
+}
+
+@media screen and (orientation:landscape) {
+    .KeyboardButton {
+        font-size: 3vmin;
+    }
+
+    .KeyboardButton-NormalButton {
+        width: 2em;
+    }
+
+    .KeyboardButton-SpecialButton {
+        width: 3em;
+    }
 }
 
 .KeyboardButton:first-of-type {

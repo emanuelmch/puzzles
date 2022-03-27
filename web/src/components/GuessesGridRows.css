@@ -28,11 +28,18 @@
     border-style: solid;
     border-width: 2px;
     display: flex;
-    font-size: 7.5vmin;
     width: 2em;
     height: 2em;
     align-items: center;
     justify-content: center;
+}
+
+@media screen and (orientation:portrait) {
+    .LetterSquare { font-size: 7.5vmin; }
+}
+
+@media screen and (orientation:landscape) {
+    .LetterSquare { font-size: 5vmin; }
 }
 
 .LetterSquare-Active {
