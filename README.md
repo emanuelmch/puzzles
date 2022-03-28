@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/emanuelmch/puzzles/actions/workflows/check.yml/badge.svg?branch=master)](https://github.com/emanuelmch/puzzles/actions/workflows/check.yml)
+[![Build Status](https://github.com/emanuelmch/puzzles/actions/workflows/core_check.yml/badge.svg?branch=master)](https://github.com/emanuelmch/puzzles/actions/workflows/core_check.yml)
 
 # Puzzles
 
