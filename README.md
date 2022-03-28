@@ -1,5 +1,6 @@
 [![Core Check](https://github.com/emanuelmch/puzzles/actions/workflows/core_check.yml/badge.svg?branch=master)](https://github.com/emanuelmch/puzzles/actions/workflows/core_check.yml)
 [![Web Check](https://github.com/emanuelmch/puzzles/actions/workflows/web_check.yml/badge.svg?branch=master)](https://github.com/emanuelmch/puzzles/actions/workflows/web_check.yml)
+[![Web Deploy](https://github.com/emanuelmch/puzzles/actions/workflows/web_deploy.yml/badge.svg)](https://github.com/emanuelmch/puzzles/actions/workflows/web_deploy.yml)
 # Puzzles
 
 My personal collection of puzzle-solving algorithms. The most important bit is the "core" project,
