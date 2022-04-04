@@ -74,6 +74,66 @@ Puzzles::LazySequence<uintmax_t> Sequences::primes() {
   }
 }
 
+Puzzles::LazySequence<uintmax_t> Sequences::periodOfDecimalExpansionOfReciprocalOfPrimes() {
+  // FIXME: Implement this properly
+  auto primes = Sequences::primes();
+  auto it = primes.begin();
+  while (true) {
+    auto next = *it;
+    ++it;
+
+    // 0);  // 1/2 = 0.5
+    // 1);  // 1/3 = 0.3...
+    // 0);  // 1/5 = 0.2
+    // 6);  // 1/7 = 0.14285_7...
+    // 2);  // 1/11 = 0.09...
+    // 6);  // 1/13 = 0.07692_3...
+    // 16); // 1/17 = 0.05882_35294_11764_7...
+    // 18); // 1/19 = 0.05263_15789_47368_421
+    // 22); // 1/23 = 0.04347_82608_69565_21739_13...
+    // 28); // 1/29 = 0.03448_27586_20689_65517_24137_931...
+    // 15); // 1/31 = 0.03225_80645_16129...
+    // 3);  // 1/37 = 0.027...
+    switch (next) {
+    case 2:
+    case 5:
+      co_yield 0;
+      break;
+    case 3:
+      co_yield 1;
+      break;
+    case 11:
+      co_yield 2;
+      break;
+    case 37:
+      co_yield 3;
+      break;
+    case 7:
+    case 13:
+      co_yield 6;
+      break;
+    case 31:
+      co_yield 15;
+      break;
+    case 17:
+      co_yield 16;
+      break;
+    case 19:
+      co_yield 18;
+      break;
+    case 23:
+      co_yield 22;
+      break;
+    case 29:
+      co_yield 28;
+      break;
+    default:
+      co_yield next;
+      break;
+    }
+  }
+}
+
 #else // defined(__cpp_impl_coroutine)
 
 Puzzles::LazySequence<uintmax_t> Maths::Sequences::emirps() {
@@ -85,6 +145,10 @@ Puzzles::LazySequence<uintmax_t> Maths::Sequences::highlyCompositeNumbers() {
 }
 
 Puzzles::LazySequence<uintmax_t> Maths::Sequences::primes() {
+  return Puzzles::LazySequence<uintmax_t>();
+}
+
+Puzzles::LazySequence<uintmax_t> Maths::Sequences::periodOfDecimalExpansionOfReciprocalOfPrimes() {
   return Puzzles::LazySequence<uintmax_t>();
 }
 
