@@ -66,6 +66,14 @@ Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
   }
 }
 
+Puzzles::LazySequence<uintmax_t> Sequences::primes() {
+  for (uintmax_t i = 2U;; ++i) {
+    if (isPrime(i)) {
+      co_yield i;
+    }
+  }
+}
+
 #else // defined(__cpp_impl_coroutine)
 
 Puzzles::LazySequence<uintmax_t> Maths::Sequences::emirps() {
@@ -73,6 +81,10 @@ Puzzles::LazySequence<uintmax_t> Maths::Sequences::emirps() {
 }
 
 Puzzles::LazySequence<uintmax_t> Maths::Sequences::highlyCompositeNumbers() {
+  return Puzzles::LazySequence<uintmax_t>();
+}
+
+Puzzles::LazySequence<uintmax_t> Maths::Sequences::primes() {
   return Puzzles::LazySequence<uintmax_t>();
 }
 

@@ -118,4 +118,22 @@ TEST(Maths, Sequences_Emirps) {
   EXPECT_EQ(next(it), 1193);
 }
 
+TEST(Maths, Sequences_Primes) {
+  auto sequence = Sequences::primes();
+  auto it = sequence.begin();
+
+  EXPECT_EQ(*it, 2);
+  EXPECT_EQ(next(it), 3);
+  EXPECT_EQ(next(it), 5);
+  EXPECT_EQ(next(it), 7);
+  EXPECT_EQ(next(it), 11);
+  EXPECT_EQ(next(it), 13);
+  EXPECT_EQ(next(it), 17);
+  EXPECT_EQ(next(it), 19);
+  EXPECT_EQ(next(it), 23);
+  EXPECT_EQ(next(it), 29);
+  EXPECT_EQ(next(it), 31);
+  EXPECT_EQ(next(it), 37);
+}
+
 #endif // defined(__cpp_impl_coroutine)

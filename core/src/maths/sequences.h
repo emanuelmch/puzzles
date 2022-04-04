@@ -30,4 +30,5 @@ namespace Maths::Sequences {
 
 Puzzles::LazySequence<uintmax_t> emirps();
 Puzzles::LazySequence<uintmax_t> highlyCompositeNumbers();
+Puzzles::LazySequence<uintmax_t> primes();
 }
