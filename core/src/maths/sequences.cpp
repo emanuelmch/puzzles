@@ -41,7 +41,7 @@
 using namespace Maths;
 
 Puzzles::LazySequence<uintmax_t> Sequences::emirps() {
-  for (uintmax_t i = 0;; ++i) {
+  for (uintmax_t i = 0U;; ++i) {
     if (isPrime(i)) {
       std::string string = std::to_string(i);
       std::reverse(string.begin(), string.end());
@@ -54,10 +54,10 @@ Puzzles::LazySequence<uintmax_t> Sequences::emirps() {
 }
 
 Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
-  auto lastCount = 0u;
+  auto lastCount = 0U;
 
-  for (auto number = 0u;; ++number) {
-    auto range = std::views::iota(1u, number + 1);
+  for (auto number = 0U;; ++number) {
+    auto range = std::views::iota(1U, number + 1U);
     auto count = std::count_if(range.begin(), range.end(), [number](auto i) { return number % i == 0; });
     if (count > lastCount) {
       co_yield number;
