@@ -165,6 +165,12 @@ bool runEmirpsSequence() {
   return runInfiniteSequence("Emirps", expectedSequence, actualSequence);
 }
 
+bool runPrimeReciprocalPeriodSequence() {
+  auto expectedSequence = {0U, 1U, 0U, 6U, 2U, 6U, 16U, 18U, 22U, 28U, 15U, 3U};
+  auto actualSequence = Sequences::periodOfDecimalExpansionOfReciprocalOfPrimes();
+  return runInfiniteSequence("Prime Reciprocal Period", expectedSequence, actualSequence);
+}
+
 bool runSteppingStonesPuzzle() {
   constexpr std::array<uintmax_t, 3> expectedResults{0, 1, 16};
 
@@ -201,5 +207,5 @@ bool runSteppingStonesPuzzle() {
 bool Maths::run() {
   return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
          runJosephusProblem(139562, 16981) && runHighlyCompositeNumberSequence() && runEmirpsSequence() &&
-         runSteppingStonesPuzzle();
+         runPrimeReciprocalPeriodSequence() && runSteppingStonesPuzzle();
 }
