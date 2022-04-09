@@ -299,3 +299,21 @@ TEST(Numbers_Rational, ToString_Expansion_Terminating) {
   EXPECT_EQ(Rational(81, 16).toStringWithDecimalExpansion(), "5.0625");
   EXPECT_EQ(Rational(193, 32).toStringWithDecimalExpansion(), "6.03125");
 }
+
+TEST(Numbers_Rational, ToString_Expansion_NonTerminating) {
+  EXPECT_EQ(Rational(1, 3).toStringWithDecimalExpansion(), "0.(3)");
+  EXPECT_EQ(Rational(1, 6).toStringWithDecimalExpansion(), "0.1(6)");
+  EXPECT_EQ(Rational(1, 7).toStringWithDecimalExpansion(), "0.(142857)");
+  EXPECT_EQ(Rational(1, 9).toStringWithDecimalExpansion(), "0.(1)");
+  EXPECT_EQ(Rational(1, 11).toStringWithDecimalExpansion(), "0.(09)");
+  EXPECT_EQ(Rational(1, 12).toStringWithDecimalExpansion(), "0.08(3)");
+
+  EXPECT_EQ(Rational(4, 3).toStringWithDecimalExpansion(), "1.(3)");
+  EXPECT_EQ(Rational(13, 6).toStringWithDecimalExpansion(), "2.1(6)");
+  EXPECT_EQ(Rational(22, 7).toStringWithDecimalExpansion(), "3.(142857)");
+  EXPECT_EQ(Rational(37, 9).toStringWithDecimalExpansion(), "4.(1)");
+  EXPECT_EQ(Rational(56, 11).toStringWithDecimalExpansion(), "5.(09)");
+  EXPECT_EQ(Rational(73, 12).toStringWithDecimalExpansion(), "6.08(3)");
+
+  EXPECT_EQ(Rational(232, 70).toStringWithDecimalExpansion(), "3.3(142857)");
+}

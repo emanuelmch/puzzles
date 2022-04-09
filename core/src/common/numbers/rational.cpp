@@ -147,7 +147,6 @@ std::string Rational::toString() const {
   return result;
 }
 
-// FIXME: If this results in a non-terminating expansion, we'll run forever.
 std::string Rational::toStringWithDecimalExpansion() const {
   const auto base = 10; // TODO: Other bases?
   ensure(denominator > 0);
@@ -162,11 +161,28 @@ std::string Rational::toStringWithDecimalExpansion() const {
 
   auto result = integerPart.toString() + ".";
 
+  const auto periodIndex = result.length();
+  auto pastDivisions = std::vector<std::pair<Integer, Integer>>();
+
   while (fractionalPart != 0) {
     auto dividend = fractionalPart * base;
     fractionalPart = dividend % denominator;
     auto nextDigit = (dividend - fractionalPart) / denominator;
     ensure(nextDigit < base);
+
+    auto divisionPair = std::make_pair(fractionalPart, nextDigit);
+    auto begin = pastDivisions.cbegin();
+    auto end = pastDivisions.cend();
+    auto it = std::find(begin, end, divisionPair);
+    if (it != end) {
+      // From here on out, we'll be repeating our digits
+      auto index = static_cast<size_t>(it - begin);
+      result = result.insert(periodIndex + index, "(");
+      result += ")";
+      break;
+    }
+
+    pastDivisions.push_back(divisionPair);
     result += nextDigit.toString();
   }
 
