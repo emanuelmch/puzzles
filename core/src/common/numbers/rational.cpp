@@ -147,6 +147,32 @@ std::string Rational::toString() const {
   return result;
 }
 
+// FIXME: If this results in a non-terminating expansion, we'll run forever.
+std::string Rational::toStringWithDecimalExpansion() const {
+  const auto base = 10; // TODO: Other bases?
+  ensure(denominator > 0);
+
+  if (denominator == 1) {
+    return toString();
+  }
+
+  // TODO: Create a function to have both / & % at the same time for performance
+  auto fractionalPart = numerator % denominator;
+  auto integerPart = (numerator - fractionalPart) / denominator;
+
+  auto result = integerPart.toString() + ".";
+
+  while (fractionalPart != 0) {
+    auto dividend = fractionalPart * base;
+    fractionalPart = dividend % denominator;
+    auto nextDigit = (dividend - fractionalPart) / denominator;
+    ensure(nextDigit < base);
+    result += nextDigit.toString();
+  }
+
+  return result;
+}
+
 std::tuple<Integer, Integer, Integer> Rational::normalizeDenominatorWith(const Rational &o) const {
   if (denominator == o.denominator) return std::make_tuple(this->numerator, o.numerator, this->denominator);
 
