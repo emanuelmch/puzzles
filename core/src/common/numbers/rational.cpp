@@ -34,6 +34,7 @@ Rational::Rational(intmax_t numerator, intmax_t denominator)
   if (denominator < 0) {
     this->numerator *= -1;
   }
+  this->simplify();
 }
 
 Rational::Rational(Integer numerator, const Integer &denominator)
@@ -42,6 +43,7 @@ Rational::Rational(Integer numerator, const Integer &denominator)
   if (denominator < 0) {
     this->numerator *= -1;
   }
+  this->simplify();
 }
 
 Rational Rational::operator+(const Rational &o) const {
@@ -171,5 +173,6 @@ Rational &Rational::simplify() {
   this->numerator /= gcd;
   this->denominator /= gcd;
 
+  // FIXME: We shouldn't be returning "this", this makes it ambiguous whether this method edits in place or not
   return *this;
 }

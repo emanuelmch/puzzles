@@ -27,13 +27,9 @@
 using pzl::Rational;
 
 TEST(Numbers_Rational, CreateFromString) {
-  Rational negativeOne("-1");
-  Rational zero("0");
-  Rational one("1");
-
-  EXPECT_EQ(std::to_string(negativeOne), "-1");
-  EXPECT_EQ(std::to_string(zero), "0");
-  EXPECT_EQ(std::to_string(one), "1");
+  EXPECT_EQ(std::to_string(Rational("-1")), "-1");
+  EXPECT_EQ(std::to_string(Rational("0")), "0");
+  EXPECT_EQ(std::to_string(Rational("1")), "1");
 }
 
 TEST(Numbers_Rational, CreateFromInt) {
@@ -41,6 +37,10 @@ TEST(Numbers_Rational, CreateFromInt) {
   EXPECT_EQ(std::to_string(Rational(-1)), "-1");
   EXPECT_EQ(std::to_string(Rational(0)), "0");
   EXPECT_EQ(std::to_string(Rational(1)), "1");
+
+  EXPECT_EQ(std::to_string(Rational(2, 2)), "1");
+  EXPECT_EQ(std::to_string(Rational(6, 3)), "2");
+  EXPECT_EQ(std::to_string(Rational(12, 4)), "3");
 }
 
 TEST(Numbers_Rational, Addition) {
