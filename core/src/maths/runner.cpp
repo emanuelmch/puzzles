@@ -149,20 +149,26 @@ bool runInfiniteSequence(const string &name, const list &expectedSequence,
 #endif // !defined(__cpp_impl_coroutine)
 
 bool runHighlyCompositeNumberSequence() {
-  auto expectedSequence = {1u,    2u,    4u,     6u,     12u,    24u,    36u,    48u,    60u,
-                           120u,  180u,  240u,   360u,   720u,   840u,   1260u,  1680u,  2520u,
-                           5040u, 7560u, 10080u, 15120u, 20160u, 25200u, 27720u, 45360u, 50400u};
+  auto expectedSequence = {1U,    2U,    4U,     6U,     12U,    24U,    36U,    48U,    60U,
+                           120U,  180U,  240U,   360U,   720U,   840U,   1260U,  1680U,  2520U,
+                           5040U, 7560U, 10080U, 15120U, 20160U, 25200U, 27720U, 45360U, 50400U};
   auto actualSequence = Sequences::highlyCompositeNumbers();
   return runInfiniteSequence("Highly Composite Number", expectedSequence, actualSequence);
 }
 
 bool runEmirpsSequence() {
-  auto expectedSequence = {13u,   17u,   31u,   37u,   71u,   73u,   79u,   97u,   107u,  113u,  149u,  157u,  167u,
-                           179u,  199u,  311u,  337u,  347u,  359u,  389u,  701u,  709u,  733u,  739u,  743u,  751u,
-                           761u,  769u,  907u,  937u,  941u,  953u,  967u,  971u,  983u,  991u,  1009u, 1021u, 1031u,
-                           1033u, 1061u, 1069u, 1091u, 1097u, 1103u, 1109u, 1151u, 1153u, 1181u, 1193u};
+  auto expectedSequence = {13U,   17U,   31U,   37U,   71U,   73U,   79U,   97U,   107U,  113U,  149U,  157U,  167U,
+                           179U,  199U,  311U,  337U,  347U,  359U,  389U,  701U,  709U,  733U,  739U,  743U,  751U,
+                           761U,  769U,  907U,  937U,  941U,  953U,  967U,  971U,  983U,  991U,  1009U, 1021U, 1031U,
+                           1033U, 1061U, 1069U, 1091U, 1097U, 1103U, 1109U, 1151U, 1153U, 1181U, 1193U};
   auto actualSequence = Sequences::emirps();
   return runInfiniteSequence("Emirps", expectedSequence, actualSequence);
+}
+
+bool runPrimeReciprocalPeriodSequence() {
+  auto expectedSequence = {0U, 1U, 0U, 6U, 2U, 6U, 16U, 18U, 22U, 28U, 15U, 3U};
+  auto actualSequence = Sequences::periodOfDecimalExpansionOfReciprocalOfPrimes();
+  return runInfiniteSequence("Prime Reciprocal Period", expectedSequence, actualSequence);
 }
 
 bool runSteppingStonesPuzzle() {
@@ -175,7 +181,7 @@ bool runSteppingStonesPuzzle() {
   };
 
   auto [result, duration] = runningTime([&expectedResults] {
-    for (uintmax_t i = 1u; i < expectedResults.size(); ++i) {
+    for (uintmax_t i = 1U; i < expectedResults.size(); ++i) {
       auto expected = expectedResults[i];
       auto actual = Maths::steppingStones(i);
       if (actual != expected) {
@@ -201,5 +207,5 @@ bool runSteppingStonesPuzzle() {
 bool Maths::run() {
   return runLargestPrimeFactor(13195, 29) && runEvaluateExpression("3 + (4 * 2) ^ 2 ^ 3 / ( 1 - 5 ) ^ 2", 1048579) &&
          runJosephusProblem(139562, 16981) && runHighlyCompositeNumberSequence() && runEmirpsSequence() &&
-         runSteppingStonesPuzzle();
+         runPrimeReciprocalPeriodSequence() && runSteppingStonesPuzzle();
 }

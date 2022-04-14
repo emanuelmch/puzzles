@@ -34,6 +34,7 @@ Rational::Rational(intmax_t numerator, intmax_t denominator)
   if (denominator < 0) {
     this->numerator *= -1;
   }
+  this->simplify();
 }
 
 Rational::Rational(Integer numerator, const Integer &denominator)
@@ -42,6 +43,7 @@ Rational::Rational(Integer numerator, const Integer &denominator)
   if (denominator < 0) {
     this->numerator *= -1;
   }
+  this->simplify();
 }
 
 Rational Rational::operator+(const Rational &o) const {
@@ -145,6 +147,48 @@ std::string Rational::toString() const {
   return result;
 }
 
+std::string Rational::toStringWithDecimalExpansion() const {
+  const auto base = 10; // TODO: Other bases?
+  ensure(denominator > 0);
+
+  if (denominator == 1) {
+    return toString();
+  }
+
+  // TODO: Create a function to have both / & % at the same time for performance
+  auto fractionalPart = numerator % denominator;
+  auto integerPart = (numerator - fractionalPart) / denominator;
+
+  auto result = integerPart.toString() + ".";
+
+  const auto periodIndex = result.length();
+  auto pastDivisions = std::vector<std::pair<Integer, Integer>>();
+
+  while (fractionalPart != 0) {
+    auto dividend = fractionalPart * base;
+    fractionalPart = dividend % denominator;
+    auto nextDigit = (dividend - fractionalPart) / denominator;
+    ensure(nextDigit < base);
+
+    auto divisionPair = std::make_pair(fractionalPart, nextDigit);
+    auto begin = pastDivisions.cbegin();
+    auto end = pastDivisions.cend();
+    auto it = std::find(begin, end, divisionPair);
+    if (it != end) {
+      // From here on out, we'll be repeating our digits
+      auto index = static_cast<size_t>(it - begin);
+      result = result.insert(periodIndex + index, "(");
+      result += ")";
+      break;
+    }
+
+    pastDivisions.push_back(divisionPair);
+    result += nextDigit.toString();
+  }
+
+  return result;
+}
+
 std::tuple<Integer, Integer, Integer> Rational::normalizeDenominatorWith(const Rational &o) const {
   if (denominator == o.denominator) return std::make_tuple(this->numerator, o.numerator, this->denominator);
 
@@ -171,5 +215,6 @@ Rational &Rational::simplify() {
   this->numerator /= gcd;
   this->denominator /= gcd;
 
+  // FIXME: We shouldn't be returning "this", this makes it ambiguous whether this method edits in place or not
   return *this;
 }

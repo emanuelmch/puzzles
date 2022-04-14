@@ -118,4 +118,40 @@ TEST(Maths, Sequences_Emirps) {
   EXPECT_EQ(next(it), 1193);
 }
 
+TEST(Maths, Sequences_Primes) {
+  auto sequence = Sequences::primes();
+  auto it = sequence.begin();
+
+  EXPECT_EQ(*it, 2);
+  EXPECT_EQ(next(it), 3);
+  EXPECT_EQ(next(it), 5);
+  EXPECT_EQ(next(it), 7);
+  EXPECT_EQ(next(it), 11);
+  EXPECT_EQ(next(it), 13);
+  EXPECT_EQ(next(it), 17);
+  EXPECT_EQ(next(it), 19);
+  EXPECT_EQ(next(it), 23);
+  EXPECT_EQ(next(it), 29);
+  EXPECT_EQ(next(it), 31);
+  EXPECT_EQ(next(it), 37);
+}
+
+TEST(Maths, Sequences_PeriodOfDecimalExpansionOfReciprocalOfPrimes) {
+  auto sequence = Sequences::periodOfDecimalExpansionOfReciprocalOfPrimes();
+  auto it = sequence.begin();
+
+  EXPECT_EQ(*it, 0);       // 1/2 = 0.5
+  EXPECT_EQ(next(it), 1);  // 1/3 = 0.3...
+  EXPECT_EQ(next(it), 0);  // 1/5 = 0.2
+  EXPECT_EQ(next(it), 6);  // 1/7 = 0.14285_7...
+  EXPECT_EQ(next(it), 2);  // 1/11 = 0.09...
+  EXPECT_EQ(next(it), 6);  // 1/13 = 0.07692_3...
+  EXPECT_EQ(next(it), 16); // 1/17 = 0.05882_35294_11764_7...
+  EXPECT_EQ(next(it), 18); // 1/19 = 0.05263_15789_47368_421
+  EXPECT_EQ(next(it), 22); // 1/23 = 0.04347_82608_69565_21739_13...
+  EXPECT_EQ(next(it), 28); // 1/29 = 0.03448_27586_20689_65517_24137_931...
+  EXPECT_EQ(next(it), 15); // 1/31 = 0.03225_80645_16129...
+  EXPECT_EQ(next(it), 3);  // 1/37 = 0.027...
+}
+
 #endif // defined(__cpp_impl_coroutine)

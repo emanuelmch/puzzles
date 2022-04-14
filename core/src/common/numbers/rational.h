@@ -62,6 +62,7 @@ struct Rational {
   [[nodiscard]] inline bool operator!=(intmax_t o) const { return !(*this == o); }
 
   [[nodiscard]] std::string toString() const;
+  [[nodiscard]] std::string toStringWithDecimalExpansion() const;
 
 private:
   pzl::Integer numerator;
