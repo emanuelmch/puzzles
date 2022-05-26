@@ -50,3 +50,18 @@ TEST(Strings, TrimLeadingView) {
   EXPECT_EQ(trimLeadingView(repeat, 'r'), "");
   EXPECT_EQ(trimLeadingView(repeat, ' '), "rrr");
 }
+
+TEST(Strings, ToString) {
+  EXPECT_EQ(pzl::toString(0), "0");
+  EXPECT_EQ(pzl::toString(1), "1");
+  EXPECT_EQ(pzl::toString(9), "9");
+  EXPECT_EQ(pzl::toString(10), "10");
+  EXPECT_EQ(pzl::toString(99), "99");
+  EXPECT_EQ(pzl::toString(1000000), "1000000");
+
+  static_assert(std::numeric_limits<uint32_t>::max() == 4294967295U); // NOLINT(readability-magic-numbers)
+  EXPECT_EQ(pzl::toString(8461339), "8461339");
+  EXPECT_EQ(pzl::toString(75400661), "75400661");
+  EXPECT_EQ(pzl::toString(486977962), "486977962");
+  EXPECT_EQ(pzl::toString(4294967295), "4294967295");
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Emanuel Machado da Silva
+ * Copyright (c) 2022 Emanuel Machado da Silva
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,36 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "strings.h"
 
-#include <string>
+#include "common/assertions.h"
 
-namespace pzl {
-
-inline std::string padLeading(const std::string_view &original, unsigned int howMany, char c) {
-  if (howMany <= original.size()) return std::string{original};
-
-  auto padLength = howMany - original.size();
-
-  std::string result{original};
-  result.insert(0, padLength, c);
-  return result;
+inline char toChar(uint_fast8_t digit, uint_fast8_t base) {
+  ensure_m(base == 10U, "haven't implemented other bases yet");
+  ensure(digit < base);
+  return static_cast<char>(digit + '0');
 }
 
-constexpr std::string_view trimLeadingView(const std::string_view &original, char c) {
-  auto start = original.find_first_not_of(c);
+std::string pzl::toString(uint32_t val, uint8_t base) { // NOLINT(readability-magic-numbers)
+  uint_fast8_t length = 1U;
+  {
+    auto value = val;
+    while (base <= value) {
+      length++;
+      value /= base;
+    }
+  }
 
-  if (start == 0) return original;
-  if (start == std::string::npos) return original.substr(original.length());
+  char result[length + 1];
+  result[length] = '\0';
 
-  return original.substr(start);
-}
+  for (auto nextIndex = static_cast<int_fast8_t>(length - 1); nextIndex >= 0; nextIndex--) {
+    auto nextDigit = val % base;
+    result[nextIndex] = toChar(nextDigit, base);
 
-inline std::string trimLeading(const std::string_view &original, char c) {
-  return std::string{trimLeadingView(original, c)};
-}
+    val -= nextDigit;
+    val /= base;
+  }
 
-std::string toString(uint32_t val, uint8_t base = 10U); // NOLINT(readability-magic-numbers)
+  return {result};
 }

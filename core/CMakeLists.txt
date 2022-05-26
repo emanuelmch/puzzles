@@ -76,6 +76,7 @@ endif ()
 # Source Files
 include_directories(src)
 add_library(puzzles_lib OBJECT
+        src/common/strings.cpp
         src/common/numbers/integer.cpp
         src/common/numbers/rational.cpp
         src/comsci/runner.cpp
