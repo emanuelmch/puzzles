@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace Puzzles;
+using namespace pzl;
 
 TEST(Strings, PadLeading) {
   EXPECT_EQ(padLeading("", 8, '0'), "00000000");

@@ -84,11 +84,11 @@ std::string Integer::toString() const {
   std::string result;
   for (auto slice : slices) {
     auto nextSlice = std::to_string(slice);
-    auto paddedSlice = Puzzles::padLeading(nextSlice, 9, '0');
+    auto paddedSlice = pzl::padLeading(nextSlice, 9, '0');
     result.insert(0, paddedSlice);
   }
 
-  result = Puzzles::trimLeading(result, '0');
+  result = pzl::trimLeading(result, '0');
 
   if (!_positive) {
     result.insert(0, 1, '-');

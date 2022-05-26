@@ -24,7 +24,7 @@
 
 #include <string>
 
-namespace Puzzles {
+namespace pzl {
 
 inline std::string padLeading(const std::string_view &original, unsigned int howMany, char c) {
   if (howMany <= original.size()) return std::string{original};
