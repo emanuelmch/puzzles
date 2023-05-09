@@ -38,27 +38,47 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, macos-12]
-        compiler: [gcc, clang]
+        compiler: [gcc-11,gcc-12,gcc-13,clang-12,clang-13,clang-14,clang-15,clang-16]
         build_type: [Debug, Release]
         include:
-          - os: ubuntu-22.04
-            compiler: gcc
+          - compiler: gcc-11
             CC: gcc-11
             CXX: g++-11
-          - os: ubuntu-22.04
-            compiler: clang
-            extra-packages: clang-12 libunwind-dev libc++-12-dev libc++abi-12-dev
+          - compiler: gcc-12
+            CC: gcc-12
+            CXX: g++-12
+          - compiler: gcc-13
+            CC: gcc-13
+            CXX: g++-13
+            ubuntu-extra-packages: gcc-13 g++-13
+          - compiler: clang-12
             CC: clang-12
             CXX: clang++-12
-          - os: macos-12
-            compiler: gcc
-            CC: gcc-11
-            CXX: g++-11
-          - os: macos-12
-            compiler: clang
-            extra-packages: llvm@12
-            CC: /usr/local/opt/llvm@12/bin/clang
-            CXX: /usr/local/opt/llvm@12/bin/clang++
+            macos-extra-package: llvm@12
+            ubuntu-extra-packages: clang-12 libunwind-12-dev libc++-12-dev libc++abi-12-dev
+          - compiler: clang-13
+            CC: clang-13
+            CXX: clang++-13
+            macos-extra-package: llvm@13
+            ubuntu-extra-packages: clang-13 libunwind-13-dev libc++-13-dev libc++abi-13-dev
+          - compiler: clang-14
+            CC: clang-14
+            CXX: clang++-14
+            macos-extra-package: llvm@14
+          - compiler: clang-15
+            CC: clang-15
+            CXX: clang++-15
+            macos-extra-package: llvm@15
+            ubuntu-extra-packages: clang-15 libc++-15-dev libc++abi-15-dev
+          - compiler: clang-16
+            CC: clang-16
+            CXX: clang++-16
+            macos-extra-package: llvm@16
+            ubuntu-extra-packages: clang-16 libc++-16-dev libc++abi-16-dev
+        exclude:
+          # TODO: Haven't been able to find a working version yet
+          - os: ubuntu-22.04
+            compiler: gcc-13
 
     env:
       CC: ${{ matrix.CC }}
@@ -66,20 +86,20 @@ jobs:
 
     steps:
     - name: Install the latest compilers (Ubuntu)
-      if: matrix.extra-packages && matrix.os == 'ubuntu-22.04'
+      if: matrix.os == 'ubuntu-22.04' && matrix.ubuntu-extra-packages
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        sudo add-apt-repository 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main'
+        sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main'
         sudo apt-get update
-        sudo apt-get install -y ${{ matrix.extra-packages }}
+        sudo apt-get install -y ${{ matrix.ubuntu-extra-packages }}
 
     - name: Install the latest compilers (Mac OS)
-      if: matrix.extra-packages && matrix.os == 'macos-12'
+      if: matrix.os == 'macos-12' && matrix.macos-extra-package
       run: |
-        brew install ${{ matrix.extra-packages }}
-        # TODO: This assumes we only have one extra package
-        export PATH="/usr/local/opt/${{ matrix.extra-packages }}/bin:$PATH"
+        brew install ${{ matrix.macos-extra-package }}
+        echo "CC=$(brew --prefix ${{ matrix.macos-extra-package }})/bin/clang" >> "$GITHUB_ENV"
+        echo "CXX=$(brew --prefix ${{ matrix.macos-extra-package }})/bin/clang++" >> "$GITHUB_ENV"
 
     - uses: actions/checkout@v2
       with:
