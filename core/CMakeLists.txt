@@ -69,8 +69,9 @@ else ()
     endif ()
 endif ()
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=leak -fsanitize=undefined")
+check_cxx_compiler_flag(-fsanitize=address -fsanitize=leak -fsanitize=undefined _CXX_SUPPORTS_SANITIZER_FLAGS)
+if (_CXX_SUPPORTS_SANITIZER_FLAGS)
+    add_compile_options(-fsanitize=address -fsanitize=leak -fsanitize=undefined)
 endif ()
 
 # Source Files
