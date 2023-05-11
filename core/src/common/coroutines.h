@@ -99,7 +99,7 @@ struct LazySequence {
 
   explicit constexpr LazySequence(promise_type &handle)
       : handle(std::coroutine_handle<promise_type>::from_promise(handle)) {}
-  constexpr LazySequence(const LazySequence<T> &) = delete;
+  constexpr LazySequence(const LazySequence<T> &) = default;
   constexpr ~LazySequence() {
     if (handle) handle.destroy();
   }
