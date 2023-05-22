@@ -25,6 +25,8 @@
 #include "common/assertions.h"
 #include "common/numbers/integers.h" // greatestCommonDivisor
 
+#include <algorithm> // std::find
+
 using pzl::Integer;
 using pzl::Rational;
 

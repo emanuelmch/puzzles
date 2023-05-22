@@ -27,7 +27,6 @@
 
 using namespace Shurikens;
 
-using std::move;
 using std::stack;
 using std::unordered_map;
 using std::vector;
@@ -37,8 +36,8 @@ struct Node {
   const Shuriken shuriken;
   const MoveContainer moves;
 
-  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+  explicit Node(Shuriken shuriken) : shuriken(std::move(shuriken)), moves() {}
+  Node(Shuriken shuriken, MoveContainer moves) : shuriken(std::move(shuriken)), moves(std::move(moves)) {}
 };
 }
 

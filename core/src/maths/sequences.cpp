@@ -34,10 +34,11 @@
 
 #include "common/numbers/rational.h"
 
+#include "compat/ranges.h" // compat::iota
+
 #include <algorithm>
 #include <cinttypes>
 #include <execution>
-#include <ranges>
 #include <string>
 
 using namespace Maths;
@@ -59,7 +60,7 @@ Puzzles::LazySequence<uintmax_t> Sequences::highlyCompositeNumbers() {
   auto lastCount = 0U;
 
   for (auto number = 0U;; ++number) {
-    auto range = std::views::iota(1U, number + 1U);
+    auto range = compat::views::iota(1U, number + 1U);
     auto count = std::count_if(range.begin(), range.end(), [number](auto i) { return number % i == 0; });
     if (count > lastCount) {
       co_yield number;

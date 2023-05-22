@@ -26,6 +26,7 @@
 
 #include "common/assertions.h"
 
+#include <functional> // std::function
 #include <numeric> // std::accumulate
 #include <vector>  // std::vector
 

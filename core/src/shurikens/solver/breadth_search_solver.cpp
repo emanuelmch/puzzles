@@ -32,7 +32,6 @@
 using namespace Puzzles;
 using namespace Shurikens;
 
-using std::move;
 using std::queue;
 using std::unordered_set;
 using std::vector;
@@ -42,8 +41,8 @@ struct Node {
   const Shuriken shuriken;
   const MoveContainer moves;
 
-  explicit Node(Shuriken shuriken) : shuriken(move(shuriken)), moves() {}
-  Node(Shuriken shuriken, MoveContainer moves) : shuriken(move(shuriken)), moves(move(moves)) {}
+  explicit Node(Shuriken shuriken) : shuriken(std::move(shuriken)), moves() {}
+  Node(Shuriken shuriken, MoveContainer moves) : shuriken(std::move(shuriken)), moves(std::move(moves)) {}
 };
 }
 
