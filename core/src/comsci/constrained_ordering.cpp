@@ -45,6 +45,7 @@
 
 ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::run(
     const std::vector<std::string> &cowNames,
-    const std::vector<std::string> &constraints) {
-  return Solution{cowNames};
+    const std::vector<std::string> &) {
+  const auto reversedCowNames = std::vector(cowNames.rbegin(), cowNames.rend());
+  return Solution{reversedCowNames};
 }

@@ -30,9 +30,10 @@ namespace ComSci::ConstrainedOrdering {
 struct Solution {
   std::vector<std::string> cows;
 
-  bool operator==(const std::vector<std::string> &other) const {
-    // TODO: Check the reverse
-    return this->cows == other;
+  template<typename Range>
+  inline bool operator==(const Range &other) const {
+    const auto begin = std::begin(other), end = std::end(other);
+    return std::equal(begin, end, this->cows.begin()) || std::equal(begin, end, this->cows.rbegin());
   }
 };
 

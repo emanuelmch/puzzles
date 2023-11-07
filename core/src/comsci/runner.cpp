@@ -23,6 +23,7 @@
 #include "runner.h"
 
 #include "common/runners.h"
+#include "common/strings.h"
 #include "constrained_ordering.h"
 #include "travelling_salesman.h"
 #include "travelling_salesman_data.h"
@@ -48,15 +49,11 @@ bool runConstrainedOrdering() {
               << ", it took about " << duration << " µs!\n";
     return true;
   } else {
-    std::cout << "ComSci: Constrained Ordering didn't find a known valid order, was expecting [";
-    for (const auto &cow: expected) {
-      std::cout << cow << ", ";
-    }
-    std::cout << "], but got this: [";
-    for (const auto &cow: results.cows) {
-      std::cout << cow << ", ";
-    }
-    std::cout << "]\n";
+    std::cout << "ComSci: Constrained Ordering didn't find a known valid order, was expecting ["
+              << Puzzles::join(expected, ", ")
+              << "], but got this: ["
+              << Puzzles::join(results.cows, ", ")
+              << "]\n";
     return false;
   }
 }
