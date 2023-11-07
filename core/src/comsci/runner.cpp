@@ -23,6 +23,7 @@
 #include "runner.h"
 
 #include "common/runners.h"
+#include "constrained_ordering.h"
 #include "travelling_salesman.h"
 #include "travelling_salesman_data.h"
 
@@ -30,20 +31,55 @@
 
 using Puzzles::runningTime;
 
-bool ComSci::run() {
+bool runConstrainedOrdering() {
+  const std::vector<std::string> cows = {"Buttercup", "Bella"};
+  const std::vector<std::string> constraints = {
+      "Buttercup must be milked beside Bella",
+//            "Blue must be milked beside Bella",
+//            "Sue must be milked beside Beatrice"
+  };
+
+  auto [results, duration] = runningTime(
+      [&cows, &constraints] { return ComSci::ConstrainedOrdering::run(cows, constraints); });
+
+  const std::vector<std::string> expected = {"Buttercup", "Bella"};
+  if (results == expected) {
+    std::cout << "ComSci: Constrained Ordering found a known valid order"
+              << ", it took about " << duration << " µs!\n";
+    return true;
+  } else {
+    std::cout << "ComSci: Constrained Ordering didn't find a known valid order, was expecting [";
+    for (const auto &cow: expected) {
+      std::cout << cow << ", ";
+    }
+    std::cout << "], but got this: [";
+    for (const auto &cow: results.cows) {
+      std::cout << cow << ", ";
+    }
+    std::cout << "]\n";
+    return false;
+  }
+}
+
+bool runTravellingSalesman() {
   auto [results, duration] = runningTime([] { return ComSci::TravellingSalesman::run(); });
   if (results.distance == KNOWN_SHORTEST_DISTANCE) {
     std::cout << "ComSci: Travelling Salesman found a correct path"
               << ", it took about " << duration << " µs!\n";
     return true;
   } else {
-    std::cout << "ComSci: Travelling Salesman didn't find the shortest path, was expecting " << KNOWN_SHORTEST_DISTANCE
+    std::cout << "ComSci: Travelling Salesman didn't find the shortest path, was expecting "
+              << KNOWN_SHORTEST_DISTANCE
               << ", but got this: (";
     std::cout << results.distance << ")[";
-    for (auto i : results.shortestPath) {
+    for (auto i: results.shortestPath) {
       std::cout << i << ", ";
     }
     std::cout << "]\n";
     return false;
   }
+}
+
+bool ComSci::run() {
+  return runConstrainedOrdering() && runTravellingSalesman();
 }

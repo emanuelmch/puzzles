@@ -82,6 +82,7 @@ include_directories(src)
 add_library(puzzles_lib OBJECT
         src/common/numbers/integer.cpp
         src/common/numbers/rational.cpp
+        src/comsci/constrained_ordering.cpp
         src/comsci/runner.cpp
         src/comsci/travelling_salesman.cpp
         src/cpic/data/easy.cpp
@@ -110,7 +111,7 @@ add_library(puzzles_lib OBJECT
         src/sudoku/solver/brute_force_board_solver.cpp
         src/sudoku/solver/heuristic_board_solver.cpp
         src/sudoku/view/board_logger.cpp
-        )
+)
 
 # Executable
 add_executable(puzzles
@@ -152,7 +153,7 @@ set(test_sources
         tests/shurikens/shurikens_model_test.cpp
         tests/sudoku/model/sudoku_board_test.cpp
         tests/sudoku/model/sudoku_board_validity_test.cpp
-        )
+)
 
 foreach (testfile ${test_sources})
     get_filename_component(test_name ${testfile} NAME_WE)
