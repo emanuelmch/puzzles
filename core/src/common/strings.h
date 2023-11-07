@@ -22,9 +22,26 @@
 
 #pragma once
 
+#include <sstream>
 #include <string>
+#include <vector>
 
 namespace Puzzles {
+
+template<typename Range, typename Value = typename Range::value_type>
+inline std::string join(const Range &input, const char *delimiter) {
+  const auto begin = std::begin(input);
+  const auto end = std::end(input);
+
+  if (begin == end) return "";
+
+  std::ostringstream output;
+
+  std::copy(begin, std::prev(end), std::ostream_iterator<Value>{output, delimiter});
+  output << *(std::prev(end));
+
+  return output.str();
+}
 
 inline std::string padLeading(const std::string_view &original, unsigned int howMany, char c) {
   if (howMany <= original.size()) return std::string{original};

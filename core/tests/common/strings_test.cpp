@@ -26,6 +26,14 @@
 
 using namespace Puzzles;
 
+TEST(Strings, Join) {
+  EXPECT_EQ(join(std::vector<std::string>{}, ", "), "");
+  EXPECT_EQ(join(std::vector{"1"}, ", "), "1");
+  EXPECT_EQ(join(std::vector{"1", "2"}, ", "), "1, 2");
+  EXPECT_EQ(join(std::vector{"1", "2", "3"}, ", "), "1, 2, 3");
+  EXPECT_EQ(join(std::vector{"1", "2", "3"}, "abcdef"), "1abcdef2abcdef3");
+}
+
 TEST(Strings, PadLeading) {
   EXPECT_EQ(padLeading("", 8, '0'), "00000000");
   EXPECT_EQ(padLeading("1234", 8, '0'), "00001234");
