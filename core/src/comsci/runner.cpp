@@ -22,12 +22,14 @@
 
 #include "runner.h"
 
+#include "common/ranges.h"
 #include "common/runners.h"
 #include "common/strings.h"
 #include "constrained_ordering.h"
 #include "travelling_salesman.h"
 #include "travelling_salesman_data.h"
 
+#include <array>
 #include <iostream>
 
 using Puzzles::runningTime;
@@ -40,31 +42,49 @@ bool runConstrainedOrdering() {
       "Sue must be milked beside Beatrice"
   };
 
-  auto [results, duration] = runningTime(
-      [&cows, &constraints] { return ComSci::ConstrainedOrdering::runBaseline(cows, constraints); });
-
-  const std::vector<std::string> expected = {
-      "Beatrice",
-      "Sue",
-      "Belinda",
-      "Bessie",
-      "Betsy",
-      "Blue",
-      "Bella",
-      "Buttercup"
+  auto solvers = {
+      std::make_pair("Baseline", &ComSci::ConstrainedOrdering::runBaseline),
+      std::make_pair("Heuristic", &ComSci::ConstrainedOrdering::runHeuristic)
   };
-  if (results == expected) {
-    std::cout << "ComSci: Constrained Ordering found a known valid order"
-              << ", it took about " << duration << " µs!\n";
-    return true;
-  } else {
-    std::cout << "ComSci: Constrained Ordering didn't find a known valid order, was expecting ["
-              << Puzzles::join(expected, ", ")
-              << "], but got this: ["
-              << Puzzles::join(results.cows, ", ")
-              << "]\n";
-    return false;
+
+  for (const auto &solver: solvers) {
+    const auto name = solver.first;
+    const auto function = solver.second;
+    auto [results, duration] = runningTime([&] { return function(cows, constraints); });
+
+    const std::array<std::vector<std::string>, 2> possibleSolutions = {
+        std::vector<std::string>{
+            "Beatrice",
+            "Sue",
+            "Belinda",
+            "Bessie",
+            "Betsy",
+            "Blue",
+            "Bella",
+            "Buttercup"
+        },
+        std::vector<std::string>{
+            "Blue",
+            "Bella",
+            "Buttercup",
+            "Beatrice",
+            "Sue",
+            "Bessie",
+            "Belinda",
+            "Betsy"
+        }
+    };
+    if (pzl::ranges::contains(possibleSolutions, results)) {
+      std::cout << "Constrained Ordering: " << name << " found a known valid order"
+                << ", it took about " << duration << " µs!\n";
+    } else {
+      std::cout << "Constrained Ordering: " << name << " didn't find a known valid order. Received this:\n"
+                << "[" << Puzzles::join(results.cows, ", ") << "]\n";
+      return false;
+    }
   }
+
+  return true;
 }
 
 bool runTravellingSalesman() {

@@ -24,6 +24,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <deque>
+#include <map>
 
 /*
  * USACO 2019 December context, Bronze
@@ -49,41 +51,166 @@
 // TODO: Ensure alphabetical ordering
 
 using Constraint = std::pair<std::string, std::string>;
+const Constraint EMPTY_CONSTRAINT = {"", ""};
 
-std::vector<Constraint> parseConstraints(const std::vector<std::string> &constraints) {
-  std::vector<Constraint> parsedConstraints;
+// TODO: Unit tests, maybe?
+struct ConstraintSet {
+  std::vector<Constraint> constraints;
 
-  std::transform(constraints.cbegin(), constraints.cend(), std::back_inserter(parsedConstraints),
+  [[nodiscard]] bool isSatisfiedBy(const std::vector<std::string> &cowNames) const {
+    return std::all_of(constraints.cbegin(), constraints.cend(), [cowNames](auto const &constraint) {
+      const auto index0 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.first);
+      const auto index1 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.second);
+
+      return std::abs(index0 - index1) == 1;
+    });
+  }
+
+  [[nodiscard]] std::string getCowThatShowsUpTheMost() const {
+    std::map<std::string, uint_fast8_t> cowCount;
+
+    for (const auto &constraint : constraints) {
+      cowCount[constraint.first]++;
+      cowCount[constraint.second]++;
+    }
+
+    auto max = std::max_element(cowCount.cbegin(), cowCount.cend(), [](auto left, auto right) {
+      return left.second < right.second;
+    });
+
+    return max->first;
+  }
+
+  /**
+   * Removes a constraint containing the given cow.
+   *
+   * If there are multiple matching constraints, it will remove exactly one of them, with no guarantees on which one.
+   *
+   * If there are no matching constraints, it will not remove anything, and will return EMPTY_CONSTRAINT
+   */
+  Constraint popConstraintWithCow(const std::string &cow) {
+    for (auto it = this->constraints.begin(); it != this->constraints.end(); ++it) {
+      auto constraint = *it;
+      if (cow == constraint.first || cow == constraint.second) {
+        this->constraints.erase(it);
+        return constraint;
+      }
+    }
+
+    return EMPTY_CONSTRAINT;
+  }
+};
+
+std::string getOtherCow(const Constraint &constraint, const std::string &cow) {
+  if (constraint.first == cow) {
+    return constraint.second;
+  } else {
+    return constraint.first;
+  }
+}
+
+ConstraintSet parseConstraints(const std::vector<std::string> &constraints) {
+  std::vector<Constraint> parsed;
+
+  std::transform(constraints.cbegin(), constraints.cend(), std::back_inserter(parsed),
                  [](const std::string &constraint) {
                    const auto first = constraint.substr(0, constraint.find_first_of(' '));
                    const auto second = constraint.substr(constraint.find_last_of(' ') + 1);
                    return std::pair{first, second};
                  });
 
-  return parsedConstraints;
-}
-
-bool orderSatisfiesConstraints(const std::vector<std::string> &cowNames,
-                               const std::vector<Constraint> &constraints) {
-  return std::all_of(constraints.cbegin(), constraints.cend(), [cowNames](auto const &constraint) {
-    const auto index0 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.first);
-    const auto index1 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.second);
-
-    return std::abs(index0 - index1) == 1;
-  });
+  return ConstraintSet{parsed};
 }
 
 ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::runBaseline(
-    std::vector<std::string> cowNames,
+    const std::vector<std::string> &cowNames,
     const std::vector<std::string> &constraints) {
-  const auto parsedConstraints = parseConstraints(constraints);
+  auto sortedCowNames = cowNames;
+  const auto constraintSet = parseConstraints(constraints);
 
-  const auto begin = std::begin(cowNames), end = std::end(cowNames);
+  const auto begin = std::begin(sortedCowNames), end = std::end(sortedCowNames);
   std::sort(begin, end);
 
   do {
-    if (orderSatisfiesConstraints(cowNames, parsedConstraints)) break;
+    if (constraintSet.isSatisfiedBy(sortedCowNames)) break;
   } while (std::next_permutation(begin, end));
 
-  return Solution{cowNames};
+  return Solution{sortedCowNames};
+}
+
+// NOLINTNEXTLINE(misc-no-recursion)
+std::deque<std::string> runHeuristicWithParsedConstraints(
+    const std::deque<std::string> &cowNames,
+    ConstraintSet constraints
+    ) {
+  if (constraints.constraints.empty()) {
+    return cowNames;
+  }
+
+  auto remainingCowNames = cowNames;
+
+  auto middleCow = constraints.getCowThatShowsUpTheMost();
+  auto output = std::deque{middleCow};
+  std::erase(remainingCowNames, middleCow);
+
+  auto backConstraint = constraints.popConstraintWithCow(middleCow);
+  if (backConstraint != EMPTY_CONSTRAINT) {
+    auto backCow = getOtherCow(backConstraint, middleCow);
+    output.emplace_back(backCow);
+    std::erase(remainingCowNames, backCow);
+  }
+
+  auto frontConstraint = constraints.popConstraintWithCow(middleCow);
+  if (frontConstraint != EMPTY_CONSTRAINT) {
+    auto frontCow = getOtherCow(frontConstraint, middleCow);
+    output.emplace_front(frontCow);
+    std::erase(remainingCowNames, frontCow);
+  }
+
+  auto backCow = output.back();
+  auto nextBackConstraint = constraints.popConstraintWithCow(backCow);
+  while (nextBackConstraint != EMPTY_CONSTRAINT) {
+    backCow = getOtherCow(nextBackConstraint, backCow);
+    output.push_back(backCow);
+    nextBackConstraint = constraints.popConstraintWithCow(backCow);
+  }
+
+  auto frontCow = output.front();
+  auto nextFrontConstraint = constraints.popConstraintWithCow(frontCow);
+  while (nextFrontConstraint != EMPTY_CONSTRAINT) {
+    frontCow = getOtherCow(nextFrontConstraint, frontCow);
+    output.push_front(frontCow);
+    nextFrontConstraint = constraints.popConstraintWithCow(frontCow);
+  }
+
+  auto nextPass = runHeuristicWithParsedConstraints(remainingCowNames, constraints);
+  // TODO: Do something smarter here
+  for (const auto &cow : nextPass) {
+    output.push_back(cow);
+  }
+
+  return output;
+}
+
+ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::runHeuristic(
+    const std::vector<std::string> &cowNames,
+    const std::vector<std::string> &constraints
+    ) {
+  auto constraintSet = parseConstraints(constraints);
+
+  // TODO: Do something smarter
+  std::deque<std::string> cowNamesDeque;
+  for (const auto &cow : cowNames) {
+    cowNamesDeque.emplace_back(cow);
+  }
+
+  const auto solution = runHeuristicWithParsedConstraints(cowNamesDeque, constraintSet);
+
+  // TODO: Do something smarter
+  std::vector<std::string> finalOutput;
+  for (const auto &cow : solution) {
+    finalOutput.emplace_back(cow);
+  }
+
+  return Solution{finalOutput};
 }
