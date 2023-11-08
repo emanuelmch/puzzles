@@ -37,5 +37,5 @@ struct Solution {
   }
 };
 
-Solution run(const std::vector<std::string> &cowNames, const std::vector<std::string> &constraints);
+Solution runBaseline(std::vector<std::string> cowNames, const std::vector<std::string> &constraints);
 }

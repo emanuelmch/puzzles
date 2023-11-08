@@ -22,6 +22,9 @@
 
 #include "constrained_ordering.h"
 
+#include <algorithm>
+#include <cmath>
+
 /*
  * USACO 2019 December context, Bronze
  * Problem 3. Livestock Lineup
@@ -43,9 +46,44 @@
  * the second cow should be alphabetically lowest among all possible valid orderings, and so on.
  */
 
-ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::run(
-    const std::vector<std::string> &cowNames,
-    const std::vector<std::string> &) {
-  const auto reversedCowNames = std::vector(cowNames.rbegin(), cowNames.rend());
-  return Solution{reversedCowNames};
+// TODO: Ensure alphabetical ordering
+
+using Constraint = std::pair<std::string, std::string>;
+
+std::vector<Constraint> parseConstraints(const std::vector<std::string> &constraints) {
+  std::vector<Constraint> parsedConstraints;
+
+  std::transform(constraints.cbegin(), constraints.cend(), std::back_inserter(parsedConstraints),
+                 [](const std::string &constraint) {
+                   const auto first = constraint.substr(0, constraint.find_first_of(' '));
+                   const auto second = constraint.substr(constraint.find_last_of(' ') + 1);
+                   return std::pair{first, second};
+                 });
+
+  return parsedConstraints;
+}
+
+bool orderSatisfiesConstraints(const std::vector<std::string> &cowNames,
+                               const std::vector<Constraint> &constraints) {
+  return std::all_of(constraints.cbegin(), constraints.cend(), [cowNames](auto const &constraint) {
+    const auto index0 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.first);
+    const auto index1 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.second);
+
+    return std::abs(index0 - index1) == 1;
+  });
+}
+
+ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::runBaseline(
+    std::vector<std::string> cowNames,
+    const std::vector<std::string> &constraints) {
+  const auto parsedConstraints = parseConstraints(constraints);
+
+  const auto begin = std::begin(cowNames), end = std::end(cowNames);
+  std::sort(begin, end);
+
+  do {
+    if (orderSatisfiesConstraints(cowNames, parsedConstraints)) break;
+  } while (std::next_permutation(begin, end));
+
+  return Solution{cowNames};
 }

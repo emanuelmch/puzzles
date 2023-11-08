@@ -33,17 +33,26 @@
 using Puzzles::runningTime;
 
 bool runConstrainedOrdering() {
-  const std::vector<std::string> cows = {"Buttercup", "Bella"};
+  const std::vector<std::string> cows = {"Bessie", "Buttercup", "Belinda", "Beatrice", "Bella", "Blue", "Betsy", "Sue"};
   const std::vector<std::string> constraints = {
       "Buttercup must be milked beside Bella",
-//            "Blue must be milked beside Bella",
-//            "Sue must be milked beside Beatrice"
+      "Blue must be milked beside Bella",
+      "Sue must be milked beside Beatrice"
   };
 
   auto [results, duration] = runningTime(
-      [&cows, &constraints] { return ComSci::ConstrainedOrdering::run(cows, constraints); });
+      [&cows, &constraints] { return ComSci::ConstrainedOrdering::runBaseline(cows, constraints); });
 
-  const std::vector<std::string> expected = {"Buttercup", "Bella"};
+  const std::vector<std::string> expected = {
+      "Beatrice",
+      "Sue",
+      "Belinda",
+      "Bessie",
+      "Betsy",
+      "Blue",
+      "Bella",
+      "Buttercup"
+  };
   if (results == expected) {
     std::cout << "ComSci: Constrained Ordering found a known valid order"
               << ", it took about " << duration << " µs!\n";
