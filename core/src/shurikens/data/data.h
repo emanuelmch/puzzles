@@ -34,17 +34,43 @@ namespace Shurikens {
 struct ShurikenData {
 
   ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution)
-      : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution}) {}
+    : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution}) {
+  }
 
   ShurikenData(std::string name, Shuriken shuriken, const Shurikens::MoveContainer &solution0,
                const Shurikens::MoveContainer &solution1)
-      : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution0, solution1}) {
+    : name(std::move(name)), shuriken(std::move(shuriken)), solutions({solution0, solution1}) {
     assert(solution0.size() == solution1.size());
   }
 
   inline size_t solutionSize() const { return solutions.cbegin()->size(); }
+
   inline bool isSolution(const Shurikens::MoveContainer &solution) const {
-    return solutions.find(solution) != solutions.end();
+    if (solution.size() != solutions.cbegin()->size()) return false;
+
+    const bool isExactSolution = solutions.find(solution) != solutions.end();
+    if (isExactSolution) return true;
+
+    const auto &lastMove = solution.at(solution.size() - 1);
+    // If the last move is a swap, it doesn't matter if it's top or bottom
+    if (lastMove == swap_top) {
+      // TODO: This for loop should've been `MoveContainer copy{solution.cbegin(), solution.cend() - 1};` instead
+      MoveContainer copy;
+      for (size_t i = 0; i < solution.size() - 1; ++i) {
+        copy.push(solution[i]);
+      }
+      copy.push(swap_bottom);
+      return solutions.find(copy) != solutions.end();
+    } else if (lastMove == swap_bottom) {
+      MoveContainer copy;
+      for (size_t i = 0; i < solution.size() - 1; ++i) {
+        copy.push(solution[i]);
+      }
+      copy.push(swap_top);
+      return solutions.find(copy) != solutions.end();
+    }
+
+    return false;
   }
 
   const std::string name;
