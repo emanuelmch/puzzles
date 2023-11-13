@@ -40,4 +40,6 @@ struct Solution {
 Solution runBaseline(const std::vector<std::string> &cowNames, const std::vector<std::string> &constraints);
 
 Solution runHeuristic(const std::vector<std::string> &cowNames, const std::vector<std::string> &constraints);
+
+Solution runDepthFirstSearch(const std::vector<std::string> &cowNames, const std::vector<std::string> &textConstraints);
 }

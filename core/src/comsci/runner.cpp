@@ -22,12 +22,13 @@
 
 #include "runner.h"
 
-#include "common/ranges.h"
-#include "common/runners.h"
-#include "common/strings.h"
 #include "constrained_ordering.h"
 #include "travelling_salesman.h"
 #include "travelling_salesman_data.h"
+
+#include "common/ranges.h"
+#include "common/runners.h"
+#include "common/strings.h"
 
 #include <array>
 #include <iostream>
@@ -44,15 +45,16 @@ bool runConstrainedOrdering() {
 
   auto solvers = {
       std::make_pair("Baseline", &ComSci::ConstrainedOrdering::runBaseline),
-      std::make_pair("Heuristic", &ComSci::ConstrainedOrdering::runHeuristic)
+      std::make_pair("Heuristic", &ComSci::ConstrainedOrdering::runHeuristic),
+      std::make_pair("DepthFirst", &ComSci::ConstrainedOrdering::runDepthFirstSearch)
   };
 
-  for (const auto &solver: solvers) {
+  for (const auto &solver : solvers) {
     const auto name = solver.first;
     const auto function = solver.second;
     auto [results, duration] = runningTime([&] { return function(cows, constraints); });
 
-    const std::array<std::vector<std::string>, 2> possibleSolutions = {
+    const std::array possibleSolutions = {
         std::vector<std::string>{
             "Beatrice",
             "Sue",
@@ -72,14 +74,24 @@ bool runConstrainedOrdering() {
             "Bessie",
             "Belinda",
             "Betsy"
+        },
+        std::vector<std::string>{
+            "Sue",
+            "Beatrice",
+            "Betsy",
+            "Blue",
+            "Bella",
+            "Buttercup",
+            "Belinda",
+            "Bessie"
         }
     };
     if (pzl::ranges::contains(possibleSolutions, results)) {
       std::cout << "Constrained Ordering: " << name << " found a known valid order"
-                << ", it took about " << duration << " µs!\n";
+          << ", it took about " << duration << " µs!\n";
     } else {
       std::cout << "Constrained Ordering: " << name << " didn't find a known valid order. Received this:\n"
-                << "[" << Puzzles::join(results.cows, ", ") << "]\n";
+          << "[" << Puzzles::join(results.cows, ", ") << "]\n";
       return false;
     }
   }
@@ -91,14 +103,14 @@ bool runTravellingSalesman() {
   auto [results, duration] = runningTime([] { return ComSci::TravellingSalesman::run(); });
   if (results.distance == KNOWN_SHORTEST_DISTANCE) {
     std::cout << "ComSci: Travelling Salesman found a correct path"
-              << ", it took about " << duration << " µs!\n";
+        << ", it took about " << duration << " µs!\n";
     return true;
   } else {
     std::cout << "ComSci: Travelling Salesman didn't find the shortest path, was expecting "
-              << KNOWN_SHORTEST_DISTANCE
-              << ", but got this: (";
+        << KNOWN_SHORTEST_DISTANCE
+        << ", but got this: (";
     std::cout << results.distance << ")[";
-    for (auto i: results.shortestPath) {
+    for (auto i : results.shortestPath) {
       std::cout << i << ", ";
     }
     std::cout << "]\n";

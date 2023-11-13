@@ -26,6 +26,7 @@
 #include <cmath>
 #include <deque>
 #include <map>
+#include <stack>
 
 /*
  * USACO 2019 December context, Bronze
@@ -57,10 +58,16 @@ const Constraint EMPTY_CONSTRAINT = {"", ""};
 struct ConstraintSet {
   std::vector<Constraint> constraints;
 
+  /**
+   * If there are missing cows, it WON'T be reported as broken
+   */
   [[nodiscard]] bool isSatisfiedBy(const std::vector<std::string> &cowNames) const {
-    return std::all_of(constraints.cbegin(), constraints.cend(), [cowNames](auto const &constraint) {
-      const auto index0 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.first);
-      const auto index1 = std::find(cowNames.cbegin(), cowNames.cend(), constraint.second);
+    const auto begin = cowNames.cbegin(), end = cowNames.end();
+    return std::all_of(constraints.cbegin(), constraints.cend(), [&](auto const &constraint) {
+      const auto index0 = std::find(begin, end, constraint.first);
+      const auto index1 = std::find(begin, end, constraint.second);
+
+      if (index0 == end || index1 == end) return true;
 
       return std::abs(index0 - index1) == 1;
     });
@@ -213,4 +220,44 @@ ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::runHeuristic(
   }
 
   return Solution{finalOutput};
+}
+
+namespace {
+struct Node {
+  std::vector<std::string> names;
+};
+}
+
+ComSci::ConstrainedOrdering::Solution ComSci::ConstrainedOrdering::runDepthFirstSearch(
+    const std::vector<std::string> &cowNames,
+    const std::vector<std::string> &textConstraints
+    ) {
+  auto constraints = parseConstraints(textConstraints);
+
+  std::stack<Node> nodes;
+  nodes.emplace();
+
+  while (nodes.empty() == false) {
+    const auto next = nodes.top();
+    nodes.pop();
+
+    for (const auto &name : cowNames) {
+      auto it = std::find(next.names.cbegin(), next.names.cend(), name);
+      if (it == next.names.cend()) {
+        auto newCows = next.names;
+        newCows.push_back(name);
+
+        if (constraints.isSatisfiedBy(newCows)) {
+          if (newCows.size() == cowNames.size()) {
+            return Solution{newCows};
+          }
+
+          nodes.push(Node{newCows});
+        }
+      }
+    }
+  }
+
+  // Couldn't find anything, give up
+  return Solution{cowNames};
 }
