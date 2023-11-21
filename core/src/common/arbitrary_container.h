@@ -105,6 +105,7 @@ struct ArbitraryContainer {
 
     return result;
   }
+  // TODO: inline value_t &operator[](size_t i) { ... }
   inline value_t operator[](size_t i) const { return at(i); }
   inline size_t size() const { return internal.size() / valueBitLength; }
 
